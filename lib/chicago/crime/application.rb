@@ -27,7 +27,18 @@ module Chicago
       helpers Chicago::Crime::ViewHelpers
 
       get "/" do
+        @current_menu = "home"
         haml :index
+      end
+      
+      get "/:page" do |page_name|
+        template = File.join(settings.views, page_name + ".haml")
+        if File.exists?(template)
+          @current_menu = page_name
+          haml page_name.to_sym
+        else
+          pass
+        end
       end
     end
   end

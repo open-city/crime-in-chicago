@@ -27,34 +27,38 @@
           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
 
-  %body{:id => "page"}
-    %div{:id => "nav"}
-      %div{:id => "nav-content"}
+  %body#page
+    #nav
+      #nav-content
         %ul
-          %li
-            %a{:href => "/"}= "Home"
+          %li{:class => current_menu_class("home")}
+            %a{:href => "/"} Home
             
-          %li
-            %a{:href => "/about"}= "About"
+          %li{:class => current_menu_class("about")}
+            %a{:href => "/about"} About
           
-    %div{:id => "identity"}
-      %div{:id => "identity-content"}
+    #identity
+      #identity-content
         %a{:href => "/"}
           %img{:alt => "Crime in Chicago", :src => "/images/logo.png"}
-        %div{:id => "tagline"} An interactive analysis of crime severity in Chicago's 50 wards
+        #tagline
+          An interactive analysis of crime severity in Chicago's 50 wards
 
-
-    %div{:id=> "content"}
+    #content
     
       = yield
 
-      %div{:class => :clear}
+      .clear
     
-    %div{:id=> "subfooter"}
-      %div{:id=> "subfooter-content"}
+    #subfooter
+      #subfooter-content
         %h2 About this site
-        %p Sed eget nibh massa, id suscipit metus. Vestibulum cursus luctus felis, in posuere odio euismod quis. Pellentesque lacinia, metus vel suscipit porttitor, odio tellus adipiscing ipsum, ut mollis nunc turpis a dolor. Pellentesque lacus quam, egestas in lobortis eget, venenatis non nulla. Mauris sagittis orci pretium lacus faucibus placerat. Fusce porttitor euismod convallis. Mauris condimentum egestas sapien ac auctor. Praesent vel elit risus.
-        %div{:id=> "subfooter-secondary"}
+        %p 
+          Sed eget nibh massa, id suscipit metus. Vestibulum cursus luctus felis, in posuere odio euismod quis. Pellentesque lacinia, metus vel suscipit porttitor, odio tellus adipiscing ipsum, ut mollis nunc turpis a dolor. Pellentesque lacus quam, egestas in lobortis eget, venenatis non nulla. Mauris sagittis orci pretium lacus faucibus placerat. Fusce porttitor euismod convallis. Mauris condimentum egestas sapien ac auctor. Praesent vel elit risus.
+        #subfooter-secondary
         %h2 Get the posters
-        %p See crime data for all 50 wards compared on a single poster printed on high-quality materials.
-    %div{:id=> "footer"} Crime in Chicago was designed and developed by [name]. &copy; 2012
+        %p 
+          See crime data for
+          %strong all 50 wards
+          compared on a single poster printed on high-quality materials.
+    #footer Crime in Chicago was designed and developed by [name]. &copy; 2012

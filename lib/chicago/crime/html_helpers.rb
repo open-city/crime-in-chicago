@@ -29,7 +29,7 @@ module Chicago
 
         if [:script].include? tag
           element << "></script>"
-        else
+        elsif [:link].include? tag
           element << "/>"
         end
         element
