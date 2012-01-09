@@ -2,22 +2,18 @@
 %html{:lang => :en}
   %head
     %title
-      Crime in Chicago's Words
+      Crime in Chicago - An interactive analysis of crime severity in Chicago's 50 wards
 
-    %meta{"http-equiv" => "Content-Type",       :content => "text/html; charset=uft-8"}
+    %meta{"http-equiv" => "Content-Type",       :content => "text/html; charset=utf-8"}
     %meta{"http-equiv" => "Content-Style-Type", :content => "text/css"}
     %meta{:name => "google-site-verification",  :content => ''}
 
-    = include_stylesheets "default",  :media => :screen
+    = include_stylesheets "master",  :media => :screen
 
-    = include_javascripts "http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"
-    = include_javascripts "jquery.dataTables.min",   :media => :screen
-    = include_javascripts "jquery.sparkline.min",    :media => :screen
-    = include_javascripts :highcharts
-    =# include_javascripts "bootstrap/1.3.0/bootstrap-dropdown",    :media => :screen
-    =# include_javascripts "bootstrap/1.3.0/bootstrap-twipsy",  :media => :screen
-    =# include_javascripts "bootstrap/1.3.0/bootstrap-popover",  :media => :screen
-    =# include_javascripts :application
+    = include_javascripts "jquery.min"
+    = include_javascripts "jquery-ui.min"
+    = include_javascripts "jquery.tooltip.min"
+    = include_javascripts "jquery.sparkline.min"
 
     - if production?
       :javascript
@@ -31,24 +27,34 @@
           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
 
-  %body{:id => :page}
-    %h1
-      Crime in Chicago's Words
-    %p
+  %body{:id => "page"}
+    %div{:id => "nav"}
+      %div{:id => "nav-content"}
+        %ul
+          %li
+            %a{:href => "/"}= "Home"
+            
+          %li
+            %a{:href => "/about"}= "About"
+          
+    %div{:id => "identity"}
+      %div{:id => "identity-content"}
+        %a{:href => "/"}
+          %img{:alt => "Crime in Chicago", :src => "/images/logo.png"}
+        %div{:id => "tagline"} An interactive analysis of crime severity in Chicago's 50 wards
 
-    %ul
-      %li
-        %a{:href => "1.html"}
-          %img{:alt => "1-thumb.jpg"}
-          %span{:class => :num}= "Home"
-      %li
-        %a{:href => "2.html", :src => "2-thumb.jpg"}
-          %img{:alt => "2-thumb.jpg", :src => "2-thumb.jpg"}
-          %span{:class => :num}= "Contextual stats"
-      %li
-        %a{:href => "3.html", :src => "3-thumb.jpg"}
-          %img{:alt => "3-thumb.jpg", :src => "3-thumb.jpg"}
-          %span{:class => :num}= "Ward"
 
-    %div{:class => :clear}
+    %div{:id=> "content"}
+    
+      = yield
 
+      %div{:class => :clear}
+    
+    %div{:id=> "subfooter"}
+      %div{:id=> "subfooter-content"}
+        %h2 About this site
+        %p Sed eget nibh massa, id suscipit metus. Vestibulum cursus luctus felis, in posuere odio euismod quis. Pellentesque lacinia, metus vel suscipit porttitor, odio tellus adipiscing ipsum, ut mollis nunc turpis a dolor. Pellentesque lacus quam, egestas in lobortis eget, venenatis non nulla. Mauris sagittis orci pretium lacus faucibus placerat. Fusce porttitor euismod convallis. Mauris condimentum egestas sapien ac auctor. Praesent vel elit risus.
+        %div{:id=> "subfooter-secondary"}
+        %h2 Get the posters
+        %p See crime data for all 50 wards compared on a single poster printed on high-quality materials.
+    %div{:id=> "footer"} Crime in Chicago was designed and developed by [name]. &copy; 2012
