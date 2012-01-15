@@ -1,1 +1,36 @@
-INITIAL PAGE LOAD
+#vis
+  .vis-label
+    %h2 Select year
+
+  .vis-content
+    %ol#years
+      - (2002..2011).each do |year|
+        %li{:class => "#{"current" if year == 2011}"}
+          %a{:href => "#"}
+            = year
+  %hr
+
+  .vis-label
+    %h2 Select wards
+
+    %p
+      Choose two or more to compare crime data.
+    %p
+      Height = no. of crimes
+      %br
+      Color = severity
+    %p#map-toggle
+      %a{:href => "#"}
+        Show map
+  .vis-content
+    #wards
+      %ol.chart-column
+        - (1..50).each do |ward|
+          %li
+            %a.point{:href => "#"}
+              %span.label
+                = ward
+              _
+              %span.idx{:style => "height:40%", :title => "Ward #{ward} - 8,382 crimes - Not very severe"}
+                = "Ward #{ward} - 8,382 crimes - Not very severe"
+
