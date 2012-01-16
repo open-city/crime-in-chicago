@@ -34,3 +34,69 @@
               %span.idx{:style => "height:40%", :title => "Ward #{ward} - 8,382 crimes - Not very severe"}
                 = "Ward #{ward} - 8,382 crimes - Not very severe"
 
+    .ward-map
+
+  %hr
+
+  .vis-label
+    %h2 Compare
+    %p.tip
+      %strong Tip:
+      Drag wards up and down to reorder for easy comparison.
+
+  .vis-content
+    #compare
+      .timeline
+        %span.handle{:title => "Drag to reorder"}
+        %a.remove{:href => "#", :title => "Remove"} Remove
+        %h2
+          %a{:href => "#"} Ward 1
+          %span
+            Click anything blue to see more details
+        .heatmap
+          %ol.months
+            - (1..12).each do |month|
+              %li
+                %a{:href => "#"} 
+                  = Date::ABBR_MONTHNAMES[month]
+          %ol.weekdays
+            - (0..6).each do |day|
+              %li
+                %a{:href => "#"} 
+                  = Date::ABBR_DAYNAMES[day]
+          .chart
+        .stats
+          .panel
+            %h3 Ward location
+
+            %img{:src => "#"}
+
+          .panel
+            %h3 Number of crimes
+            .crime-volume.yearly
+              %ol.chart-column
+                - (2002..2011).each do |year|
+                  %li{:style => "width: 10%;"}
+                    %span.point
+                      %span.idx{:style => "height: 80%;", :title => "#{year} - 8,300 crimes"}
+              .xaxis
+                .tick.first 
+                  2002
+                .tick.last
+                  2011
+            .summary
+              %p
+                %strong 8,976
+                in 2011
+              %p
+                %span.mute
+                  \-6.2% from 2010
+
+          .panel
+            %h3 Most frequent
+
+          .panel
+            %h3 Time of day
+
+        .clear
+
