@@ -1,3 +1,5 @@
+= include_javascripts "crime-by-ward"
+
 #vis
   .vis-label
     %h2 Select year
@@ -65,11 +67,12 @@
                 %a{:href => "#"} 
                   = Date::ABBR_DAYNAMES[day]
           .chart
-        .stats
+        
+        .stats{:style => "display: none;"}
           .panel
             %h3 Ward location
 
-            %img{:src => "#"}
+            %img{:src => "#{ward_image}"}
 
           .panel
             %h3 Number of crimes
@@ -94,9 +97,27 @@
 
           .panel
             %h3 Most frequent
+            %ol.chart-bar
+              - (0..5).each do |type|
+                %li
+                  %span.point
+                    %span.idx{:style => "width: 100%"}
+                    %span.label Theft
+                    %span.count 1,646
 
           .panel
             %h3 Time of day
+            %span.sparkline-day 
+              365,217,197,159,119,99,115,200,370,448,407,454,527,500,502,513,472,439,452,538,569,508,448,358
+            .xaxis.day
+              .tick.first 12a
+              .tick noon
+              .tick.last 12a
+            %p.panel
+              %h3
+                %a{:href => "#"} View more details &raquo;
+              %p.mute
+                See crime trends, full history, contact the alderman and more &hellip;
 
         .clear
 

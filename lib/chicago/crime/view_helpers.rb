@@ -10,7 +10,7 @@ module Chicago
       end
 
       def ward_image()
-        return <<-src_tag
+        return <<-eos
 http://maps.googleapis.com/maps/api/staticmap?
 size=138x100
 &sensor=false
@@ -24,8 +24,8 @@ color:0xc10202aa
 &style=feature:landscape|saturation:-100|lightness:75
 &style=feature:transit|visibility:off
 &style=feature:poi|saturation:-100|lightness:60
-&style=feature:water|hue:0x00b2ff
-        src_tag
+&style=feature:water|hue:0x00b2ff'
+        eos
       end
     end
   end
