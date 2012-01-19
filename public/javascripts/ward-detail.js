@@ -16,12 +16,19 @@ $(function() {
   // History toggle
   $("#history-toggle").toggle(
     function(){
-      $("#past").slideToggle();
-      $(this).text("Show fewer years");
+      var origHeight = $("#history").height();
+      $("#history").css("height", "auto");
+      var autoHeight = $("#history").height();
+      $("#history").css("height", origHeight + "px")
+      $("#history").animate({ height: autoHeight + "px" }, 500, function(){
+        $(this).find(".toggle-overlay").hide();
+      });
+      $(this).text("Less");
     },
     function(){
-      $("#past").slideToggle();
-      $(this).text("Show all years");
+      $("#history .toggle-overlay").show();
+      $("#history").animate({ height: "575px" }, 500);
+      $(this).text("More");
     }
   );
   
