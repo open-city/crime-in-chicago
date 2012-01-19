@@ -203,10 +203,10 @@ ul { list-style: disc; margin-left: 1.5em; }
 /* Trends */
 #trends { white-space: nowrap; }
 #trends .num { text-align: right; }
-#trends th[class *= "sorting"] { color: #227fa2; }
+#trends th[class *= "sorting"] { color: #227fa2; cursor: pointer; }
 #trends th.sorting_asc span { background: url(../images/sort-up.png) no-repeat 100% 50%; padding-right: 10px; }
 #trends th.sorting_desc span { background: url(../images/sort-down.png) no-repeat 100% 50%; padding-right: 10px; }
-#trends th.sorting_disabled { color: #000; }
+#trends th.sorting_disabled { color: #000; cursor: default; }
 #trends .xaxis { margin: 0; text-align: center; }
 
 /* Tooltips */

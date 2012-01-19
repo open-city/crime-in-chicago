@@ -48,76 +48,77 @@
 
   .vis-content
     #compare
-      .timeline
-        %span.handle{:title => "Drag to reorder"}
-        %a.remove{:href => "#", :title => "Remove"} Remove
-        %h2
-          %a{:href => "#"} Ward 1
-          %span
-            Click anything blue to see more details
-        .heatmap
-          %ol.months
-            - (1..12).each do |month|
-              %li
-                %a{:href => "#"} 
-                  = Date::ABBR_MONTHNAMES[month]
-          %ol.weekdays
-            - (0..6).each do |day|
-              %li
-                %a{:href => "#"} 
-                  = Date::ABBR_DAYNAMES[day]
-          .chart
-        
-        .stats{:style => "display: none;"}
-          .panel
-            %h3 Ward location
-
-            %img{:src => "#{ward_image}"}
-
-          .panel
-            %h3 Number of crimes
-            .crime-volume.yearly
-              %ol.chart-column
-                - (2002..2011).each do |year|
-                  %li{:style => "width: 10%;"}
-                    %span.point
-                      %span.idx{:style => "height: 80%;", :title => "#{year} - 8,300 crimes"}
-              .xaxis
-                .tick.first 
-                  2002
-                .tick.last
-                  2011
-            .summary
-              %p
-                %strong 8,976
-                in 2011
-              %p
-                %span.mute
-                  \-6.2% from 2010
-
-          .panel
-            %h3 Most frequent
-            %ol.chart-bar
-              - (0..5).each do |type|
+      #ward-charts
+        .timeline
+          %span.handle{:title => "Drag to reorder"}
+          %a.remove{:href => "#", :title => "Remove"} Remove
+          %h2
+            %a{:href => "#"} Ward 1
+            %span
+              Click anything blue to see more details
+          .heatmap
+            %ol.months
+              - (1..12).each do |month|
                 %li
-                  %span.point
-                    %span.idx{:style => "width: 100%"}
-                    %span.label Theft
-                    %span.count 1,646
-
-          .panel
-            %h3 Time of day
-            %span.sparkline-day 
-              365,217,197,159,119,99,115,200,370,448,407,454,527,500,502,513,472,439,452,538,569,508,448,358
-            .xaxis.day
-              .tick.first 12a
-              .tick noon
-              .tick.last 12a
-            %p.panel
+                  %a{:href => "#"} 
+                    = Date::ABBR_MONTHNAMES[month]
+            %ol.weekdays
+              - (0..6).each do |day|
+                %li
+                  %a{:href => "#"} 
+                    = Date::ABBR_DAYNAMES[day]
+            .chart
+          
+          .stats{:style => "display: none;"}
+            .panel
+              %h3 Ward location
+  
+              %img{:src => "#{ward_image}"}
+  
+            .panel
+              %h3 Number of crimes
+              .crime-volume.yearly
+                %ol.chart-column
+                  - (2002..2011).each do |year|
+                    %li{:style => "width: 10%;"}
+                      %span.point
+                        %span.idx{:style => "height: 80%;", :title => "#{year} - 8,300 crimes"}
+                .xaxis
+                  .tick.first 
+                    2002
+                  .tick.last
+                    2011
+              .summary
+                %p
+                  %strong 8,976
+                  in 2011
+                %p
+                  %span.mute
+                    \-6.2% from 2010
+  
+            .panel
+              %h3 Most frequent
+              %ol.chart-bar
+                - (0..5).each do |type|
+                  %li
+                    %span.point
+                      %span.idx{:style => "width: 100%"}
+                      %span.label Theft
+                      %span.count 1,646
+  
+            .panel
+              %h3 Time of day
+              %span.sparkline-day 
+                365,217,197,159,119,99,115,200,370,448,407,454,527,500,502,513,472,439,452,538,569,508,448,358
+              .xaxis.day
+                .tick.first 12a
+                .tick noon
+                .tick.last 12a
+            .panel
               %h3
-                %a{:href => "#"} View more details &raquo;
+                %a{:href => "/ward"} View more details &raquo;
               %p.mute
                 See crime trends, full history, contact the alderman and more &hellip;
-
-        .clear
+  
+          .clear
 
