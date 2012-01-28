@@ -1,4 +1,5 @@
-= include_javascripts "ward-detail"
+- content_for :javascript do
+  = include_javascript "ward-detail"
 
 %h1 Ward #
 
@@ -147,3 +148,4 @@
     %dd.mute Chicago Sun-Times - Dec 15, 2011
   
   %p.mute News is automatically generated from a Google Alert configured to search for news pertaining to Ward 3.
+
