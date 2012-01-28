@@ -6,6 +6,8 @@ gem "sinatra-initializers"
 gem "sinatra-reloader"
 gem "sinatra-r18n"
 gem "haml"
+gem "pg"
+gem "sequel"
 
 # data
 

@@ -1,0 +1,6 @@
+development:
+  adapter: postgres
+  host: localhost
+  database: chicago_crime
+  username: jbreen
+  password:
