@@ -1,16 +1,15 @@
-module Chicago
-  module Crime
-    module ViewHelpers
-      def current_menu
-        @current_menu
-      end
-      
-      def current_menu_class(menu_name)
-        return "current" if current_menu == menu_name
-      end
+module Crime
+  module ViewHelpers
+    def current_menu
+      @current_menu
+    end
+    
+    def current_menu_class(menu_name)
+      return "current" if current_menu == menu_name
+    end
 
-      def ward_image()
-        return <<-eos
+    def ward_image()
+      return <<-eos
 http://maps.googleapis.com/maps/api/staticmap?
 size=138x100
 &sensor=false
@@ -25,9 +24,7 @@ color:0xc10202aa
 &style=feature:transit|visibility:off
 &style=feature:poi|saturation:-100|lightness:60
 &style=feature:water|hue:0x00b2ff'
-        eos
-      end
+      eos
     end
   end
 end
-
