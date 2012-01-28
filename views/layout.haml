@@ -8,13 +8,17 @@
     %meta{"http-equiv" => "Content-Style-Type", :content => "text/css"}
     %meta{:name => "google-site-verification",  :content => ''}
 
-    = include_stylesheets "master",  :media => :screen
+    = include_favicon :favicon
 
-    = include_javascripts "jquery.min"
-    = include_javascripts "jquery-ui.min"
-    = include_javascripts "jquery.tooltip.min"
-    = include_javascripts "jquery.sparkline.min"
-    = include_javascripts "jquery.dataTables.min"
+    = include_stylesheet :master,  :media => :screen
+
+    = include_javascript "jquery.min"
+    = include_javascript "jquery-ui.min"
+    = include_javascript "jquery.tooltip.min"
+    = include_javascript "jquery.sparkline.min"
+    = include_javascript "jquery.dataTables.min"
+
+    = content :javascript
 
     - if production?
       :javascript
@@ -63,4 +67,6 @@
             See crime data for
             %strong all 50 wards
             compared on a single poster printed on high-quality materials.
-    #footer Crime in Chicago was designed and developed by [name]. &copy; 2012
+    #footer
+      Crime in Chicago was designed and developed by [name]. &copy; 2012
+
