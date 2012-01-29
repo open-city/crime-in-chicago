@@ -10,14 +10,14 @@ module Crime
     enable :logging, :sessions
     enable :dump_errors, :show_exceptions if development?
 
+    set :cacheable, {:server => "localhost:11211"}
+
     configure :development do
       register Sinatra::Reloader
     end
 
     register Sinatra::Initializers
     register Sinatra::R18n
-
-    helpers Sinatra::JSON
 
     before do
       session[:locale] = params[:locale] if params[:locale]
@@ -28,6 +28,9 @@ module Crime
 
     helpers HtmlHelpers
     helpers Crime::ViewHelpers
+    helpers Sinatra::JSON
+
+    include Cacheable
 
     get "/" do
       @current_menu = "home"
@@ -38,10 +41,15 @@ module Crime
       @current_menu = "home"
       haml :"ward", :layout => false, :locals => {
         :ward => params[:ward],
-        :map_src => ""
+        :map_src => map_ward(params[:ward])
       }
     end
-    
+
+    get "/api/wards/:ward/:year/crime/calendar" do
+      content_type :json
+      ward_calendar_detail(params[:ward], params[:year]).to_json
+    end
+
     get "/:page" do |page_name|
       template = File.join(settings.views, page_name + ".haml")
       if File.exists?(template)

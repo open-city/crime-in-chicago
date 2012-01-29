@@ -4,25 +4,47 @@ module Crime
       50
     end
 
-    def ward_detail
-      # TODO: Remove when tied to database hash responses
-      # { :ward => 1, :crime_count => 400, :crime_percentage => 42% }
-      #
-      # Formuls
-      # ward = ward number
-      # crime_count = individual ward crimes
-      # crime_percentage = (count / max) * 100 }
-      # crime_severity = Not very severe | Moderately severe | Very severe
+    def ward_crime_hash
+      @ward_crime_hash = retain_in_memory(:ward_crime_hash) do
+        DB.fetch(Crime::QUERIES[:ward_crime_hash]).all
+      end
+    end
 
-      1.upto(ward_count).map do |number|
-        crime_max_count = 1200
-        crime_count = rand(crime_max_count)
-        crime_percentage = number_to_percentage(crime_count.to_f / crime_max_count)
+    def ward_crime_max
+      ward_crime_hash.map { |h| h[:crime_count] }.max
+    end
+
+    def ward_detail
+      @ward_detail ||= ward_crime_hash.map do |hash|
+        crime_percentage = number_to_percentage(hash[:crime_count].to_f / ward_crime_max)
+
         {
-          :ward => number,
-          :crime_count => crime_count,
+          :ward => hash[:ward],
+          :crime_count => hash[:crime_count],
           :crime_percentage => crime_percentage,
           :crime_severity => severity_from_percentage(crime_percentage)
+        }
+      end
+    end
+
+    def ward_calendar_crime(ward, year)
+      @ward_calendar_crime = retain_in_memory(:"calendar_crime_#{ward}_#{year}") do
+        DB.fetch(Crime::QUERIES[:ward_crime_calendar], :ward => ward, :year => year).all
+      end
+    end
+
+    def ward_calendar_crime_max
+      @ward_calendar_crime.map { |h| h[:crime_count] }.max
+    end
+
+    def ward_calendar_detail(ward, year)
+      @ward_calendar_detail ||= ward_calendar_crime(ward, year).map do |hash|
+        crime_percentage = number_to_percentage(hash[:crime_count].to_f / ward_calendar_crime_max)
+
+        {
+          :date => hash[:occurred_at],
+          :crime_count => hash[:crime_count],
+          :crime_percentage => crime_percentage
         }
       end
     end
@@ -45,23 +67,32 @@ module Crime
       return "current" if current_menu == menu_name
     end
 
-    def ward_image()
-      return <<-eos
-http://maps.googleapis.com/maps/api/staticmap?
-size=138x100
-&sensor=false
-&path=
-color:0xc10202aa
-|fillcolor:0xc1020211
-|weight:1
-|enc:ecp~FfwyuOs@fiBpx@iCd^vI|NmErP{K~FsVvGg`@rHaOnlAeAr@rVpHdB?~Lpp@ePX~MjiAeBxGoFpd@kDX
-&maptype=roadmap
-&style=feature:road|visibility:off|saturation:-100
-&style=feature:landscape|saturation:-100|lightness:75
-&style=feature:transit|visibility:off
-&style=feature:poi|saturation:-100|lightness:60
-&style=feature:water|hue:0x00b2ff'
-      eos
+    def map_ward(number)
+      parameters = {
+        :sensor => "true", :size => "138x100",
+        :path => "color:0xc10202aa|fillcolor:0xc1020211|weight:1|enc:ecp~FfwyuOs@fiBpx@iCd^vI|NmErP{K~FsVvGg`@rHaOnlAeAr@rVpHdB?~Lpp@ePX~MjiAeBxGoFpd@kDX~hAxc@gC?{Kju@?eBujDkyA`@?_z@_O??hRyS`@?nT}jA`@?nUu_D?Vzh@a~A`@YtWq`@?",
+        :maptype => "roadmap", 
+        :style => [
+          "feature:road|visibility:off|saturation:-100",
+          "feature:landscape|saturation:-100|lightness:75",
+          "feature:transit|visibility:off",
+          "feature:poi|saturation:-100|lightness:60",
+          "feature:water|hue:0x00b2ff"
+        ]
+      }
+
+      params_array = parameters.map do |name, value|
+        if value.is_a?(Array)
+          params_array = value.map do |item|
+            "#{name}=#{item}"
+          end
+          params_array
+        else
+          "#{name}=#{value}"
+        end
+      end
+
+      "http://maps.googleapis.com/maps/api/staticmap?#{params_array.flatten.join("&")}"
     end
   end
 end

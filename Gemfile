@@ -6,11 +6,11 @@ gem "sinatra-initializers"
 gem "sinatra-reloader"
 gem "sinatra-r18n"
 gem "haml"
-gem "pg"
-gem "sequel"
 
 # data
-
+gem "dalli"
+gem "pg"
+gem "sequel"
 
 # utility
 gem "chronic"

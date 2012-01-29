@@ -79,7 +79,7 @@ ul { list-style: disc; margin-left: 1.5em; }
   .chart-column { list-style: none; margin: 0; text-align: center; }
   .chart-column .idx { background: #a5d9ee; bottom: 0; display: block; left: 0; position: absolute; text-indent: -999em; width: 100%; }
   .chart-column .label { bottom: 0; display: block; left: 0; position: absolute; width: 100%; }
-  .chart-column li { float: left; margin: 0; width: 5%; }
+  .chart-column li { float: left; margin: 10px 0 0 0; width: 5%; }
   .chart-column li.current .idx { background: #e00; }
   .chart-column li.current .point { color: #e00; font-weight: bold; }
   .chart-column .point { display: block; height: 20px; margin-right: 1px; position: relative; }
@@ -247,3 +247,21 @@ ul { list-style: disc; margin-left: 1.5em; }
 #years { font-size: 17px; list-style: none; margin: 0; }
 #years li { display: inline; margin: 0 1em 0 0; }
 #years li.current a { color: #ee0000; font-weight: bold; }
+
+
+.ward-chart {
+  font: 10px sans-serif;
+  shape-rendering: crispEdges;
+}
+
+.day {
+  fill: #fff;
+  stroke: #ccc;
+}
+
+.month {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2px;
+}
+
