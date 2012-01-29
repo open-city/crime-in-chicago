@@ -1,0 +1,12 @@
+.heatmap
+  %ol.months
+    - (1..12).each do |month|
+      %li
+        %a{:href => "#"} 
+          = Date::ABBR_MONTHNAMES[month]
+  %ol.weekdays
+    - (0..6).each do |day|
+      %li
+        %a{:href => "#"} 
+          = Date::ABBR_DAYNAMES[day]
+  .chart

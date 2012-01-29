@@ -24,6 +24,11 @@ module HtmlHelpers
     content_tag :a, name, options.merge(:href => href)
   end
 
+  def number_to_percentage(number, options = {})
+    precision = options[:precision] || 2
+    (sprintf("%.#{precision.to_s}f", number).to_f * 100).round
+  end
+
   def content(section, *args)
     view_content[section.to_sym].map! do |content|
       if respond_to?(:block_is_haml?) && block_is_haml?(content)

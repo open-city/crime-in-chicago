@@ -1,0 +1,51 @@
+.stats{:style => "display: none;"}
+  .panel
+    %h3 Ward location
+
+    %img{:src => "#{map_src}"}
+
+  .panel
+    %h3 Number of crimes
+    .crime-volume.yearly
+      %ol.chart-column
+        - (2002..2011).each do |year|
+          %li{:style => "width: 10%;"}
+            %span.point
+              %span.idx{:style => "height: 80%;", :title => "#{year} - 8,300 crimes"}
+      .xaxis
+        .tick.first 
+          2002
+        .tick.last
+          2011
+    .summary
+      %p
+        %strong 8,976
+        in 2011
+      %p
+        %span.mute
+          \-6.2% from 2010
+
+  .panel
+    %h3 Most frequent
+    %ol.chart-bar
+      - (0..5).each do |type|
+        %li
+          %span.point
+            %span.idx{:style => "width: 100%"}
+            %span.label Theft
+            %span.count 1,646
+
+  .panel
+    %h3 Time of day
+    %span.sparkline-day 
+      365,217,197,159,119,99,115,200,370,448,407,454,527,500,502,513,472,439,452,538,569,508,448,358
+    .xaxis.day
+      .tick.first 12a
+      .tick noon
+      .tick.last 12a
+  .panel
+    %h3
+      %a{:href => "/ward"} View more details &raquo;
+    %p.mute
+      See crime trends, full history, contact the alderman and more &hellip;
+

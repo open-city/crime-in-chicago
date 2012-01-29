@@ -1,0 +1,10 @@
+.vis-label
+  %h2 Select year
+
+.vis-content
+  %ol#years
+    - (2002..2011).each do |year|
+      %li.year-selector{:"data-year" => year, :class => "#{"current" if year == 2011}"}
+        %a{:href => "#"}
+          = year
+%hr

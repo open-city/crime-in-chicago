@@ -33,6 +33,14 @@ module Crime
       @current_menu = "home"
       haml :index
     end
+
+    get "/wards/:ward/partials/timeline" do
+      @current_menu = "home"
+      haml :"ward", :layout => false, :locals => {
+        :ward => params[:ward],
+        :map_src => ""
+      }
+    end
     
     get "/:page" do |page_name|
       template = File.join(settings.views, page_name + ".haml")

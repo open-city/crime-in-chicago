@@ -1,5 +1,42 @@
 module Crime
   module ViewHelpers
+    def ward_count
+      50
+    end
+
+    def ward_detail
+      # TODO: Remove when tied to database hash responses
+      # { :ward => 1, :crime_count => 400, :crime_percentage => 42% }
+      #
+      # Formuls
+      # ward = ward number
+      # crime_count = individual ward crimes
+      # crime_percentage = (count / max) * 100 }
+      # crime_severity = Not very severe | Moderately severe | Very severe
+
+      1.upto(ward_count).map do |number|
+        crime_max_count = 1200
+        crime_count = rand(crime_max_count)
+        crime_percentage = number_to_percentage(crime_count.to_f / crime_max_count)
+        {
+          :ward => number,
+          :crime_count => crime_count,
+          :crime_percentage => crime_percentage,
+          :crime_severity => severity_from_percentage(crime_percentage)
+        }
+      end
+    end
+
+    def severity_from_percentage(percentage)
+      if percentage < 33
+        "Not very severe"
+      elsif percentage < 66
+        "Moderately severe"
+      else
+        "Very severe"
+      end
+    end
+
     def current_menu
       @current_menu
     end

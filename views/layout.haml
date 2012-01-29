@@ -12,11 +12,13 @@
 
     = include_stylesheet :master,  :media => :screen
 
-    = include_javascript "jquery.min"
+    = include_javascript "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"
+    -#= include_javascript "jquery.min"
     = include_javascript "jquery-ui.min"
     = include_javascript "jquery.tooltip.min"
     = include_javascript "jquery.sparkline.min"
     = include_javascript "jquery.dataTables.min"
+    = include_javascript :application
 
     = content :javascript
 

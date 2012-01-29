@@ -1,45 +1,15 @@
 - content_for :javascript do
   = include_javascript "crime-by-ward"
+  :javascript
+    $(document).ready(function() {
+      $(".ward-selector").click(function() {
+        Ward.create($(this).attr("data-ward"), "#ward-charts");
+      });
+    });
 
 #vis
-  .vis-label
-    %h2 Select year
-
-  .vis-content
-    %ol#years
-      - (2002..2011).each do |year|
-        %li{:class => "#{"current" if year == 2011}"}
-          %a{:href => "#"}
-            = year
-  %hr
-
-  .vis-label
-    %h2 Select wards
-
-    %p
-      Choose two or more to compare crime data.
-    %p
-      Height = no. of crimes
-      %br
-      Color = severity
-    %p#map-toggle
-      %a{:href => "#"}
-        Show map
-  .vis-content
-    #wards
-      %ol.chart-column
-        - (1..50).each do |ward|
-          %li
-            %a.point{:href => "#"}
-              %span.label
-                = ward
-              _
-              %span.idx{:style => "height:40%", :title => "Ward #{ward} - 8,382 crimes - Not very severe"}
-                = "Ward #{ward} - 8,382 crimes - Not very severe"
-
-    .ward-map
-
-  %hr
+  = haml :"year-selector"
+  = haml :"ward-selector"
 
   .vis-label
     %h2 Compare
@@ -50,76 +20,4 @@
   .vis-content
     #compare
       #ward-charts
-        .timeline
-          %span.handle{:title => "Drag to reorder"}
-          %a.remove{:href => "#", :title => "Remove"} Remove
-          %h2
-            %a{:href => "#"} Ward 1
-            %span
-              Click anything blue to see more details
-          .heatmap
-            %ol.months
-              - (1..12).each do |month|
-                %li
-                  %a{:href => "#"} 
-                    = Date::ABBR_MONTHNAMES[month]
-            %ol.weekdays
-              - (0..6).each do |day|
-                %li
-                  %a{:href => "#"} 
-                    = Date::ABBR_DAYNAMES[day]
-            .chart
-          
-          .stats{:style => "display: none;"}
-            .panel
-              %h3 Ward location
-  
-              %img{:src => "#{ward_image}"}
-  
-            .panel
-              %h3 Number of crimes
-              .crime-volume.yearly
-                %ol.chart-column
-                  - (2002..2011).each do |year|
-                    %li{:style => "width: 10%;"}
-                      %span.point
-                        %span.idx{:style => "height: 80%;", :title => "#{year} - 8,300 crimes"}
-                .xaxis
-                  .tick.first 
-                    2002
-                  .tick.last
-                    2011
-              .summary
-                %p
-                  %strong 8,976
-                  in 2011
-                %p
-                  %span.mute
-                    \-6.2% from 2010
-  
-            .panel
-              %h3 Most frequent
-              %ol.chart-bar
-                - (0..5).each do |type|
-                  %li
-                    %span.point
-                      %span.idx{:style => "width: 100%"}
-                      %span.label Theft
-                      %span.count 1,646
-  
-            .panel
-              %h3 Time of day
-              %span.sparkline-day 
-                365,217,197,159,119,99,115,200,370,448,407,454,527,500,502,513,472,439,452,538,569,508,448,358
-              .xaxis.day
-                .tick.first 12a
-                .tick noon
-                .tick.last 12a
-            .panel
-              %h3
-                %a{:href => "/ward"} View more details &raquo;
-              %p.mute
-                See crime trends, full history, contact the alderman and more &hellip;
-  
-          .clear
 
