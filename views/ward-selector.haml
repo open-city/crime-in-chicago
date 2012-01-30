@@ -10,15 +10,10 @@
   %p#map-toggle
     %a{:href => "#"}
       Show map
+
 .vis-content
   #wards
-    %ol.chart-column
-      - ward_detail.each do |hash|
-        %li
-          %a.ward-selector.point{:"data-ward" => hash[:ward], :href => "#"}
-            %span.label= hash[:ward]
-            %span.idx{:style => "height:#{hash[:crime_percentage]}%", :title => "Ward #{hash[:ward]} - #{hash[:crime_count]} crimes - #{hash[:crime_severity]}"}
-              = "Ward #{hash[:ward]} - #{hash[:crime_count]} crimes - #{hash[:crime_severity]}"
+    = haml :"ward-crime-columns", :locals => { :year => "2011" }
 
   .ward-map
 

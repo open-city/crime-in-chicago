@@ -11,6 +11,7 @@ module Crime
       select cast(ward as int) ward, count(*) as crime_count
       from crimes
       where
+        date_part('year', occurred_at) = :year and
         ward is not null and
         trim(ward) != '' and ward != '0'
       group by ward

@@ -3,7 +3,7 @@
   :javascript
     $(document).ready(function() {
       $(".ward-selector").click(function() {
-        Ward.create($(this).attr("data-ward"), "#ward-charts");
+        Ward.create($(this).attr("data-ward"), $(this).attr("data-year"), "#ward-charts");
       });
     });
 

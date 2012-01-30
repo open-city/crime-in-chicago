@@ -1,10 +1,27 @@
+- content_for :javascript do
+  :javascript
+    $(document).ready(function() {
+      $('.year-selector a').click(function() {
+        link = $(this);
+
+        $('.year-selector').each(function() {
+          $(this).removeClass("current");
+        });
+
+        $.get("/wards/"+$(this).attr("data-year")+"/partials/crime-columns", function(data) {
+          $("#wards").html(data);
+          link.addClass("current");
+        });
+      });
+    });
+
 .vis-label
   %h2 Select year
 
 .vis-content
   %ol#years
     - (2002..2011).each do |year|
-      %li.year-selector{:"data-year" => year, :class => "#{"current" if year == 2011}"}
-        %a{:href => "#"}
+      %li.year-selector{:class => "#{"current" if year == 2011}"}
+        %a{:"data-year" => year, :href => "#"}
           = year
 %hr

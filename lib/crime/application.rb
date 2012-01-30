@@ -37,15 +37,21 @@ module Crime
       haml :index
     end
 
-    get "/wards/:ward/partials/timeline" do
+    get "/wards/:ward/:year/partials/timeline" do
       @current_menu = "home"
       haml :"ward", :layout => false, :locals => {
-        :ward => params[:ward],
+        :ward => params[:ward], :year => params[:year],
         :map_src => map_ward(params[:ward])
       }
     end
 
-    get "/api/wards/:ward/:year/crime/calendar" do
+    get "/wards/:year/partials/crime-columns" do
+      haml :"ward-crime-columns", :layout => false, :locals => {
+        :year => params[:year]
+      }
+    end
+
+    get "/api/:year/wards/:ward/crime/calendar" do
       content_type :json
       ward_calendar_detail(params[:ward], params[:year]).to_json
     end

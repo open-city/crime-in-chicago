@@ -4,19 +4,19 @@ module Crime
       50
     end
 
-    def ward_crime_hash
-      @ward_crime_hash = retain_in_memory(:ward_crime_hash) do
-        DB.fetch(Crime::QUERIES[:ward_crime_hash]).all
+    def ward_crime_hash(year)
+      @ward_crime_hash = retain_in_memory(:"ward_crime_hash_#{year}") do
+        DB.fetch(Crime::QUERIES[:ward_crime_hash], :year => year).all
       end
     end
 
-    def ward_crime_max
-      ward_crime_hash.map { |h| h[:crime_count] }.max
+    def ward_crime_max(year)
+      ward_crime_hash(year).map { |h| h[:crime_count] }.max
     end
 
-    def ward_detail
-      @ward_detail ||= ward_crime_hash.map do |hash|
-        crime_percentage = number_to_percentage(hash[:crime_count].to_f / ward_crime_max)
+    def ward_detail(year)
+      @ward_detail ||= ward_crime_hash(year).map do |hash|
+        crime_percentage = number_to_percentage(hash[:crime_count].to_f / ward_crime_max(year))
 
         {
           :ward => hash[:ward],

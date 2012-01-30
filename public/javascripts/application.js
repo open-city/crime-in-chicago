@@ -1,86 +1,37 @@
 var Ward = {};
-Ward.create = function(number, selector) {
-  $.get("/wards/"+number+"/partials/timeline", function(data) {
+Ward.create = function(ward, year, selector) {
+  $.get("/wards/"+ward+"/"+year+"/partials/timeline", function(data) {
     $(selector).prepend(data);
-    $("#ward-"+number+" .remove").click(function() {
+    $("#ward-"+ward+" .remove").click(function() {
       $(this).parent().remove();
+      return false;
     });
 
-    $("#ward-"+number+" h2 a").click(function() {
+    $("#ward-"+ward+" h2 a").click(function() {
       $(this).parents(".timeline").find("h2 a").toggleClass("expanded");
       $(this).parents(".timeline").find(".stats").slideToggle(function(){
         $(this).parents(".timeline").find(".handle").height($(this).parents(".timeline").outerHeight());
       });
-      $.sparkline_display_visible();
+//      $.sparkline_display_visible();
       return false;
     });
+
+    Ward.calendar(ward, 2011, "#calendar-"+ward);
   });
 }
 
-Ward.calendar = function(ward, year) {
-  var m = [19, 20, 20, 19], // top right bottom left margin
-      w = 960 - m[1] - m[3], // width
-      h = 136 - m[0] - m[2], // height
-      z = 17; // cell size
+Ward.calendar = function(ward, year, selector) {
+  var m = [0, 0, 0, 0], // top right bottom left margin
+      w = 769 - m[1] - m[3], // width
+      h = 103 - m[0] - m[2], // height
+      z = 14.5; // cell size
+
+  var data = new Object();
 
   var day = d3.time.format("%w"),
       week = d3.time.format("%U"),
       percent = d3.format(".1%"),
       format = d3.time.format("%Y-%m-%d");
-
-  var color = d3.scale.quantize()
-      .domain([10, 1])
-      .range(d3.range(10));
-
-  var svg = d3.select("#chart").selectAll("svg")
-      .data(d3.range(2011, 2013))
-    .enter().append("svg")
-      .attr("width", w + m[1] + m[3])
-      .attr("height", h + m[0] + m[2])
-      .attr("class", "RdYlGn")
-    .append("g")
-      .attr("transform", "translate(" + (m[3] + (w - z * 53) / 2) + "," + (m[0] + (h - z * 7) / 2) + ")");
-
-  svg.append("text")
-      .attr("transform", "translate(-6," + z * 3.5 + ")rotate(-90)")
-      .attr("text-anchor", "middle")
-      .text(String);
-
-  var rect = svg.selectAll("rect.day")
-      .data(function(d) { return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
-    .enter().append("rect")
-      .attr("class", "day")
-      .attr("width", z)
-      .attr("height", z)
-      .attr("x", function(d) { return week(d) * z; })
-      .attr("y", function(d) { return day(d) * z; })
-      .map(format);
-
-  rect.append("title")
-      .text(function(d) { return d; });
-
-  svg.selectAll("path.month")
-      .data(function(d) { return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
-    .enter().append("path")
-      .attr("class", "month")
-      .attr("d", monthPath);
-
-  d3.json("/wards/"+ward+"/partials/"+year+"/timeline", function(json) {
-    var data = new Object();
-    var jobs_sum  = 0;
-
-    json.forEach(function(obj, index) {
-      data[json[index][0]] = json[index][1];
-      jobs_sum += json[index][1];
-    });
-
-    d3.select("#city_count").html(jobs_sum + " opportunities");
-
-    rect.filter(function(d) { return d in data; })
-        .attr("class", function(d) { return "day q" + color(data[d]) + "-9"; })
-      .select("title")
-        .text(function(d) { return "[" + d + "]" + ": " + data[d] + " opportunities found"; });
-  });
 
   function monthPath(t0) {
     var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
@@ -92,5 +43,56 @@ Ward.calendar = function(ward, year) {
         + "H" + (w1 + 1) * z + "V" + 0
         + "H" + (w0 + 1) * z + "Z";
   }
+
+  d3.json("/api/"+year.toString()+"/wards/"+ward+"/crime/calendar", function(json) {
+    data["crime_counts"] = [];
+    data["crimes_sum"] = 0;
+    json.forEach(function(obj, index) {
+      data[json[index]["date"]] = json[index]["crime_count"];
+      data["crime_counts"][data["crime_counts"].length] = json[index]["crime_count"];
+      data["crimes_sum"] = data["crimes_sum"] + json[index]["crime_count"];
+    });
+
+    var crimes_max = Math.max.apply(Math, data["crime_counts"]);
+
+    $("#summary_count").html("<strong>"+data["crimes_sum"]+"</strong>");
+
+    var color = d3.scale.quantize()
+        .domain([crimes_max, 0])
+        .range(d3.range(crimes_max));
+
+    var svg = d3.select(selector).selectAll("svg")
+        .data(d3.range(year, year + 1))
+      .enter().append("svg")
+        .attr("width", w + m[1] + m[3])
+        .attr("height", h + m[0] + m[2])
+        .attr("class", "RdYlGn")
+      .append("g")
+        .attr("transform", "translate(0, 1)");
+
+    var rect = svg.selectAll("rect.day")
+        .data(function(d) { return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+      .enter().append("rect")
+        .attr("class", "day")
+        .attr("width", z)
+        .attr("height", z)
+        .attr("x", function(d) { return week(d) * z; })
+        .attr("y", function(d) { return day(d) * z; })
+        .map(format);
+
+    rect.append("title")
+        .text(function(d) { return d; });
+
+    svg.selectAll("path.month")
+        .data(function(d) { return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+      .enter().append("path")
+        .attr("class", "month")
+        .attr("d", monthPath);
+
+    rect.filter(function(d) { return d in data; })
+        .attr("class", function(d) { return "day q" + color(data[d]) + "-9"; })
+      .select("title")
+        .text(function(d) { return "[" + d + "]" + ": " + data[d] + " crimes listed"; });
+  });
 }
 

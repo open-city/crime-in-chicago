@@ -160,7 +160,7 @@ ul { list-style: disc; margin-left: 1.5em; }
   }
   
   /* Heatmap */
-  .heatmap .chart { background: #f0f0f0; float: right; height: 105px; width: 775px; }
+  .heatmap .chart { background: #f0f0f0; float: right; height: 103px; width: 769px; }
     
     /* Months */
     .months { font-size: 11px; list-style: none; margin-left: 60px; text-align: center; text-transform: uppercase; }
@@ -249,7 +249,7 @@ ul { list-style: disc; margin-left: 1.5em; }
 #years li.current a { color: #ee0000; font-weight: bold; }
 
 
-.ward-chart {
+.chart {
   font: 10px sans-serif;
   shape-rendering: crispEdges;
 }
@@ -262,6 +262,10 @@ ul { list-style: disc; margin-left: 1.5em; }
 .month {
   fill: none;
   stroke: #000;
-  stroke-width: 2px;
+  stroke-width: 1px;
+}
+
+.RdYlGn {
+  background: white;
 }
 

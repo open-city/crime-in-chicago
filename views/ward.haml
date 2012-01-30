@@ -6,8 +6,8 @@
       == Ward #{ward}
     %span
       Click anything blue to see more details
-  = haml :"ward_heatmap"
-  = haml :"ward_stats", :locals => { :map_src => map_src }
+  = haml :"ward_heatmap", :locals => { :identity => ward }
+  = haml :"ward_stats", :locals => { :map_src => map_src, :year => year }
 
   .clear
 

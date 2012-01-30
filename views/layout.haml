@@ -10,10 +10,12 @@
 
     = include_favicon :favicon
 
-    = include_stylesheet :master,  :media => :screen
+    = include_stylesheet :master,      :media => :screen
+    = include_stylesheet :colorbrewer, :media => :screen
 
     = include_javascript "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"
-    = include_javascript "d3.min"
+    = include_javascript :d3
+    = include_javascript "d3.time"
     = include_javascript "jquery-ui.min"
     = include_javascript "jquery.tooltip.min"
     = include_javascript "jquery.sparkline.min"
