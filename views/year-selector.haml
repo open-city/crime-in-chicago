@@ -1,17 +1,19 @@
 - content_for :javascript do
   :javascript
     $(document).ready(function() {
-      $('.year-selector a').click(function() {
-        link = $(this);
+      $('.year-selector a').hover(function() {
+        if (!$(this).parent().hasClass("current")) {
+          $.get("/wards/"+$(this).attr("data-year")+"/partials/crime-columns", function(data) {
+            $("#wards").html(data);
+          });
+        }
 
-        $('.year-selector').each(function() {
+        $('.year-selector.current').each(function() {
           $(this).removeClass("current");
         });
 
-        $.get("/wards/"+$(this).attr("data-year")+"/partials/crime-columns", function(data) {
-          $("#wards").html(data);
-          link.addClass("current");
-        });
+        link = $(this);
+        link.parent().addClass("current");
       });
     });
 
@@ -22,6 +24,5 @@
   %ol#years
     - (2002..2011).each do |year|
       %li.year-selector{:class => "#{"current" if year == 2011}"}
-        %a{:"data-year" => year, :href => "#"}
-          = year
+        %a{:"data-year" => year, :href => "#"}= year
 %hr
