@@ -160,7 +160,18 @@ ul { list-style: disc; margin-left: 1.5em; }
   }
   
   /* Heatmap */
-  .heatmap .chart { background: #f0f0f0; float: right; height: 103px; width: 769px; }
+  .heatmap .chart { float: right; height: 103px; width: 769px; }
+    
+    /* Colors */
+    .chi .q0-9{ fill:#dbf1fc; }
+    .chi .q1-9{ fill:#c8e7f6; }
+    .chi .q2-9{ fill:#acd8ef; }
+    .chi .q3-9{ fill:#8cc7e4; }
+    .chi .q4-9{ fill:#6eb3d5; }
+    .chi .q5-9{ fill:#549cc0; }
+    .chi .q6-9{ fill:#3b7fa1; }
+    .chi .q7-9{ fill:#235f7d; }
+    .chi .q8-9{ fill:#0e435d; }
     
     /* Months */
     .months { font-size: 11px; list-style: none; margin-left: 60px; text-align: center; text-transform: uppercase; }

@@ -1,7 +1,7 @@
 - content_for :javascript do
   :javascript
     $(document).ready(function() {
-      $('.year-selector a').hover(function() {
+      $('.year-selector a').click(function() {
         if (!$(this).parent().hasClass("current")) {
           $.get("/wards/"+$(this).attr("data-year")+"/partials/crime-columns", function(data) {
             $("#wards").html(data);

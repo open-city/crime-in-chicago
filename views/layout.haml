@@ -11,7 +11,6 @@
     = include_favicon :favicon
 
     = include_stylesheet :master,      :media => :screen
-    = include_stylesheet :colorbrewer, :media => :screen
 
     = include_javascript "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"
     = include_javascript :d3
@@ -41,10 +40,13 @@
       #nav-content
         %ul
           %li{:class => current_menu_class("home")}
-            %a{:href => "/"} Home
+            = link_to "Home", "/"
             
           %li{:class => current_menu_class("about")}
-            %a{:href => "/about"} About
+            = link_to "About", "/about"
+          
+          %li{:class => current_menu_class("poster")}
+            = link_to "Get the poster", "/poster"
           
     #identity
       #identity-content
@@ -72,5 +74,6 @@
             %strong all 50 wards
             compared on a single poster printed on high-quality materials.
     #footer
-      Crime in Chicago was designed and developed by [name]. &copy; 2012
+      &copy; 2012. Crime in Chicago was designed and developed by
+      = link_to "Open City", "http://www.opencityapps.org"
 

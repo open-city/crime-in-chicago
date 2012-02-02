@@ -58,15 +58,15 @@ Ward.calendar = function(ward, year, selector) {
     $("#summary_count").html("<strong>"+data["crimes_sum"]+"</strong>");
 
     var color = d3.scale.quantize()
-        .domain([crimes_max, 0])
-        .range(d3.range(crimes_max));
+        .domain([0, crimes_max])
+        .range(d3.range(9));
 
     var svg = d3.select(selector).selectAll("svg")
         .data(d3.range(year, year + 1))
       .enter().append("svg")
         .attr("width", w + m[1] + m[3])
         .attr("height", h + m[0] + m[2])
-        .attr("class", "RdYlGn")
+        .attr("class", "chi")
       .append("g")
         .attr("transform", "translate(0, 1)");
 
