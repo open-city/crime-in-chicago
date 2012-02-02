@@ -7,7 +7,7 @@ namespace :db do
   end
 
   namespace :load do
-    desc "load crime data file into tables"
+    desc "load crime data file into tables (uses tmp/Crimes_-_2001_to_present.csv by default)"
     task :crimes, :data_filename do |t, args|
       data_filename = args[:data_filename] || "tmp/Crimes_-_2001_to_present.csv"
       puts "loading crime data from #{data_filename}..."
