@@ -3,5 +3,5 @@
     %li
       %a.ward-selector.point{:"data-ward" => hash[:ward], :"data-year" => year, :href => "#"}
         %span.label= hash[:ward]
-        %span.idx{:style => "height:#{hash[:crime_percentage]}%", :title => "Ward #{hash[:ward]} - #{hash[:crime_count]} crimes - #{hash[:crime_severity]}"}
-          = "Ward #{hash[:ward]} - #{hash[:crime_count]} crimes - #{hash[:crime_severity]}"
+        %span.idx{:style => "height:#{hash[:crime_percentage]}%", :title => "Ward #{hash[:ward]} - #{hash[:crime_count]} crimes"}
+          = "Ward #{hash[:ward]} - #{hash[:crime_count]} crimes"

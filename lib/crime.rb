@@ -21,6 +21,12 @@ module Crime
       from crimes
       where ward = :ward and date_part('year', occurred_at) = :year
       group by cast(occurred_at as date)
-      order by cast(occurred_at as date);".strip
+      order by cast(occurred_at as date);".strip,
+    :crime_max_year => "
+      select cast(occurred_at as date), count(*) as crime_count, ward
+      from crimes
+      where date_part('year', occurred_at) = :year
+      group by cast(occurred_at as date), ward
+      order by crime_count desc limit 1;".strip,
   }
 end

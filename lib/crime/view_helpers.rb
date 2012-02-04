@@ -21,8 +21,7 @@ module Crime
         {
           :ward => hash[:ward],
           :crime_count => hash[:crime_count],
-          :crime_percentage => crime_percentage,
-          :crime_severity => severity_from_percentage(crime_percentage)
+          :crime_percentage => crime_percentage
         }
       end
     end
@@ -33,29 +32,21 @@ module Crime
       end
     end
 
-    def ward_calendar_crime_max
-      @ward_calendar_crime.map { |h| h[:crime_count] }.max
+    def ward_calendar_crime_max(year)
+      DB.fetch(Crime::QUERIES[:crime_max_year], :year => year).first[:crime_count].to_f
+      #@ward_calendar_crime.map { |h| h[:crime_count] }.max
     end
 
     def ward_calendar_detail(ward, year)
+      @crime_max_year = ward_calendar_crime_max(year)
       @ward_calendar_detail ||= ward_calendar_crime(ward, year).map do |hash|
-        crime_percentage = number_to_percentage(hash[:crime_count].to_f / ward_calendar_crime_max)
-
+        crime_percentage = number_to_percentage(hash[:crime_count].to_f / @crime_max_year)
         {
           :date => hash[:occurred_at],
           :crime_count => hash[:crime_count],
-          :crime_percentage => crime_percentage
+          :crime_percentage => crime_percentage,
+          :crime_max => @crime_max_year
         }
-      end
-    end
-
-    def severity_from_percentage(percentage)
-      if percentage < 33
-        "Not very severe"
-      elsif percentage < 66
-        "Moderately severe"
-      else
-        "Very severe"
       end
     end
 

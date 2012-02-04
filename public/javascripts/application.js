@@ -47,13 +47,14 @@ Ward.calendar = function(ward, year, selector) {
   d3.json("/api/"+year.toString()+"/wards/"+ward+"/crime/calendar", function(json) {
     data["crime_counts"] = [];
     data["crimes_sum"] = 0;
+    data["crimes_max"] = json[0]["crime_max"]
     json.forEach(function(obj, index) {
       data[json[index]["date"]] = json[index]["crime_count"];
       data["crime_counts"][data["crime_counts"].length] = json[index]["crime_count"];
       data["crimes_sum"] = data["crimes_sum"] + json[index]["crime_count"];
     });
 
-    var crimes_max = Math.max.apply(Math, data["crime_counts"]);
+    var crimes_max = data["crimes_max"];
 
     $("#summary_count").html("<strong>"+data["crimes_sum"]+"</strong>");
 
