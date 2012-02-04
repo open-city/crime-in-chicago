@@ -45,7 +45,7 @@
           %li{:class => current_menu_class("about")}
             = link_to "About", "/about"
           
-          %li{:class => current_menu_class("poster")}
+          %li{:class => current_menu_class("poster"), :id => "get-poster"}
             = link_to "Get the poster", "/poster"
           
     #identity
@@ -68,11 +68,14 @@
           %p 
             Sed eget nibh massa, id suscipit metus. Vestibulum cursus luctus felis, in posuere odio euismod quis. Pellentesque lacinia, metus vel suscipit porttitor, odio tellus adipiscing ipsum, ut mollis nunc turpis a dolor. Pellentesque lacus quam, egestas in lobortis eget, venenatis non nulla. Mauris sagittis orci pretium lacus faucibus placerat. Fusce porttitor euismod convallis. Mauris condimentum egestas sapien ac auctor. Praesent vel elit risus.
         #subfooter-secondary
-          %h2 Get the posters
+          = link_to "#{image_tag('poster-thumb.png', 'alt' => 'Testing')}", "/poster"
+          %h2 Get the poster
           %p 
             See crime data for
             %strong all 50 wards
             compared on a single poster printed on high-quality materials.
+          %p
+            = link_to "Pricing and details &raquo;", "/poster"
     #footer
       &copy; 2012. Crime in Chicago was designed and developed by
       = link_to "Open City", "http://www.opencityapps.org"

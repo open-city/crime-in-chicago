@@ -1,1 +1,66 @@
-Buy the poster!
+#poster-primary
+  %img{:alt => "Crime in Chicago poster", :src => "/images/poster.png"}
+#poster-secondary
+  %h1 Get the poster
+  %p
+    See crime data for all 50 wards compared on a single high-quality poster printed on high-quality semi-gloss paper.
+    = link_to "Explore the data &raquo;", "/"
+  
+  #order
+    %ol#poster-sizes
+      %li
+        .size-sm
+        .dimensions 24&rdquo; &times 36&rdquo;
+        .price
+          $37
+          %span.cents 95
+      %li
+        .size-md
+        .dimensions 36&rdquo; &times 48&rdquo;
+        .price
+          $61
+          %span.cents 80
+        %strong#best Best choice
+      %li
+        .size-lg
+        .dimensions 40&rdquo; &times 60&rdquo;
+        .price
+          $92
+          %span.cents 40
+      
+    %p.clear Additional materials, sizes, and framing available.
+    %p
+      %a{:class => "action", :href => "#"} Order &raquo;
+    
+  %hr
+  
+  %h2 Get a closer look
+  
+  %ul.gallery
+    %li
+      = link_to "#{image_tag("zoom-1.jpg")}", "/images/zoom-1.jpg"
+    %li
+      = link_to "#{image_tag("zoom-2.jpg")}", "/images/zoom-2.jpg"
+    %li
+      = link_to "#{image_tag("zoom-3.jpg")}", "/images/zoom-3.jpg"
+  
+  = include_stylesheet :prettyPhoto, :media => :screen
+  
+  - content_for :javascript do
+    = include_javascript "jquery.prettyPhoto"
+    :javascript
+      $(function() {
+        $(".gallery a")
+          .css("position", "relative")
+          .append("<span class='magnify'>Enlarge</span>")
+          .prettyPhoto({
+            deeplinking: false,
+            overlay_gallery: false,
+            show_title: false,
+            social_tools: false
+          });
+      });
+    
+  %hr
+    
+  %p This print is designed to be printed and displayed at the sizes above. It is also available at smaller sizes but please note that at the smaller sizes, the text may not be legible.

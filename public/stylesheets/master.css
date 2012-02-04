@@ -11,8 +11,8 @@
 
 /* Fonts
 =====================================================================*/
+.action h1, h2, h3, h4, h5, h6, #identity, .price, .wards, #years { font-family: Arvo, Georgia, "Times New Roman", Times, serif; }
 body, h1 span, h2 span, h3 span { font-family: "Open Sans", Arial, sans-serif; }
-h1, h2, h3, h4, h5, h6, #identity, .wards, #years { font-family: Arvo, Georgia, "Times New Roman", Times, serif; }
 
 
 /* Basics
@@ -48,6 +48,20 @@ ul { list-style: disc; margin-left: 1.5em; }
 
 /* Content
 =====================================================================*/
+
+/* Action */
+.action {
+  background: #d81212;
+  border-radius: 5px;
+  color: #fff;
+  display: inline-block;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 0.4em 1em;
+  text-transform: uppercase;
+}
+
+.action:hover { box-shadow: 0 0 4px rgba(0, 0, 0, 0.5); text-decoration: none; }
 
 /* Alderman bio */
 #alderman img { float: right; marign: 3px 0 0 30px; }
@@ -110,6 +124,29 @@ ul { list-style: disc; margin-left: 1.5em; }
   #subfooter { background: #ddf2fb; margin-bottom: 5px; overflow: hidden; padding: 23px 0; }
   #subfooter-primary { float: left; width: 65.64%; }
   #subfooter-secondary { float: right; width: 31.29%; }
+  #subfooter-secondary img { float: right; margin: -15px 0 0 15px; }
+
+/* Gallery */
+.gallery { list-style: none; margin: 0; }
+.gallery img { border: 1px solid #ddd; width: 100%; }
+.gallery li { float: left; margin-right: 6%; width: 29%; }
+.gallery li:last-child { margin: 0; }
+
+/* Magnify links */
+.magnify {
+  background: #fff url(/images/magnify.png) no-repeat 0 0;
+  border: 1px solid #ddd;
+  border-radius: 5px 0 0 0;
+  bottom: 5px;
+  display: block;
+  height: 22px;
+  position: absolute;
+  right: 0;
+  text-indent: -9999em;
+  width: 22px;
+}
+
+a:hover .magnify { background-color: #005b82; background-position: 0 -22px; border-color: #005b82; }
 
 /* Identity */
 #identity { background: #ddf2fb; margin-bottom: 35px; padding: 23px 0 15px; text-align: center; }
@@ -125,9 +162,55 @@ ul { list-style: disc; margin-left: 1.5em; }
 /* Nav */
 #nav { background: #005b82; font-size: 15px; padding: 0.6em; }
 #nav a { color: #9cbecd; }
+#nav a:hover { color: #fff; text-decoration: none; }
 #nav li { display: inline; margin-right: 0.7em; }
 #nav li.current a { color: #fff; font-weight: bold; }
 #nav ul { list-style: none; margin: 0; }
+#nav-content { position: relative; }
+
+#nav #get-poster a {
+  background: url(/images/poster-thumb.png) no-repeat 0 0;
+  color: #fff;
+  display: block;
+  font-size: 11px;
+  font-weight: bold;
+  height: 183px;
+  position: absolute;
+  right: -10px;
+  text-align: center;
+  text-indetn: -999em;
+  text-transform: uppercase;
+  top: -25px;
+  width: 128px;
+}
+
+/* Poster */
+#poster-primary { float: left; width: 48.46%; }
+#poster-secondary { float: right; padding-top: 38px; width: 48.46%; }
+#order { text-align: center; }
+
+  /* Poster sizes */
+  #poster-sizes { list-style: none; margin: 0; }
+  
+  #poster-sizes #best {
+    background: url(/images/best.png) no-repeat 0 0;
+    height: 72px;
+    position: absolute;
+    right: 0;
+    text-indent: -999em;
+    top: 0;
+    width: 73px;
+  }
+  
+  #poster-sizes .dimensions { bottom: 15px; font-size: 12px; left: 0; position: absolute; width: 100%; }
+  #poster-sizes li { background: #f2f2f2; float: left; height: 138px; margin: 0 6% 50px 0; position: relative; width: 29%; }
+  #poster-sizes li:last-child { margin: 0; }
+  #poster-sizes [class *= "size"] { background: #227fa2; margin: 0 auto; }
+  #poster-sizes .price { bottom: -40px; font-size: 30px; position: absolute; left: 0; width: 100%; }
+  #poster-sizes .price .cents { font-size: 17px; margin-left: -0.2em; vertical-align: 40%; }
+  #poster-sizes .size-sm { margin-top: 54px; height: 48px; width: 32px; }
+  #poster-sizes .size-md { margin-top: 42px; height: 60px; width: 40px; }
+  #poster-sizes .size-lg { margin-top: 22px; height: 80px; width: 53px; }
 
 /* Summaries */
 .summary { clear: both; font-size: 16px; line-height: 1; }
