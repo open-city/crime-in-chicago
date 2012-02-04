@@ -7,7 +7,7 @@
     %span
       Click anything blue to see more details
   = haml :"ward_heatmap", :locals => { :identity => ward }
-  = haml :"ward_stats", :locals => { :map_src => map_src, :year => year }
+  = haml :"ward_stats", :locals => { :ward => ward, :map_src => map_src, :year => year }
 
   .clear
 

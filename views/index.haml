@@ -3,7 +3,9 @@
   :javascript
     $(document).ready(function() {
       $(".ward-selector").click(function() {
+        $(this).parent().attr('class', 'current');
         Ward.create($(this).attr("data-ward"), $(this).attr("data-year"), "#ward-charts");
+        return false;
       });
     });
 

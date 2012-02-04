@@ -1,23 +1,27 @@
 var Ward = {};
 Ward.create = function(ward, year, selector) {
-  $.get("/wards/"+ward+"/"+year+"/partials/timeline", function(data) {
-    $(selector).prepend(data);
-    $("#ward-"+ward+" .remove").click(function() {
-      $(this).parent().remove();
-      return false;
-    });
-
-    $("#ward-"+ward+" h2 a").click(function() {
-      $(this).parents(".timeline").find("h2 a").toggleClass("expanded");
-      $(this).parents(".timeline").find(".stats").slideToggle(function(){
-        $(this).parents(".timeline").find(".handle").height($(this).parents(".timeline").outerHeight());
+  if (!$("#calendar-" + ward).exists())
+  {
+    $.get("/wards/"+ward+"/"+year+"/partials/timeline", function(data) {
+      $(selector).prepend(data);
+      $("#ward-"+ward+" .remove").click(function() {
+        $('a[data-ward|="' + ward + '"]').parent().attr('class', '');
+        $(this).parent().remove();
+        return false;
       });
-//      $.sparkline_display_visible();
-      return false;
+  
+      $("#ward-"+ward+" h2 a").click(function() {
+        $(this).parents(".timeline").find("h2 a").toggleClass("expanded");
+        $(this).parents(".timeline").find(".stats").slideToggle(function(){
+          $(this).parents(".timeline").find(".handle").height($(this).parents(".timeline").outerHeight());
+        });
+        Ward.sparkline("#ward-"+ward);
+        return false;
+      });
+  
+      Ward.calendar(ward, 2011, "#calendar-"+ward);
     });
-
-    Ward.calendar(ward, 2011, "#calendar-"+ward);
-  });
+  }
 }
 
 Ward.calendar = function(ward, year, selector) {
@@ -97,3 +101,21 @@ Ward.calendar = function(ward, year, selector) {
   });
 }
 
+Ward.sparkline = function(selector) {
+  // Sparklines
+  $(selector + " .sparkline-day").sparkline("html", {
+    chartRangeMin: 0,
+    fillColor: "#ddf2fb",
+    height: "31px",
+    lineColor: "#518fc9",
+    lineWidth: 1,
+    minSpotColor: "#0b810b",
+    maxSpotColor: "#c10202",
+    spotColor: false,
+    spotRadius: 2,
+    width: "138px"
+  });
+
+}
+
+jQuery.fn.exists = function(){return this.length>0;}

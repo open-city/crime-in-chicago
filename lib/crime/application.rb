@@ -36,6 +36,13 @@ module Crime
       @current_menu = "home"
       haml :index
     end
+    
+    get "/wards/:ward" do
+      @current_menu = "home"
+      haml :"wards/index", :locals => {
+        :ward => params[:ward]
+      }
+    end
 
     get "/wards/:ward/:year/partials/timeline" do
       @current_menu = "home"
