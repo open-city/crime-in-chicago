@@ -9,7 +9,7 @@ Ward.create = function(ward, year, selector) {
         $(this).parent().remove();
         return false;
       });
-  
+
       $("#ward-"+ward+" h2 a").click(function() {
         $(this).parents(".timeline").find("h2 a").toggleClass("expanded");
         $(this).parents(".timeline").find(".stats").slideToggle(function(){
@@ -18,7 +18,7 @@ Ward.create = function(ward, year, selector) {
         Ward.sparkline("#ward-"+ward);
         return false;
       });
-  
+
       Ward.calendar(ward, 2011, "#calendar-"+ward);
     });
   }
@@ -71,7 +71,7 @@ Ward.calendar = function(ward, year, selector) {
       .enter().append("svg")
         .attr("width", w + m[1] + m[3])
         .attr("height", h + m[0] + m[2])
-        .attr("class", "chi")
+        .attr("class", "Blues")
       .append("g")
         .attr("transform", "translate(0, 1)");
 
