@@ -49,6 +49,10 @@ module Crime
         }
       end
     end
+    
+    def ward_stats_crimes_per_year(ward)
+      DB.fetch(Crime::QUERIES[:ward_crimes_per_year], :ward => ward).all
+    end
 
     def current_menu
       @current_menu

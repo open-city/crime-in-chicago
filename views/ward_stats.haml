@@ -8,10 +8,17 @@
     %h3 Number of crimes
     .crime-volume.yearly
       %ol.chart-column
-        - (2002..2011).each do |year|
-          %li{:style => "width: 10%;"}
+        - @ward_stats_crimes_per_year = ward_stats_crimes_per_year(ward)
+        - @current_year_crimes = "0"
+        - @ward_stats_crimes_per_year.each do |hash|
+          - @max = @ward_stats_crimes_per_year.map{|x| x[:crime_count_for_year]}.max
+          - @percentage = number_to_percentage(hash[:crime_count_for_year].to_f / @max)
+          - @current = hash[:year].to_i.to_s == year ? "current" : ""
+          - if (hash[:year].to_i.to_s == year) 
+            - @current_year_crimes = hash[:crime_count_for_year]
+          %li{:style => "width: 10%;", :class => "#{@current}"}
             %span.point
-              %span.idx{:style => "height: 80%;", :title => "#{year} - 8,300 crimes"}
+              %span.idx{:style => "height: #{@percentage}%;", :title => "#{hash[:year].to_int} - #{format_number hash[:crime_count_for_year].to_int} crimes"}
       .xaxis
         .tick.first 
           2002
@@ -20,7 +27,8 @@
     .summary
       %p
         %span#summary_count
-          %strong 8,976
+          %strong 
+            = format_number @current_year_crimes
         in
         %span.year
           = year
