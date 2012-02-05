@@ -1,5 +1,6 @@
 module Crime
   module ViewHelpers
+    # WARD COLUMN METHODS
     def ward_count
       50
     end
@@ -16,8 +17,8 @@ module Crime
     end
 
     def ward_crime_columns(year)
-      retain_in_cache(:"ward_crime_columns_#{year}") do
-        ward_crime_hash(year).map do |hash|
+      ward_crime_hash(year).map do |hash|
+        if hash[:ward] != "0"
           crime_percentage = number_to_percentage(hash[:crime_count].to_f / ward_crime_max(year))
 
           {
@@ -26,21 +27,10 @@ module Crime
             :crime_percentage => crime_percentage
           }
         end
-      end
+      end.compact
     end
 
-    def ward_detail(year)
-      @ward_detail ||= ward_crime_hash(year).map do |hash|
-        crime_percentage = number_to_percentage(hash[:crime_count].to_f / ward_crime_max(year))
-
-        {
-          :ward => hash[:ward],
-          :crime_count => hash[:crime_count],
-          :crime_percentage => crime_percentage
-        }
-      end
-    end
-
+    # CALENDAR METHODS
     def ward_calendar_crime(ward, year)
       dataset = DB.fetch(Crime::QUERIES[:ward_crime_calendar], :ward => ward, :year => year)
       @ward_calendar_crime = retain_in_cache(dataset.sql) do
