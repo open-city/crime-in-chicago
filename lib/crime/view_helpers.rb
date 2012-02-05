@@ -5,13 +5,28 @@ module Crime
     end
 
     def ward_crime_hash(year)
-      @ward_crime_hash = retain_in_memory(:"ward_crime_hash_#{year}") do
-        DB.fetch(Crime::QUERIES[:ward_crime_hash], :year => year).all
+      dataset = DB.fetch(Crime::QUERIES[:ward_crime_hash], :year => year)
+      retain_in_cache(dataset.sql) do
+        dataset.all
       end
     end
 
     def ward_crime_max(year)
       ward_crime_hash(year).map { |h| h[:crime_count] }.max
+    end
+
+    def ward_crime_columns(year)
+      retain_in_cache(:"ward_crime_columns_#{year}") do
+        ward_crime_hash(year).map do |hash|
+          crime_percentage = number_to_percentage(hash[:crime_count].to_f / ward_crime_max(year))
+
+          {
+            :ward => hash[:ward],
+            :crime_count => hash[:crime_count],
+            :crime_percentage => crime_percentage
+          }
+        end
+      end
     end
 
     def ward_detail(year)
@@ -27,14 +42,19 @@ module Crime
     end
 
     def ward_calendar_crime(ward, year)
-      @ward_calendar_crime = retain_in_memory(:"calendar_crime_#{ward}_#{year}") do
-        DB.fetch(Crime::QUERIES[:ward_crime_calendar], :ward => ward, :year => year).all
+      dataset = DB.fetch(Crime::QUERIES[:ward_crime_calendar], :ward => ward, :year => year)
+      @ward_calendar_crime = retain_in_cache(dataset.sql) do
+        dataset.all
       end
     end
 
     def ward_calendar_crime_max(year)
-      DB.fetch(Crime::QUERIES[:crime_max_year], :year => year).first[:crime_count].to_f
-      #@ward_calendar_crime.map { |h| h[:crime_count] }.max
+      75
+#      dataset = DB.fetch(QUERIES[:crime_max_daily_year], :year => year)
+#      retain_in_cache(dataset.sql) do
+#        dataset.first[:max].to_f
+#      end
+#      DB.fetch(Crime::QUERIES[:crime_max_year], :year => year).first[:crime_count].to_f
     end
 
     def ward_calendar_detail(ward, year)

@@ -1,3 +1,6 @@
+-- Crime max by year
+select max(*) max from crimes whee date_part('year', occurred_at) = :year
+
 -- Crime count by ward for year.
 select ward, count(*) from crimes where date_part('year', occurred_at) = 2011 and trim(ward) != '' group by ward order by ward::integer;
 

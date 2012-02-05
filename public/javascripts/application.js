@@ -1,7 +1,6 @@
 var Ward = {};
 Ward.create = function(ward, year, selector) {
-  if (!$("#calendar-" + ward).exists())
-  {
+  if ($("#calendar-" + ward).missing()) {
     $.get("/wards/"+ward+"/"+year+"/partials/timeline", function(data) {
       $(selector).prepend(data);
       $("#ward-"+ward+" .remove").click(function() {
@@ -115,7 +114,5 @@ Ward.sparkline = function(selector) {
     spotRadius: 2,
     width: "138px"
   });
-
 }
 
-jQuery.fn.exists = function(){return this.length>0;}

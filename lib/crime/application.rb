@@ -7,6 +7,8 @@ require "sequel"
 
 module Crime
   class Application < Sinatra::Base
+    include Cacheable
+
     enable :logging, :sessions
     enable :dump_errors, :show_exceptions if development?
 
@@ -30,7 +32,14 @@ module Crime
     helpers Crime::ViewHelpers
     helpers Sinatra::JSON
 
-    include Cacheable
+
+#    (2002..2011).each do |year|
+#      dataset = DB.fetch(QUERIES[:crime_max_daily_year], :year => year)
+#      retain_in_cache(dataset.sql) do
+#        dataset.first[:max].to_i
+#      end
+#    end
+
 
     get "/" do
       @current_menu = "home"

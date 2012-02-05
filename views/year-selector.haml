@@ -6,14 +6,14 @@
           $.get("/wards/"+$(this).attr("data-year")+"/partials/crime-columns", function(data) {
             $("#wards").html(data);
           });
+
+          $('.year-selector.current').each(function() {
+            $(this).removeClass("current");
+          });
+
+          link = $(this);
+          link.parent().addClass("current");
         }
-
-        $('.year-selector.current').each(function() {
-          $(this).removeClass("current");
-        });
-
-        link = $(this);
-        link.parent().addClass("current");
       });
     });
 
