@@ -29,6 +29,13 @@ module HtmlHelpers
     (sprintf("%.#{precision.to_s}f", number).to_f * 100).round
   end
 
+  def number_with_delimiter(number, default_options = {})
+    options = {
+      :delimiter => ','
+    }.merge(default_options)
+    number.to_s.reverse.gsub(/(\d{3}(?=(\d)))/, "\\1#{options[:delimiter]}").reverse
+  end
+
   def content(section, *args)
     view_content[section.to_sym].map! do |content|
       if respond_to?(:block_is_haml?) && block_is_haml?(content)

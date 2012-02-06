@@ -1,75 +1,75 @@
 var Ward = {};
-Ward.create = function(ward, year, selector) {
-  if ($("#calendar-" + ward).missing()) {
-    ward_element = $("#ward-"+ward);
-    ward_element.attr("data-year", year);
+Ward.create = function(number, year, selector) {
+  identity = function(number, year) {
+    ward = $("#ward-"+number+"-"+year);
+    if (ward.exists()) {
+      ward.attr("data-year", year);
+      ward.attr("data-ward", number);
+      ward.year = ward.attr("data-year");
+      ward.number = ward.attr("data-ward");
+    }
+    return ward;
+  }
 
-    $.get("/wards/"+ward+"/"+year+"/partials/timeline", function(data) {
+  ward = identity(number, year);
+  if (ward.missing()) {
+    $.get("/wards/"+number+"/"+year+"/partials/timeline", function(data) {
       $(selector).prepend(data);
-      $("#ward-"+ward+" .remove").click(function() {
-        $('a[data-ward|="' + ward + '"]').parent().attr('class', '');
+      ward = identity(number, year);
+
+      ward.find(".remove").click(function() {
+        $('a[data-ward|="'+ward.number+'"]').parent().attr('class', '');
         $(this).parent().remove();
         return false;
       });
 
-      $("#ward-"+ward+" h2 a").click(function() {
+      ward.find("h2 a").click(function() {
+        timeline = $(this).parents(".timeline");
         $(this).toggleClass("expanded");
-        $(this).parents(".timeline").find(".statistics").slideToggle(function(){
-          $(this).parents(".timeline").find(".handle").height($(this).parents(".timeline").outerHeight());
+        timeline.find(".statistics").slideToggle(function(){
+          timeline.find(".handle").height(timeline.outerHeight());
         });
-        Ward.sparkline("#ward-"+ward);
         return false;
       });
 
-      // Toggle ward highlighting
-//      $(".wards a").click(function(){
-//        $(this).parent().toggleClass("current");
-//      });
+      Ward.calendar(ward, "#calendar-"+ward.number+"-"+ward.year);
 
-      Ward.calendar(ward, 2011, "#calendar-"+ward);
-
-      Ward.statistics.crime(ward, year);
-      Ward.statistics.category(ward, year);
-      Ward.statistics.sparkline(ward, year);
+      Ward.statistics.sparkline(ward);
+      Ward.statistics.crime(ward);
+      Ward.statistics.category(ward);
     });
   }
 }
 
 Ward.statistics = {};
-Ward.statistics.crime = function(ward, year) {
-  $.get("/wards/"+ward+"/"+year+"/partials/statistics/crime", function(data) {
-    $("#ward-"+ward).find(".crime").html(data);
+Ward.statistics.sparkline = function(ward) {
+  $.get("/wards/"+ward.number+"/"+ward.year+"/partials/statistics/sparkline", function(data) {
+    ward.find(".sparkline").html(data.trim());
+
+    spark_data = ward.find(".sparkline-day")
+    spark_data.sparkline("html", {
+      chartRangeMin: 0, fillColor: "#ddf2fb",
+      height: "31px", lineColor: "#518fc9",
+      lineWidth: 1, minSpotColor: "#0b810b",
+      maxSpotColor: "#c10202", spotColor: false,
+      spotRadius: 2, width: "138px"
+    });
   });
 }
 
-Ward.statistics.category = function(ward, year) {
-  $.get("/wards/"+ward+"/"+year+"/partials/statistics/category", function(data) {
-    $("#ward-"+ward).find(".category").html(data);
+Ward.statistics.crime = function(ward) {
+  $.get("/wards/"+ward.number+"/"+ward.year+"/partials/statistics/crime", function(data) {
+    ward.find(".crime").html(data);
   });
 }
 
-Ward.statistics.sparkline = function(ward, year) {
-  $.get("/wards/"+ward+"/"+year+"/partials/statistics/sparkline", function(data) {
-    $("#ward-"+ward).find(".sparkline").html(data);
+Ward.statistics.category = function(ward) {
+  $.get("/wards/"+ward.number+"/"+ward.year+"/partials/statistics/category", function(data) {
+    ward.find(".category").html(data);
   });
 }
 
-Ward.sparkline = function(selector) {
-  $(selector + " .sparkline-day").sparkline("html", {
-    chartRangeMin: 0,
-    fillColor: "#ddf2fb",
-    height: "31px",
-    lineColor: "#518fc9",
-    lineWidth: 1,
-    minSpotColor: "#0b810b",
-    maxSpotColor: "#c10202",
-    spotColor: false,
-    spotRadius: 2,
-    width: "138px"
-  });
-}
-
-Ward.calendar = function(ward, year, selector) {
+Ward.calendar = function(ward, selector) {
   var m = [0, 0, 0, 0], // top right bottom left margin
       w = 770 - m[1] - m[3], // width
       h = 104 - m[0] - m[2], // height
@@ -93,7 +93,7 @@ Ward.calendar = function(ward, year, selector) {
         + "H" + (w0 + 1) * z + "Z";
   }
 
-  d3.json("/api/"+year.toString()+"/wards/"+ward+"/crime/calendar", function(json) {
+  d3.json("/api/"+ward.year+"/wards/"+ward.number+"/crime/calendar", function(json) {
     data["crime_counts"] = [];
     data["crimes_sum"] = 0;
     data["crimes_max"] = json[0]["crime_max"]
@@ -105,14 +105,14 @@ Ward.calendar = function(ward, year, selector) {
 
     var crimes_max = data["crimes_max"];
 
-    $("#summary_count").html("<strong>"+data["crimes_sum"]+"</strong>");
+    ward.find(".summary_count").html("<strong>"+data["crimes_sum"]+"</strong>");
 
     var color = d3.scale.quantize()
         .domain([0, crimes_max])
         .range(d3.range(9));
 
     var svg = d3.select(selector).selectAll("svg")
-        .data(d3.range(year, year + 1))
+        .data(d3.range(parseInt(ward.year), parseInt(ward.year) + 1))
       .enter().append("svg")
         .attr("width", w + m[1] + m[3])
         .attr("height", h + m[0] + m[2])

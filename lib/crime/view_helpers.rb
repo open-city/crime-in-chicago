@@ -30,6 +30,31 @@ module Crime
       end.compact
     end
 
+    # STATISTIC METHODS
+    def statistic_crimes_by_ward(number)
+      dataset = DB.fetch(QUERIES[:ward_crimes_per_year], :ward => number)
+      retain_in_cache(dataset.sql) do
+        dataset.all.sort do |a,b|
+          a[:year] <=> b[:year]
+        end
+      end
+    end
+
+    def statistic_categories_by_ward_and_year(ward, year)
+      dataset = DB.fetch(QUERIES[:ward_crimes_categories_per_year], :ward => ward, :year => year)
+      retain_in_cache(dataset.sql) do
+        dataset.all
+      end
+    end
+
+    def year_comparison(crimes, year1, year2)
+      data1 = crimes.detect { |c| c[:year].to_s == year1.to_s }[:crime_count_for_year]
+      data2 = crimes.detect { |c| c[:year].to_s == year2.to_s }[:crime_count_for_year]
+
+      diff = (data1.to_f / data2 * 100) - 100
+      number_to_percentage(diff) / 100.0
+    end
+
     # CALENDAR METHODS
     def ward_calendar_crime(ward, year)
       dataset = DB.fetch(Crime::QUERIES[:ward_crime_calendar], :ward => ward, :year => year)

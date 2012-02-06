@@ -1,10 +1,13 @@
 .panel
   %h3 Most frequent
   %ol.chart-bar
-    - (0..5).each do |type|
+    - max = @categories_by_year.map{ |hash| hash[:crime_count] }.max
+    - @categories_by_year.each do |hash|
       %li
         %span.point
-          %span.idx{:style => "width: 100%"}
-          %span.label Theft
-          %span.count 1,646
+          %span.idx{:style => "width: #{number_to_percentage(hash[:crime_count].to_f / max)}%"}
+          %span.label
+            = hash[:primary_type]
+          %span.count
+            = hash[:crime_count]
 

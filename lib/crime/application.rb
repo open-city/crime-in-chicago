@@ -62,13 +62,16 @@ module Crime
     end
 
     get "/wards/:ward/:year/partials/statistics/crime" do
+      @crimes_by_year = statistic_crimes_by_ward(params[:ward])
+
       haml :"ward/statistics/crime", :layout => false, :locals => {
         :ward => params[:ward], :year => params[:year]
       }
     end
 
     get "/wards/:ward/:year/partials/statistics/category" do
-      @categories = {}
+      @categories_by_year = statistic_categories_by_ward_and_year(params[:ward], params[:year])
+
       haml :"ward/statistics/category", :layout => false, :locals => {
         :ward => params[:ward], :year => params[:year]
       }

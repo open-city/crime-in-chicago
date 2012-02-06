@@ -5,6 +5,12 @@
         if (!$(this).parent().hasClass("current")) {
           $.get("/wards/"+$(this).attr("data-year")+"/partials/crime-columns", function(data) {
             $("#wards").html(data);
+
+            $(".ward-selector").click(function() {
+              $(this).parent().attr('class', 'current');
+              Ward.create($(this).attr("data-ward"), $(this).attr("data-year"), "#ward-charts");
+              return false;
+            });
           });
 
           $('.year-selector.current').each(function() {
@@ -24,5 +30,5 @@
   %ol#years
     - (2002..2011).each do |year|
       %li.year-selector{:class => "#{"current" if year == 2011}"}
-        %a{:"data-year" => year, :href => "#"}= year
+        = link_to year.to_s, "#", :"data-year" => year
 %hr

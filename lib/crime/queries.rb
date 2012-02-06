@@ -27,6 +27,13 @@ module Crime
       where date_part('year', occurred_at) = :year
       group by cast(occurred_at as date), ward
       order by crime_count desc limit 1;".strip,
+    :ward_crimes_categories_per_year => "
+      select count(*) as crime_count, primary_type
+      from crimes
+      where ward = :ward and year = :year
+      group by primary_type
+      order by crime_count desc
+      limit 6".strip,
     :ward_crimes_per_year => "
       select cast(date_part('year',occurred_at) as int) as year, count(*) as crime_count_for_year
       from crimes 

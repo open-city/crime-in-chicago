@@ -1,13 +1,13 @@
-.timeline{:id => "ward-#{ward}"}
+.timeline{:id => "ward-#{ward}-#{year}"}
   %span.handle{:title => "Drag to reorder"}
   %a.remove{:href => "#", :title => "Remove"} Remove
   %h2
     %a{:href => "#"}
-      == Ward #{ward}
+      == Ward #{ward} [#{year}]
     %span
       Click anything blue to see more details
 
-  = haml :"ward_heatmap", :locals => { :identity => ward }
+  = haml :"ward_heatmap", :locals => { :identity => ward, :year => year }
   = haml :"ward_stats", :locals => { :ward => ward, :map_src => map_src, :year => year }
 
   .clear
