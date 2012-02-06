@@ -1,0 +1,10 @@
+.panel
+  %h3 Most frequent
+  %ol.chart-bar
+    - (0..5).each do |type|
+      %li
+        %span.point
+          %span.idx{:style => "width: 100%"}
+          %span.label Theft
+          %span.count 1,646
+

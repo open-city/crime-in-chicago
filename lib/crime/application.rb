@@ -61,6 +61,25 @@ module Crime
       }
     end
 
+    get "/wards/:ward/:year/partials/statistics/crime" do
+      haml :"ward/statistics/crime", :layout => false, :locals => {
+        :ward => params[:ward], :year => params[:year]
+      }
+    end
+
+    get "/wards/:ward/:year/partials/statistics/category" do
+      @categories = {}
+      haml :"ward/statistics/category", :layout => false, :locals => {
+        :ward => params[:ward], :year => params[:year]
+      }
+    end
+
+    get "/wards/:ward/:year/partials/statistics/sparkline" do
+      haml :"ward/statistics/sparkline", :layout => false, :locals => {
+        :ward => params[:ward], :year => params[:year]
+      }
+    end
+
     get "/wards/:year/partials/crime-columns" do
       haml :"ward-crime-columns", :layout => false, :locals => {
         :year => params[:year]

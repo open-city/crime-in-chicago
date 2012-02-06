@@ -1,0 +1,61 @@
+.panel
+  %h3 Ward location
+
+  %img{:src => "#{map_src}"}
+
+.panel
+  %h3 Number of crimes
+  -#.crime-volume.yearly
+    %ol.chart-column
+      - @ward_stats_crimes_per_year = ward_stats_crimes_per_year(ward)
+      - @current_year_crimes = "0"
+      - @ward_stats_crimes_per_year.each do |hash|
+        - @max = @ward_stats_crimes_per_year.map{|x| x[:crime_count_for_year]}.max
+        - @percentage = number_to_percentage(hash[:crime_count_for_year].to_f / @max)
+        - @current = hash[:year].to_i.to_s == year ? "current" : ""
+        - if (hash[:year].to_i.to_s == year) 
+          - @current_year_crimes = hash[:crime_count_for_year]
+        %li{:style => "width: 10%;", :class => "#{@current}"}
+          %span.point
+            %span.idx{:style => "height: #{@percentage}%;", :title => "#{hash[:year].to_int} - #{format_number hash[:crime_count_for_year].to_int} crimes"}
+    .xaxis
+      .tick.first 
+        2002
+      .tick.last
+        2011
+  .summary
+    %p
+      %span#summary_count
+        %strong 
+          = format_number @current_year_crimes
+      in
+      %span.year
+        = year
+    %p
+      %span.mute
+        \-6.2% from 2010
+
+.panel
+  %h3 Most frequent
+  %ol.chart-bar
+    - (0..5).each do |type|
+      %li
+        %span.point
+          %span.idx{:style => "width: 100%"}
+          %span.label Theft
+          %span.count 1,646
+
+.panel
+  %h3 Time of day
+  %span.sparkline-day 
+    365,217,197,159,119,99,115,200,370,448,407,454,527,500,502,513,472,439,452,538,569,508,448,358
+  .xaxis.day
+    .tick.first 12a
+    .tick noon
+    .tick.last 12a
+.panel
+  %h3
+    %a{:href => "/wards/#{ward}"} View more details &raquo;
+  %p.mute
+    See crime trends, full history, contact the alderman and more &hellip;
+
