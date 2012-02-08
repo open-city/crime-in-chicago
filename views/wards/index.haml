@@ -21,7 +21,7 @@
         function(){
           while (year > 2001)
           {
-            Ward.createHistory("#{ward}", year, "#history");
+            WardDetail.create("#{ward}", year, "#history");
             year--;
           } 
           $(this).hide();
