@@ -1,5 +1,5 @@
 - content_for :javascript do
-  = include_javascript "ward-detail"
+  = include_javascript "dataTables.sorting"
   :javascript
     $(document).ready(function() {
       var year = 2011;
@@ -20,6 +20,37 @@
           $(this).hide();
           return false;
         }); 
+        
+      // DataTables
+      $("#trends").dataTable({
+        "aoColumns": [
+          null,
+          { "bSortable": false },
+          { "sType": "number-comma" },
+          { "sType": "number-comma" },
+          { "sType": "number-comma" },
+          { "sType": "number-comma" }
+        ],
+        "aaSorting": [[ 5, "desc" ]],
+        "bFilter": false,
+        "bInfo": false,
+        "bLengthChange": false,
+        "bPaginate": false
+      });
+      
+      // Sparklines
+      $(".sparkline").sparkline("html", {
+        chartRangeMin: 0,
+        fillColor: "#ddf2fb",
+        height: "20px",
+        lineColor: "#518fc9",
+        lineWidth: 1,
+        minSpotColor: "#0b810b",
+        maxSpotColor: "#c10202",
+        spotColor: false,
+        spotRadius: 2,
+        width: "240px"
+      });
     });
 
 %h1 
@@ -72,28 +103,24 @@
           %br
           Earlier data is available but sporadic and therefore not included.
     %tbody
-      %tr
-        %td
-          %a{:href => "#"}
-            Battery
-        %td
-          %span.sparkline
-            127, 441, 480, 531, 443, 438, 403, 282, 283, 276, 234, 332, 351, 380, 377, 423, 407, 323, 344, 290, 293, 264, 258, 313, 333, 334, 365, 349, 333, 312, 331, 223, 171, 235, 192, 267, 291, 312, 356, 339, 337, 290, 261, 253, 199, 232, 204, 275, 260, 294, 313, 334, 244, 228, 243, 224, 186, 177, 151, 233, 195, 259, 252, 262, 251, 245, 243, 181, 148, 177, 158, 220, 228, 239, 251, 243, 263, 216, 214, 140, 140, 171, 143, 212, 195, 230, 215, 187, 180, 180, 168, 158, 120, 143, 122, 190, 183, 180, 209, 164, 197, 171, 161, 130, 135, 127, 112, 164, 164, 197, 191, 173, 178, 144, 153, 143, 83
-        %td.min.num 83
-        %td.num 244
-        %td.max.num 531
-        %td.num 28,495
-      %tr
-        %td
-          %a{:href => "#"}
-            Narcotics
-        %td
-          %span.sparkline
-            167, 350, 286, 220, 316, 251, 332, 278, 286, 479, 433, 453, 309, 278, 312, 250, 222, 231, 278, 279, 336, 366, 381, 317, 367, 276, 216, 252, 234, 252, 195, 242, 245, 329, 265, 240, 177, 237, 207, 236, 200, 285, 276, 198, 198, 249, 187, 171, 229, 208, 237, 202, 281, 193, 233, 233, 146, 262, 177, 152, 154, 126, 149, 107, 148, 136, 129, 135, 154, 192, 134, 173, 177, 172, 132, 171, 182, 157, 192, 185, 151, 155, 151, 158, 124, 166, 127, 117, 141, 114, 133, 117, 91, 136, 113, 119, 94, 103, 101, 105, 103, 130, 107, 105, 97, 113, 87, 109, 84, 99, 85, 94, 97, 90, 67, 79, 56
-        %td.min.num 56
-        %td.num 196
-        %td.max.num 479
-        %td.num 22,937
+      - ward_detail_category_list(ward).each do |hash|
+        %tr
+          %td
+            %a{:href => "#"}
+              = hash[:primary_type]
+          %td
+            %span.sparkline
+              - ward_detail_category_sparkline(ward, hash[:primary_type]).each do |s|
+                = s[:crime_count]
+                ,
+          %td.min.num 
+            = format_number hash[:minimum]
+          %td.num 
+            = format_number hash[:average]
+          %td.max.num
+            = format_number hash[:maximum]
+          %td.num
+            = format_number hash[:total]
 
 #content-secondary
   #alderman

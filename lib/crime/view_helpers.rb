@@ -88,6 +88,15 @@ module Crime
     def ward_stats_crimes_per_year(ward)
       DB.fetch(Crime::QUERIES[:ward_crimes_per_year], :ward => ward).all
     end
+    
+    # WARD DETAIL METHODS
+    def ward_detail_category_list(ward)
+      DB.fetch(Crime::QUERIES[:ward_detail_category_list], :ward => ward).all
+    end
+    
+    def ward_detail_category_sparkline(ward, primary_type)
+      DB.fetch(Crime::QUERIES[:ward_detail_category_sparkline], :ward => ward, :primary_type => primary_type).all
+    end
 
     def current_menu
       @current_menu
