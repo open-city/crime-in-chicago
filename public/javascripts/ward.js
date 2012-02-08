@@ -32,7 +32,7 @@ Ward.create = function(number, year, selector) {
         return false;
       });
 
-      Ward.calendar(ward, "#calendar-"+ward.number+"-"+ward.year);
+      Ward.calendar(ward, "#calendar-"+ward.number+"-"+ward.year, false);
 
       Ward.statistics.sparkline(ward);
       Ward.statistics.crime(ward);
@@ -69,11 +69,41 @@ Ward.statistics.category = function(ward) {
   });
 }
 
-Ward.calendar = function(ward, selector) {
-  var m = [0, 0, 0, 0], // top right bottom left margin
-      w = 770 - m[1] - m[3], // width
-      h = 104 - m[0] - m[2], // height
-      z = 14.5; // cell size
+Ward.createHistory = function(number, year, selector) {
+  identity = function(number, year) {
+    ward = $("#ward-"+number+"-"+year);
+    if (ward.exists()) {
+      ward.attr("data-year", year);
+      ward.attr("data-ward", number);
+      ward.year = ward.attr("data-year");
+      ward.number = ward.attr("data-ward");
+    }
+    return ward;
+  }
+
+  ward = identity(number, year);
+  $.get("/wards/"+number+"/"+year+"/partials/timeline-history", function(data) {
+    $(selector).append(data);
+    ward = identity(number, year);
+
+    Ward.calendar(ward, "#calendar-"+ward.number+"-"+ward.year, true);
+  });
+}
+
+Ward.calendar = function(ward, selector, isHistory) {
+
+  if (isHistory) {
+    var m = [0, 0, 0, 0], // top right bottom left margin
+      w = 590 - m[1] - m[3], // width
+      h = 95 - m[0] - m[2], // height
+      z = 10.65; // cell size
+  }
+  else {
+    var m = [0, 0, 0, 0], // top right bottom left margin
+        w = 770 - m[1] - m[3], // width
+        h = 104 - m[0] - m[2], // height
+        z = 14.5; // cell size
+  }
 
   var data = new Object();
 

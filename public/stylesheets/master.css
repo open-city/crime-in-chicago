@@ -257,7 +257,7 @@ a:hover .magnify { background-color: #005b82; background-position: 0 -22px; bord
     .weekdays li.current a { color: #e00; }
   
   /* History */
-  #history { height: 575px; overflow: hidden; position: relative; }
+  #history { position: relative; }
   #history .heatmap { float: right; width: 92.22%; }
   #history .heatmap .chart { height: 78px; width: 565px; }
   #history h2 { float: left; padding-top: 18px; width: 6.66%; }

@@ -1,5 +1,26 @@
 - content_for :javascript do
   = include_javascript "ward-detail"
+  :javascript
+    $(document).ready(function() {
+      var year = 2011;
+      while (year > 2006)
+      {
+        Ward.createHistory("#{ward}", year, "#history");
+        year--;
+      }
+      
+      // History toggle
+      $("#history-toggle").click(
+        function(){
+          while (year > 2001)
+          {
+            Ward.createHistory("#{ward}", year, "#history");
+            year--;
+          } 
+          $(this).hide();
+          return false;
+        }); 
+    });
 
 %h1 
   Ward #{ward}
@@ -16,23 +37,6 @@
       var addthis_config = { ui_click: true }
   
   #history
-    - 2011.downto(2002).each do |year|
-      .timeline
-        %h2
-          = year
-        .heatmap
-          %ol.months
-            - (1..12).each do |month|
-              %li
-                %a{:href => "#"} 
-                  = Date::ABBR_MONTHNAMES[month]
-          %ol.weekdays
-            - (0..6).each do |day|
-              %li
-                %a{:href => "#"} 
-                  = Date::ABBR_DAYNAMES[day]
-          .chart
-        .clear
     .toggle-overlay
     
   

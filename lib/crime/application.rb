@@ -60,6 +60,13 @@ module Crime
         :map_src => map_ward(params[:ward])
       }
     end
+    
+    get "/wards/:ward/:year/partials/timeline-history" do
+      @current_menu = "home"
+      haml :"ward-history", :layout => false, :locals => {
+        :ward => params[:ward], :year => params[:year]
+      }
+    end
 
     get "/wards/:ward/:year/partials/statistics/crime" do
       @crimes_by_year = statistic_crimes_by_ward(params[:ward])

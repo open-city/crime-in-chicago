@@ -1,0 +1,6 @@
+.timeline{:id => "ward-#{ward}-#{year}"}
+  %h2
+    == #{year}
+  = haml :"ward_heatmap", :locals => { :identity => ward, :year => year }
+  .clear
+
