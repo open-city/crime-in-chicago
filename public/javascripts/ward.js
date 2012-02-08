@@ -69,7 +69,8 @@ Ward.statistics.category = function(ward) {
   });
 }
 
-Ward.createHistory = function(number, year, selector) {
+var WardDetail = {};
+WardDetail.create = function(number, year, selector) {
   identity = function(number, year) {
     ward = $("#ward-"+number+"-"+year);
     if (ward.exists()) {
@@ -89,6 +90,97 @@ Ward.createHistory = function(number, year, selector) {
     Ward.calendar(ward, "#calendar-"+ward.number+"-"+ward.year, true);
   });
 }
+
+WardDetail.subcategories = function(number, primary_type) {
+  $.get("/wards/"+number+"/"+primary_type+"/partials/subcategories", function(data) {
+    $(data).insertAfter("#category-" + primary_type + "-chart");
+  });
+}
+
+var CategoryChart = {};
+CategoryChart.create = function(number, primary_type) {
+  $("<tr><td colspan='6'><div id='category-" + primary_type + "-chart'></td></tr></div>").insertAfter("#category-" + primary_type);
+  chart = new Highcharts.Chart({
+    chart: {
+      defaultSeriesType: "area",
+      renderTo: "category-" + primary_type + "-chart",
+      spacingBottom: 0,
+      spacingLeft: 0,
+      zoomType: "x"
+    },
+    credits: { enabled: false },
+    title: { text: "" },
+    legend: { enabled: false },
+    plotOptions: {
+      series: {
+        lineWidth: 2,
+        marker: {
+          fillColor: "#518fc9",
+          radius: 0,
+          states: {
+            hover: {
+              enabled: true,
+              radius: 5
+            }
+          }
+        },
+        pointInterval: 30 * 24 * 3600 * 1000,
+        pointStart: Date.UTC(2002, 4, 1),
+        shadow: false,
+        states: {
+           hover: {
+              lineWidth: 2
+           }
+        }
+      }
+    },
+    series: [{
+      color: "#ddf2fb",
+      data: [40, 96, 110, 88, 115, 99, 174, 116, 96, 127, 135, 156, 136, 138, 105, 96, 103, 114, 136, 154, 130, 147, 139, 166, 125, 130, 108, 93, 104, 103, 122, 206, 150,
+        {
+          marker: {
+            fillColor: "#c10202",
+            radius: 4
+          },
+          y: 225
+        },
+        142, 168, 150, 143, 169, 154, 144, 144, 162, 135, 194, 171, 94, 138, 148, 153, 145, 138, 126, 136, 138, 114, 125, 167, 131, 119, 142, 130, 91, 81, 96, 87, 78, 81, 88, 123, 111, 126, 149, 134, 91, 86, 106, 138, 157, 135, 119, 115, 56, 89, 67, 58, 44, 65, 53, 51, 43, 31, 51, 53, 50, 45, 47, 34, 31, 29, 31, 31, 26, 24, 28, 29, 23, 43, 27, 30, 32, 37, 26, 21, 28, 19,
+        {
+          marker: {
+            fillColor: "#0b810b",
+            radius: 4
+          },
+          y: 11
+        }
+      ],
+      lineColor: "#518fc9",
+      name: "Crimes"
+    }],
+    tooltip: {
+      borderColor: "#518fc9",
+      formatter: function() {
+        var s = "<strong>" + Highcharts.dateFormat("%B %Y", this.x) + "</strong>";
+        $.each(this.points, function(i, point) {
+          s += "<br />" + point.series.name + ": " + Highcharts.numberFormat(point.y, 0);
+        });
+        return s;
+      },
+      shared: true
+    },
+    xAxis: {
+      dateTimeLabelFormats: { year: "%Y" },
+      gridLineColor: "#ddd",
+      gridLineWidth: 1,
+      tickLength: 0,
+      type: "datetime"
+    },
+    yAxis: {
+      lineWidth: 1,
+      title: { text: "" }
+    }
+  });
+}
+
 
 Ward.calendar = function(ward, selector, isHistory) {
 

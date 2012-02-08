@@ -1,13 +1,20 @@
 - content_for :javascript do
   = include_javascript "dataTables.sorting"
+  = include_javascript "highcharts"
   :javascript
     $(document).ready(function() {
       var year = 2011;
       while (year > 2006)
       {
-        Ward.createHistory("#{ward}", year, "#history");
+        WardDetail.create("#{ward}", year, "#history");
         year--;
       }
+      
+      $("#trends a").click(function() {
+        CategoryChart.create(#{ward}, $(this).attr("data-category"));
+        WardDetail.subcategories(#{ward}, $(this).attr("data-category"));
+        return false;
+      });
       
       // History toggle
       $("#history-toggle").click(
@@ -52,7 +59,7 @@
         width: "240px"
       });
     });
-
+    
 %h1 
   Ward #{ward}
 
@@ -104,9 +111,9 @@
           Earlier data is available but sporadic and therefore not included.
     %tbody
       - ward_detail_category_list(ward).each do |hash|
-        %tr
+        %tr{:id => "category-#{URI::encode hash[:primary_type]}"}
           %td
-            %a{:href => "#"}
+            %a{:href => "#", :"data-category" => (URI::encode hash[:primary_type])}
               = hash[:primary_type]
           %td
             %span.sparkline

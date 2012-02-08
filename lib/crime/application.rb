@@ -4,6 +4,7 @@ require "sinatra-initializers"
 require "sinatra/r18n"
 require "sinatra/json"
 require "sequel"
+require "uri"
 
 module Crime
   class Application < Sinatra::Base
@@ -93,6 +94,12 @@ module Crime
     get "/wards/:year/partials/crime-columns" do
       haml :"ward-crime-columns", :layout => false, :locals => {
         :year => params[:year]
+      }
+    end
+    
+    get "/wards/:ward/:primary_type/partials/subcategories" do 
+      haml :"ward-subcategory", :layout => false, :locals => {
+        :ward => params[:ward], :primary_type => params[:primary_type]
       }
     end
 

@@ -1,0 +1,9 @@
+%table
+  - ward_detail_subcategory_list(ward, (URI::decode primary_type)).each do |s|
+    %tr
+      %td{:colspan => "5"}
+        = s[:description]
+      %td
+        = format_number s[:crime_count]
+    
+

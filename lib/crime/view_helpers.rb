@@ -97,6 +97,10 @@ module Crime
     def ward_detail_category_sparkline(ward, primary_type)
       DB.fetch(Crime::QUERIES[:ward_detail_category_sparkline], :ward => ward, :primary_type => primary_type).all
     end
+    
+    def ward_detail_subcategory_list(ward, primary_type)
+      DB.fetch(Crime::QUERIES[:ward_detail_subcategory_list], :ward => ward, :primary_type => primary_type).all
+    end
 
     def current_menu
       @current_menu

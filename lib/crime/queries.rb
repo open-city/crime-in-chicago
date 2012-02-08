@@ -48,6 +48,12 @@ module Crime
     :ward_detail_category_sparkline => "
       select crime_count from crimes_for_month 
       where ward = :ward and year > 2001 and primary_type = :primary_type
-      order by year, month;"
+      order by year, month;".strip,
+    :ward_detail_subcategory_list => "
+      select description, count(*) as crime_count from crimes
+      where ward = :ward and occurred_at >= '1/1/2002' and primary_type = :primary_type
+      group by description
+      order by count(*) desc
+      "
   }
 end
