@@ -244,6 +244,10 @@ a:hover .magnify { background-color: #005b82; background-position: 0 -22px; bord
   
   /* Heatmap */
   .heatmap .chart { background: #fff; float: right; height: 104px; width: 770px; }
+  .chart { font: 10px sans-serif; shape-rendering: crispEdges; }
+  .day { fill: #fff; stroke: rgba(255, 255, 255, 0.7); }
+  .heatmap .day:hover { cursor: pointer; fill: #d81111; }
+  .month { fill: none; stroke: #000; stroke-width: 1px; }
     
     /* Months */
     .months { font-size: 11px; list-style: none; margin-left: 60px; text-align: center; text-transform: uppercase; }
@@ -261,6 +265,7 @@ a:hover .magnify { background-color: #005b82; background-position: 0 -22px; bord
   #history .heatmap { float: right; width: 92.22%; }
   #history .heatmap .chart { height: 78px; width: 565px; }
   #history h2 { float: left; padding-top: 18px; width: 6.66%; }
+  #history .months { margin-left: 35px; }
   #history .months li { margin-bottom: 3px; }
   #history .timeline { border: 0; clear: none; margin: 0; padding: 4px 0; }
   #history .weekdays li { font-size: 8px; padding: 0; }
@@ -286,6 +291,7 @@ a:hover .magnify { background-color: #005b82; background-position: 0 -22px; bord
 
 /* Trends */
 #trends { white-space: nowrap; }
+#trends .highchart { height: 250px; }
 #trends .num { text-align: right; }
 #trends th[class *= "sorting"] { color: #227fa2; cursor: pointer; }
 #trends th.sorting_asc span { background: url(../images/sort-up.png) no-repeat 100% 50%; padding-right: 10px; }
@@ -330,21 +336,4 @@ a:hover .magnify { background-color: #005b82; background-position: 0 -22px; bord
 #years { font-size: 17px; list-style: none; margin: 0; }
 #years li { display: inline; margin: 0 1em 0 0; }
 #years li.current a { color: #ee0000; }
-
-
-.chart {
-  font: 10px sans-serif;
-  shape-rendering: crispEdges;
-}
-
-.day {
-  fill: #fff;
-  stroke: #ccc;
-}
-
-.month {
-  fill: none;
-  stroke: #000;
-  stroke-width: 1px;
-}
 

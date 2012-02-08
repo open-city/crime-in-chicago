@@ -99,7 +99,7 @@ WardDetail.subcategories = function(number, primary_type) {
 
 var CategoryChart = {};
 CategoryChart.create = function(number, primary_type) {
-  $("<tr><td colspan='6'><div id='category-" + primary_type + "-chart'></td></tr></div>").insertAfter("#category-" + primary_type);
+  $("<tr><td colspan='6'><div class='highchart' id='category-" + primary_type + "-chart'></td></tr></div>").insertAfter("#category-" + primary_type);
   chart = new Highcharts.Chart({
     chart: {
       defaultSeriesType: "area",
