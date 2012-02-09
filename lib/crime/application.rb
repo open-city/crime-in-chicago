@@ -59,7 +59,7 @@ module Crime
       @current_menu = "home"
       haml :"ward", :layout => false, :locals => {
         :ward => params[:ward], :year => params[:year],
-        :map_src => map_ward(params[:ward])
+        :map_src => map_ward(params[:ward], "small")
       }
     end
     

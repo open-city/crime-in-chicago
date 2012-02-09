@@ -129,9 +129,9 @@ module Crime
       URI::decode(s.gsub("-", " "))
     end
 
-    def map_ward(number)
+    def map_ward(number, size)      
       parameters = {
-        :sensor => "true", :size => "138x100",
+        :sensor => "true", :size => size == "small" ? "138x100" : "307x307",
         :path => "color:0xc10202aa|fillcolor:0xc1020211|weight:1|enc:ecp~FfwyuOs@fiBpx@iCd^vI|NmErP{K~FsVvGg`@rHaOnlAeAr@rVpHdB?~Lpp@ePX~MjiAeBxGoFpd@kDX~hAxc@gC?{Kju@?eBujDkyA`@?_z@_O??hRyS`@?nT}jA`@?nUu_D?Vzh@a~A`@YtWq`@?",
         :maptype => "roadmap", 
         :style => [
