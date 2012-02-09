@@ -169,32 +169,21 @@
 #content-secondary
   #alderman
     %img{:alt => "", :src => "http://dummyimage.com/138x207"}
+    - @ward_office = ward_office(ward)
     %h2
       Alderman
       %br
-      Pat Dowell
+      = @ward_office[:alderman].titleize
     %dl
       %dt Ward office
       %dd
-        5046 S. State St.
+        = @ward_office[:address].titleize
         %br
-        Chicago, IL 60609
+        = "#{@ward_office[:city].titleize}, #{@ward_office[:state]} #{@ward_office[:zipcode]}"
         %br
-        773.373.9273
+        = @ward_office[:ward_phone]
         %br
-        %a{:href =>"#"} Send email
-      %dt City Hall office
-      %dd
-        121 N. La Salle
-        %br
-        Room 300, Office 03
-        %br
-        Chicago, IL 60602
-        %br
-        312.744.8734
-        %br
-        312.744.6712
-  
+        %a{:href => @ward_office[:website] } Website
   %hr
   
   %h2

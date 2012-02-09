@@ -53,6 +53,9 @@ module Crime
       select description, count(*) as crime_count from crimes
       where ward = :ward and occurred_at >= '1/1/2003' and primary_type = :primary_type
       group by description
-      order by count(*) desc".strip
+      order by count(*) desc".strip,
+    :ward_office => "
+      select * from ward_offices
+      where ward = :ward".strip
   }
 end

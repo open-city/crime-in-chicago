@@ -101,6 +101,10 @@ module Crime
     def ward_detail_subcategory_list(ward, primary_type)
       DB.fetch(Crime::QUERIES[:ward_detail_subcategory_list], :ward => ward, :primary_type => primary_type).all
     end
+    
+    def ward_office(ward)
+      DB.fetch(Crime::QUERIES[:ward_office], :ward => ward).first
+    end
 
     def current_menu
       @current_menu

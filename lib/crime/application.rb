@@ -5,7 +5,7 @@ require "sinatra/r18n"
 require "sinatra/json"
 require "sequel"
 require "uri"
-require "facets/string/briefcase"
+require "facets/string"
 
 module Crime
   class Application < Sinatra::Base
@@ -137,5 +137,11 @@ module Crime
       query = "select date_part('year',occurred_at) as year, count(*) from crimes where ward = :ward group by date_part('year', occurred_at) order by year;"
       json DB.fetch(query, :ward => params[:ward]).all
     end
+  end
+end
+
+class String
+  def titleize
+    split(/(\W)/).map(&:capitalize).join
   end
 end
