@@ -13,7 +13,8 @@
       $("#trends a").click(function() {
         var primary_type = $(this).attr("data-category");
         //append a new tr for expanded row
-        $("<tr><td colspan='6' id='expanded-" + primary_type + "'><div class='highchart' id='expanded-" + primary_type + "-chart'></td></tr></div>").insertAfter("#category-" + primary_type);
+        var expandedPlaceholder = "<tr><td colspan='6' id='expanded-" + primary_type + "'><div class='highchart' id='expanded-" + primary_type + "-chart'></td></tr></div>";
+        $(expandedPlaceholder).insertAfter("#category-" + primary_type);
         CategoryChart.create(#{ward}, primary_type);
         WardDetail.subcategories(#{ward}, primary_type);
         return false;

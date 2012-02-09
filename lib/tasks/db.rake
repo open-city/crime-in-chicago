@@ -15,6 +15,13 @@ namespace :db do
       puts "populating crimes_for_month table..."
       sh "psql --dbname=chicago_crime -f db/script/load_crime_for_month_data.sql"
     end
+    
+    desc "load ward offices file into tables (uses tmp/Ward_Offices.csv by default)"
+    task :ward_offices, :data_filename do |t, args|
+      data_filename = args[:data_filename] || "tmp/Ward_Offices.csv"
+      puts "loading ward office data from #{data_filename}..."
+      sh "cat #{data_filename} | psql --dbname=chicago_crime -c \"$(cat db/script/load_ward_offices.sql)\""
+    end
   end
 
   desc "migrate schema and load crime data"
