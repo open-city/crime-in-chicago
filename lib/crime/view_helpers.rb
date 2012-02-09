@@ -116,6 +116,14 @@ module Crime
       
       "#{integer_part_string}"
     end
+    
+    def encode_element_id(s)
+      URI::encode(s.gsub(" ", "-"))
+    end
+    
+    def decode_element_id(s)
+      URI::decode(s.gsub("-", " "))
+    end
 
     def map_ward(number)
       parameters = {

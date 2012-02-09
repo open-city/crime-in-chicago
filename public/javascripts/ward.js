@@ -93,17 +93,22 @@ WardDetail.create = function(number, year, selector) {
 
 WardDetail.subcategories = function(number, primary_type) {
   $.get("/wards/"+number+"/"+primary_type+"/partials/subcategories", function(data) {
-    $(data).insertAfter("#category-" + primary_type + "-chart");
+    $(data).insertAfter('#expanded-' + primary_type + '-chart');
   });
 }
 
 var CategoryChart = {};
 CategoryChart.create = function(number, primary_type) {
-  $("<tr><td colspan='6'><div class='highchart' id='category-" + primary_type + "-chart'></td></tr></div>").insertAfter("#category-" + primary_type);
+  
+  //fetch data from data attribute on link and convert to array of ints
+  var dataSeries = $("#category-" + primary_type + " a").attr("data-values").split(',');
+  for(var i=0; i<dataSeries.length; i++) { dataSeries[i] = parseInt(dataSeries[i], 10); }
+
+  //build high chart
   chart = new Highcharts.Chart({
     chart: {
       defaultSeriesType: "area",
-      renderTo: "category-" + primary_type + "-chart",
+      renderTo: 'expanded-' + primary_type + '-chart',
       spacingBottom: 0,
       spacingLeft: 0,
       zoomType: "x"
@@ -136,7 +141,8 @@ CategoryChart.create = function(number, primary_type) {
     },
     series: [{
       color: "#ddf2fb",
-      data: [40, 96, 110, 88, 115, 99, 174, 116, 96, 127, 135, 156, 136, 138, 105, 96, 103, 114, 136, 154, 130, 147, 139, 166, 125, 130, 108, 93, 104, 103, 122, 206, 150,
+      data: dataSeries,
+      /*data: [40, 96, 110, 88, 115, 99, 174, 116, 96, 127, 135, 156, 136, 138, 105, 96, 103, 114, 136, 154, 130, 147, 139, 166, 125, 130, 108, 93, 104, 103, 122, 206, 150,
         {
           marker: {
             fillColor: "#c10202",
@@ -152,7 +158,7 @@ CategoryChart.create = function(number, primary_type) {
           },
           y: 11
         }
-      ],
+      ],*/
       lineColor: "#518fc9",
       name: "Crimes"
     }],
@@ -176,7 +182,9 @@ CategoryChart.create = function(number, primary_type) {
     },
     yAxis: {
       lineWidth: 1,
-      title: { text: "" }
+      title: { text: "" },
+      min: Math.min.apply( Math, dataSeries ),
+      max: Math.max.apply( Math, dataSeries )
     }
   });
 }

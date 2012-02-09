@@ -5,6 +5,7 @@ require "sinatra/r18n"
 require "sinatra/json"
 require "sequel"
 require "uri"
+require "facets/string/briefcase"
 
 module Crime
   class Application < Sinatra::Base

@@ -37,23 +37,22 @@ module Crime
     :ward_crimes_per_year => "
       select cast(date_part('year',occurred_at) as int) as year, count(*) as crime_count_for_year
       from crimes 
-      where ward = :ward and date_part('year',occurred_at) > 2001
+      where ward = :ward and date_part('year',occurred_at) > 2002
       group by date_part('year', occurred_at) 
       order by year;".strip,
     :ward_detail_category_list => "
       select primary_type, min(crime_count) as minimum, avg(crime_count)::integer as average, 
       max(crime_count) as maximum, sum(crime_count) as total 
       from crimes_for_month 
-      where ward = :ward and year > 2001 group by primary_type;".strip,
+      where ward = :ward and year > 2002 group by primary_type;".strip,
     :ward_detail_category_sparkline => "
       select crime_count from crimes_for_month 
-      where ward = :ward and year > 2001 and primary_type = :primary_type
+      where ward = :ward and year > 2002 and primary_type = :primary_type
       order by year, month;".strip,
     :ward_detail_subcategory_list => "
       select description, count(*) as crime_count from crimes
-      where ward = :ward and occurred_at >= '1/1/2002' and primary_type = :primary_type
+      where ward = :ward and occurred_at >= '1/1/2003' and primary_type = :primary_type
       group by description
-      order by count(*) desc
-      "
+      order by count(*) desc".strip
   }
 end

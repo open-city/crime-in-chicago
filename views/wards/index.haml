@@ -11,8 +11,11 @@
       }
       
       $("#trends a").click(function() {
-        CategoryChart.create(#{ward}, $(this).attr("data-category"));
-        WardDetail.subcategories(#{ward}, $(this).attr("data-category"));
+        var primary_type = $(this).attr("data-category");
+        //append a new tr for expanded row
+        $("<tr><td colspan='6' id='expanded-" + primary_type + "'><div class='highchart' id='expanded-" + primary_type + "-chart'></td></tr></div>").insertAfter("#category-" + primary_type);
+        CategoryChart.create(#{ward}, primary_type);
+        WardDetail.subcategories(#{ward}, primary_type);
         return false;
       });
       
@@ -58,9 +61,6 @@
         }
       );
         */
-        
-        
-        
         
       // DataTables
       $("#trends").dataTable({
@@ -145,15 +145,17 @@
           Earlier data is available but sporadic and therefore not included.
     %tbody
       - ward_detail_category_list(ward).each do |hash|
-        %tr{:id => "category-#{URI::encode hash[:primary_type]}"}
+        - @category_sparkline = ""
+        - ward_detail_category_sparkline(ward, hash[:primary_type]).each do |s|
+          - @category_sparkline += "#{s[:crime_count]},"
+        - @category_sparkline = @category_sparkline.chomp(",")
+        %tr{:id => "category-#{encode_element_id hash[:primary_type]}"}
           %td
-            %a{:href => "#", :"data-category" => (URI::encode hash[:primary_type])}
-              = hash[:primary_type]
+            %a{:href => "#", :"data-category" => (encode_element_id hash[:primary_type]), :"data-values" => @category_sparkline}
+              = hash[:primary_type].briefcase
           %td
             %span.sparkline
-              - ward_detail_category_sparkline(ward, hash[:primary_type]).each do |s|
-                = s[:crime_count]
-                ,
+              = @category_sparkline
           %td.min.num 
             = format_number hash[:minimum]
           %td.num 
@@ -202,23 +204,4 @@
     %img{:src => "http://dummyimage.com/307"}
   
   %hr
-  
-  %h2 Demographics
-  
-  %hr
-  
-  %h2 Latest news
-  
-  %dl.news
-    %dt
-      %a{:href => "#"} Waukeganite hospitalized after North Chicago arrest
-    %dd.mute Chicago Sun-Times - Dec 15, 2011
-    %dt
-      %a{:href => "#"} Waukeganite hospitalized after North Chicago arrest
-    %dd.mute Chicago Sun-Times - Dec 15, 2011
-    %dt
-      %a{:href => "#"} Waukeganite hospitalized after North Chicago arrest
-    %dd.mute Chicago Sun-Times - Dec 15, 2011
-  
-  %p.mute News is automatically generated from a Google Alert configured to search for news pertaining to Ward 3.
 

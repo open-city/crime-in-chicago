@@ -6,6 +6,7 @@ gem "sinatra-initializers"
 gem "sinatra-reloader"
 gem "sinatra-r18n"
 gem "haml"
+gem "facets"
 
 # data
 gem "dalli"
