@@ -14,8 +14,16 @@ namespace :db do
       sh "sed 1d #{data_filename} | psql --dbname=chicago_crime -c \"$(cat db/script/load_crime_data.sql)\""
       puts "populating crimes_for_month table..."
       sh "psql --dbname=chicago_crime -f db/script/load_crime_for_month_data.sql"
+      Rake::Task['db:load:zero_crime_months'].invoke
     end
     
+    desc "backfill crimes_for_month table with zero crime months"
+    task :zero_crime_months do
+      require './lib/models/crimes_for_month_backfill.rb'
+      puts "populating crimes_for_month table with zero crime months"
+      CrimesForMonthBackfill.new.run
+    end
+
     desc "load ward offices file into tables (uses tmp/Ward_Offices.csv by default)"
     task :ward_offices, :data_filename do |t, args|
       data_filename = args[:data_filename] || "tmp/Ward_Offices.csv"
