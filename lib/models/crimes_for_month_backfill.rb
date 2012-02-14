@@ -14,7 +14,6 @@ class CrimesForMonthBackfill
     ds = DB.fetch(crimes_for_month_sql)
     last_row = {:month => 12}
     ds.each do |row|
-    #ds.limit(10_000).each do |row|
       if rows_for_same_ward_type_and_year(row, last_row)
         if row[:month] != last_row[:month] + 1
           add_crimes_for_month_zero_rows(row, ((last_row[:month]+1)...row[:month]))
@@ -53,7 +52,6 @@ class CrimesForMonthBackfill
 
   def add_crimes_for_month_zero_row(base_row, month)
     new_row = base_row.merge(:month => month, :crime_count => 0).reject{|k,v| k == :id}
-    #puts "- NEW ROW FOR #{new_row.inspect}"
     @insert_dataset.insert(new_row)
     @rows_inserted += 1
     puts "Inserted #{@rows_inserted} rows in crimes_for_month for months with zero crimes" if @rows_inserted % 1000 == 0
