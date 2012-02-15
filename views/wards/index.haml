@@ -168,8 +168,8 @@
 
 #content-secondary
   #alderman
-    %img{:alt => "", :src => "http://dummyimage.com/138x207"}
     - @ward_office = ward_office(ward)
+    %img{:alt => "", :src => "/images/aldermen/#{@ward_office[:image]}"}
     %h2
       Alderman
       %br
@@ -177,13 +177,24 @@
     %dl
       %dt Ward office
       %dd
-        = @ward_office[:address].titleize
+        = @ward_office[:ward_address].titleize
         %br
-        = "#{@ward_office[:city].titleize}, #{@ward_office[:state]} #{@ward_office[:zipcode]}"
+        = "#{@ward_office[:ward_city].titleize}, #{@ward_office[:ward_state]} #{@ward_office[:ward_zipcode]}"
         %br
         = @ward_office[:ward_phone]
         %br
+        %a{:href => "mailto:#{@ward_office[:email]}" } Send email
+        %br
         %a{:href => @ward_office[:website] } Website
+      
+      - if (!@ward_office[:city_hall_address].nil?)  
+        %dt City Hall office
+        %dd
+          = @ward_office[:city_hall_address].titleize
+          %br
+          = "#{@ward_office[:city_hall_city].titleize}, #{@ward_office[:city_hall_state]} #{@ward_office[:city_hall_zipcode]}"
+          %br
+          = @ward_office[:city_hall_phone]
   %hr
   
   %h2
