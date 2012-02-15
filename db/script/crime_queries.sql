@@ -60,6 +60,9 @@ select primary_type, year, month, crime_count from crimes_for_month where ward =
 -- Monthly min, monthly avg, monthly max and total crime count by primary type for ward
 select primary_type, min(crime_count), avg(crime_count)::integer, max(crime_count), sum(crime_count) from crimes_for_month where ward = '28' and year > 2001 group by primary_type;
 
+-- Crime count by subcategory for ward and primary_type
+select * from crimes_per_subcategory where ward = '28' and category = 'THEFT' order by crime_count desc;
+
 -- Database size
 SELECT pg_size_pretty(pg_database_size('chicago_crime'));
 
