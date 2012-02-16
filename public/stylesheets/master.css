@@ -32,7 +32,8 @@ li { margin-bottom: 0.5em; }
 ol { list-style: decimal; margin-left: 2em; }
 table { border-collapse: collapse; width: 100%; }
 tbody td { border: 1px solid #ccc; border-width: 1px 0; }
-td, th { padding: 0.3em 0; }
+td, th { padding: 0.3em 1em 0.3em 0; }
+td:last-child, th:last-child { padding-right: 0; }
 th { font-weight: bold; vertical-align: top; }
 ul { list-style: disc; margin-left: 1.5em; }
 
@@ -84,7 +85,7 @@ ul { list-style: disc; margin-left: 1.5em; }
   /* Bar charts */
   .chart-bar { font-size: 11px; line-height: 1; list-style: none; margin: 0; }
   .chart-bar .count { color: #777; position: absolute; right: 5px; top: 4px; }
-  .chart-bar .idx { background: #a5d9ee; height: 100%; position: absolute; }
+  .chart-bar .idx { background: #a5d9ee; border-right: 1px solid #a5d9ee; height: 100%; position: absolute; }
   .chart-bar .label { left: 5px; position: absolute; top: 4px; }
   .chart-bar li { margin-bottom: 1px; }
   .chart-bar .point { display: block; height: 20px; position: relative; }
@@ -228,8 +229,8 @@ a:hover .magnify { background-color: #005b82; background-position: 0 -22px; bord
   position: relative;
 }
 
-.timeline h2 a { background: url(../images/expand.png) no-repeat 0 0.2em; padding-left: 17px; }
-.timeline h2 a.expanded { background-image: url(../images/collapse.png); color: #e00; }
+.timeline h2 a.ward-title { background: url(../images/expand.png) no-repeat 0 0.2em; padding-left: 17px; }
+.timeline h2 a.ward-title.expanded { background-image: url(../images/collapse.png); color: #e00; }
 
   /* Handles */
   .timeline:hover .handle { left: -25px; }
@@ -293,6 +294,10 @@ a:hover .magnify { background-color: #005b82; background-position: 0 -22px; bord
 
 /* Trends */
 #trends { white-space: nowrap; }
+#trends .cat-title a { background: url(/images/expand.png) no-repeat 0 50%; padding-left: 17px; }
+#trends .current td { font-weight: bold; }
+#trends .current .cat-title a { background-image: url(/images/collapse.png); }
+#trends h3 { margin-left: 30px; }
 #trends .highchart { height: 250px; }
 #trends .num { text-align: right; }
 #trends th[class *= "sorting"] { color: #227fa2; cursor: pointer; }
@@ -300,6 +305,13 @@ a:hover .magnify { background-color: #005b82; background-position: 0 -22px; bord
 #trends th.sorting_desc span { background: url(../images/sort-down.png) no-repeat 100% 50%; padding-right: 10px; }
 #trends th.sorting_disabled { color: #000; cursor: default; }
 #trends .xaxis { margin: 0; text-align: center; }
+
+  /* Subtypes */
+  #trends .chart-bar { font-size: 1em; margin: 0 0 15px 32px; }
+  #trends .chart-bar .count { color: #2b5b7e; font-size: 1em; font-weight: bold; }
+  #trends .chart-bar .count, #trends .chart-bar .label { top: 8px; }
+  #trends .chart-bar li { margin-bottom: 3px; }
+  #trends .chart-bar .point { height: 30px; }
 
 /* Toggle */
 .toggle-overlay {

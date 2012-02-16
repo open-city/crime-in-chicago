@@ -23,7 +23,7 @@ Ward.create = function(number, year, selector) {
         return false;
       });
 
-      ward.find("h2 a").click(function() {
+      ward.find("h2 .ward-title").click(function() {
         timeline = $(this).parents(".timeline");
         $(this).toggleClass("expanded");
         timeline.find(".statistics").slideToggle(function(){
@@ -146,8 +146,11 @@ CategoryChart.create = function(number, primary_type) {
     chart: {
       defaultSeriesType: "area",
       renderTo: 'expanded-' + primary_type + '-chart',
+      margin: [10, 0, 30, 30],
       spacingBottom: 0,
       spacingLeft: 0,
+      spacingRight: 0,
+      spacingTop: 0,
       zoomType: "x"
     },
     credits: { enabled: false },

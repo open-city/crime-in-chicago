@@ -2,10 +2,11 @@
   %span.handle{:title => "Drag to reorder"}
   %a.remove{:href => "#", :title => "Remove"} Remove
   %h2
-    %a{:href => "#"}
+    %a.ward-title{:href => "#"}
       == Ward #{ward} [#{year}]
     %span
-      Click anything blue to see more details
+      = link_to "View all ward details", "/wards/#{ward}"
+      &raquo;
 
   = haml :"ward_heatmap", :locals => { :identity => ward, :year => year }
   = haml :"ward_stats", :locals => { :ward => ward, :map_src => map_src, :year => year }

@@ -1,10 +1,13 @@
-%ul
+%h3 Subcatgories
+%ol.chart-bar
   - @subcategory_list = ward_detail_subcategory_list(ward, (decode_element_id primary_type))
   - @max = @subcategory_list.map { |h| h[:crime_count] }.max
   - @subcategory_list.each do |s|
     %li
-      = s[:subcategory].briefcase
-      %span.index{:style => "width: #{number_to_percentage(s[:crime_count].to_f / @max)}%"}
-      %span.count
-        = format_number s[:crime_count]
+      %span.point
+        %span.idx{:style => "width: #{number_to_percentage(s[:crime_count].to_f / @max)}%"}
+        %span.label
+          = s[:subcategory].briefcase
+        %span.count
+          = format_number s[:crime_count]
 

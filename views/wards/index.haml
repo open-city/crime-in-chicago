@@ -13,6 +13,7 @@
       
       $("#trends a").click(function() {
         var primary_type = $(this).attr("data-category");
+        $(this).parents("tr").toggleClass("current");
         if ($('#expanded-' + primary_type).exists()) {
           $('#expanded-' + primary_type).remove();
           return false;
@@ -76,10 +77,25 @@
         "aoColumns": [
           null,
           { "bSortable": false },
-          { "sType": "number-comma" },
-          { "sType": "number-comma" },
-          { "sType": "number-comma" },
-          { "sType": "number-comma" }
+          {
+            "aDataSort": [2, 5],
+            "asSorting": ["desc", "asc"],
+            "sType": "number-comma"
+          },
+          {
+            "aDataSort": [3, 5],
+            "asSorting": ["desc", "asc"],
+            "sType": "number-comma"
+          },
+          {
+            "aDataSort": [4, 5],
+            "asSorting": ["desc", "asc"],
+            "sType": "number-comma"
+          },
+          {
+            "asSorting": ["desc", "asc"],
+            "sType": "number-comma"
+          }
         ],
         "aaSorting": [[ 5, "desc" ]],
         "bFilter": false,
@@ -105,7 +121,9 @@
       FusiontableWard.create("#{ward}", "map_canvas_detail");
     });
     
-%h1 
+%h1
+  = link_to "All wards", "/"
+  &raquo;
   Ward #{ward}
 
 #content-primary
@@ -161,7 +179,7 @@
           - @category_sparkline += "#{s[:crime_count]},"
         - @category_sparkline = @category_sparkline.chomp(",")
         %tr{:id => "category-#{encode_element_id hash[:primary_type]}"}
-          %td
+          %td.cat-title
             %a{:href => "#", :"data-category" => (encode_element_id hash[:primary_type]), :"data-values" => @category_sparkline}
               = hash[:primary_type].briefcase
           %td
