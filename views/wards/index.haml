@@ -12,12 +12,19 @@
       
       $("#trends a").click(function() {
         var primary_type = $(this).attr("data-category");
-        //append a new tr for expanded row
-        var expandedPlaceholder = "<tr><td colspan='6' id='expanded-" + primary_type + "'><div class='highchart' id='expanded-" + primary_type + "-chart'></td></tr></div>";
-        $(expandedPlaceholder).insertAfter("#category-" + primary_type);
-        CategoryChart.create(#{ward}, primary_type);
-        WardDetail.subcategories(#{ward}, primary_type);
-        return false;
+        if ($('#expanded-' + primary_type).exists()) {
+          $('#expanded-' + primary_type).remove();
+          return false;
+        }
+        else
+        {
+          //append a new tr for expanded row
+          var expandedPlaceholder = "<tr><td colspan='6' id='expanded-" + primary_type + "'><div class='highchart' id='expanded-" + primary_type + "-chart'></td></tr></div>";
+          $(expandedPlaceholder).insertAfter("#category-" + primary_type);
+          CategoryChart.create(#{ward}, primary_type);
+          WardDetail.subcategories(#{ward}, primary_type);
+          return false;
+        }
       });
       
       // History toggle

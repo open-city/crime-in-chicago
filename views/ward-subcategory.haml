@@ -1,9 +1,10 @@
-%table
-  - ward_detail_subcategory_list(ward, (decode_element_id primary_type)).each do |s|
-    %tr
-      %td{:colspan => "5"}
-        = s[:subcategory].briefcase
-      %td
+%ul
+  - @subcategory_list = ward_detail_subcategory_list(ward, (decode_element_id primary_type))
+  - @max = @subcategory_list.map { |h| h[:crime_count] }.max
+  - @subcategory_list.each do |s|
+    %li
+      = s[:subcategory].briefcase
+      %span.index{:style => "width: #{number_to_percentage(s[:crime_count].to_f / @max)}%"}
+      %span.count
         = format_number s[:crime_count]
-    
 
