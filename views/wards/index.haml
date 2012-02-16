@@ -1,6 +1,7 @@
 - content_for :javascript do
   = include_javascript "dataTables.sorting"
   = include_javascript "highcharts"
+  = include_javascript "fusiontables.ward"
   :javascript
     $(document).ready(function() {
       var year = 2011;
@@ -100,6 +101,8 @@
         spotRadius: 2,
         width: "240px"
       });
+      
+      FusiontableWard.create("#{ward}");
     });
     
 %h1 
@@ -209,8 +212,8 @@
     Location
     %span
       %a{:href => "#"} Enlarge
-  %p
-    %img{:src => map_ward(ward, "big")}
+  
+  #map_canvas_detail
   
   %hr
 

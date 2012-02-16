@@ -132,6 +132,8 @@ ul { list-style: disc; margin-left: 1.5em; }
 .gallery li { float: left; margin-right: 6%; width: 29%; }
 .gallery li:last-child { margin: 0; }
 
+#map_canvas_detail { height: 307px; margin-bottom: 1em; }
+
 /* Magnify links */
 .magnify {
   background: #fff url(/images/magnify.png) no-repeat 0 0;
