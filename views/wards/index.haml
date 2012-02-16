@@ -189,10 +189,11 @@
         = "#{@ward_office[:ward_city].titleize}, #{@ward_office[:ward_state]} #{@ward_office[:ward_zipcode]}"
         %br
         = @ward_office[:ward_phone]
+        - if !@ward_office[:email].nil? 
+          %br
+          = link_to "Send email", "mailto:#{@ward_office[:email]}"
         %br
-        %a{:href => "mailto:#{@ward_office[:email]}" } Send email
-        %br
-        %a{:href => @ward_office[:website] } Website
+        = link_to "Website", @ward_office[:website], :rel => :external
       
       - if (!@ward_office[:city_hall_address].nil?)  
         %dt City Hall office
