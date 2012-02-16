@@ -7,7 +7,7 @@
         %span.point
           %span.idx{:style => "width: #{number_to_percentage(hash[:crime_count].to_f / max)}%"}
           %span.label
-            = hash[:primary_type]
+            = hash[:primary_type].titleize
           %span.count
             = hash[:crime_count]
 

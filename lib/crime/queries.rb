@@ -55,6 +55,11 @@ module Crime
       order by crime_count desc".strip,
     :ward_office => "
       select * from ward_offices
-      where ward = :ward".strip
+      where ward = :ward".strip,
+    :sparkline_by_ward_and_year => "
+      select primary_type, year, month, crime_count
+      from crimes_for_month
+      where ward = :ward and year = :year
+      order by primary_type, year, month".strip
   }
 end

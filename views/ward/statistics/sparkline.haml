@@ -1,6 +1,7 @@
 .panel
   %h3 Time of day
-  %span.sparkline-day 365,217,197,159,119,99,115,200,370,448,407,454,527,500,502,513,472,439,452,538,569,508,448,358
+  %span.sparkline-day
+    = sparkline_by_ward_and_year(:ward => ward, :year => year).join(",")
   .xaxis.day
     .tick.first 12a
     .tick noon

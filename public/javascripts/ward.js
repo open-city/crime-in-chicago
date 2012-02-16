@@ -29,30 +29,65 @@ Ward.create = function(number, year, selector) {
         timeline.find(".statistics").slideToggle(function(){
           timeline.find(".handle").height(timeline.outerHeight());
         });
+        $.sparkline_display_visible();
         return false;
       });
 
       Ward.calendar(ward, "#calendar-"+ward.number+"-"+ward.year, false);
 
-      Ward.statistics.sparkline(ward);
       Ward.statistics.crime(ward);
       Ward.statistics.category(ward);
+      Ward.statistics.sparkline(ward);
     });
   }
 }
 
+Ward.events = {};
+Ward.events.load_ward_clickables = function() {
+  $(".ward-selector").click(function() {
+    $(this).parent().attr('class', 'current');
+    Ward.create($(this).attr("data-ward"), $(this).attr("data-year"), "#ward-charts");
+    return false;
+  });
+}
+
+Ward.events.load_year_clickables = function() {
+  $('.year-selector a').click(function() {
+    if (!$(this).parent().hasClass("current")) {
+      $.get("/wards/"+$(this).attr("data-year")+"/partials/crime-columns", function(data) {
+        $("#wards").html(data);
+
+        $(".ward-selector").click(function() {
+          $(this).parent().attr('class', 'current');
+          Ward.create($(this).attr("data-ward"), $(this).attr("data-year"), "#ward-charts");
+          return false;
+        });
+
+        Ward.tooltips(".chart-column .idx");
+      });
+
+      $('.year-selector.current').each(function() {
+        $(this).removeClass("current");
+      });
+
+      link = $(this);
+      link.parent().addClass("current");
+    }
+  });
+}
+
 Ward.statistics = {};
 Ward.statistics.sparkline = function(ward) {
-  $.get("/wards/"+ward.number+"/"+ward.year+"/partials/statistics/sparkline", function(data) {
-    ward.find(".sparkline").html(data.trim());
-
-    spark_data = ward.find(".sparkline-day")
-    spark_data.sparkline("html", {
-      chartRangeMin: 0, fillColor: "#ddf2fb",
-      height: "31px", lineColor: "#518fc9",
-      lineWidth: 1, minSpotColor: "#0b810b",
-      maxSpotColor: "#c10202", spotColor: false,
-      spotRadius: 2, width: "138px"
+  $(document).ready(function() {
+    $.get("/wards/"+ward.number+"/"+ward.year+"/partials/statistics/sparkline", function(data) {
+      $(ward).find(".sparkline").html(data.trim())
+      $(ward).find(".sparkline-day").sparkline("html", {
+        chartRangeMin: 0, fillColor: "#ddf2fb",
+        height: "31px", lineColor: "#518fc9",
+        lineWidth: 1, minSpotColor: "#0b810b",
+        maxSpotColor: "#c10202", spotColor: false,
+        spotRadius: 2, width: "138px"
+      });
     });
   });
 }
@@ -60,6 +95,8 @@ Ward.statistics.sparkline = function(ward) {
 Ward.statistics.crime = function(ward) {
   $.get("/wards/"+ward.number+"/"+ward.year+"/partials/statistics/crime", function(data) {
     ward.find(".crime").html(data);
+
+    Ward.tooltips(".point .idx");
   });
 }
 
@@ -99,7 +136,7 @@ WardDetail.subcategories = function(number, primary_type) {
 
 var CategoryChart = {};
 CategoryChart.create = function(number, primary_type) {
-  
+
   //fetch data from data attribute on link and convert to array of ints
   var dataSeries = $("#category-" + primary_type + " a").attr("data-values").split(',');
   for(var i=0; i<dataSeries.length; i++) { dataSeries[i] = parseInt(dataSeries[i], 10); }

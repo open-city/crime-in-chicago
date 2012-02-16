@@ -55,6 +55,13 @@ module Crime
       number_to_percentage(diff) / 100.0
     end
 
+    def sparkline_by_ward_and_year(options)
+      dataset = DB.fetch(QUERIES[:sparkline_by_ward_and_year], options)
+      retain_in_cache(dataset.sql) do
+        dataset.all.map {|hash| hash[:crime_count] }
+      end
+    end
+
     # CALENDAR METHODS
     def ward_calendar_crime(ward, year)
       dataset = DB.fetch(Crime::QUERIES[:ward_crime_calendar], :ward => ward, :year => year)

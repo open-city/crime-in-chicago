@@ -1,26 +1,7 @@
 - content_for :javascript do
   :javascript
     $(document).ready(function() {
-      $('.year-selector a').click(function() {
-        if (!$(this).parent().hasClass("current")) {
-          $.get("/wards/"+$(this).attr("data-year")+"/partials/crime-columns", function(data) {
-            $("#wards").html(data);
-
-            $(".ward-selector").click(function() {
-              $(this).parent().attr('class', 'current');
-              Ward.create($(this).attr("data-ward"), $(this).attr("data-year"), "#ward-charts");
-              return false;
-            });
-          });
-
-          $('.year-selector.current').each(function() {
-            $(this).removeClass("current");
-          });
-
-          link = $(this);
-          link.parent().addClass("current");
-        }
-      });
+      Ward.events.load_year_clickables();
     });
 
 .vis-label
