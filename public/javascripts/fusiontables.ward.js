@@ -2,8 +2,8 @@ var FusiontableWard = {};
 var map = null;
 var fusionTableId = 2954091;
 var map_bounds = new google.maps.LatLngBounds();
-FusiontableWard.create = function(number) {
-  var chicago = new google.maps.LatLng(41.8781136, -87.66677856445312);
+var chicago = new google.maps.LatLng(41.8781136, -87.66677856445312);
+FusiontableWard.create = function(number, selector) {
   
   var simpleWardStyles = [
     {
@@ -52,7 +52,7 @@ FusiontableWard.create = function(number) {
     zoomControl: false,
     suppressInfoWindows: true
   };
-  map = new google.maps.Map(document.getElementById("map_canvas_detail"), myOptions);
+  map = new google.maps.Map(document.getElementById(selector), myOptions);
   map.setOptions({styles: simpleWardStyles});
   
   var wardKML = new google.maps.FusionTablesLayer(fusionTableId, {
