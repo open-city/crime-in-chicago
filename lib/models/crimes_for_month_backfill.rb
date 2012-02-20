@@ -10,26 +10,6 @@ class CrimesForMonthBackfill
     @rows_inserted = 0
   end
 
-  def run
-    ds = DB.fetch(crimes_for_month_sql)
-    last_row = {:month => 12}
-    ds.each do |row|
-      if rows_for_same_ward_type_and_year(row, last_row)
-        if row[:month] != last_row[:month] + 1
-          add_crimes_for_month_zero_rows(row, ((last_row[:month]+1)...row[:month]))
-        end
-      else #new year
-        if last_row[:month] != 12
-          add_crimes_for_month_zero_rows(last_row, ((last_row[:month]+1)..12))
-        end
-        if row[:month] != 1
-          add_crimes_for_month_zero_rows(row, (1...row[:month]))
-        end
-      end
-      last_row = row
-    end
-  end
-
   def crimes_for_month_sql
     <<-SQL
       SELECT * 
@@ -40,18 +20,89 @@ class CrimesForMonthBackfill
     SQL
   end
 
-  def rows_for_same_ward_type_and_year(row1, row2)
-    row1[:ward] == row2[:ward] && row1[:primary_type] == row2[:primary_type] && row1[:year] == row2[:year]
+  def run
+    ds = DB.fetch(crimes_for_month_sql)
+    last_row = {:year => 2011, :month => 12}
+    ds.each do |row|
+      if !rows_for_same_ward_and_category(row, last_row)
+        # new category
+        add_missing_months_at_end_of_previous_year(last_row)
+        add_missing_years_at_end_of_previous_category(last_row)
+        add_missing_years_at_beginning_of_new_category(row)
+        add_missing_months_at_beginning_of_new_year(row)
+      else 
+        # same category
+        if row[:year] != last_row[:year]
+          #new year
+          add_missing_months_at_end_of_previous_year(last_row)
+          add_missing_months_between_previous_and_new_years(last_row, row)
+          add_missing_months_at_beginning_of_new_year(row)
+        else #same year
+          add_missing_months_between_previous_and_new_months(last_row, row)
+        end
+      end
+      #puts row.inspect
+      last_row = row
+    end
+    add_missing_months_at_end_of_previous_year(last_row)
+    add_missing_years_at_end_of_previous_category(last_row)
   end
 
-  def add_crimes_for_month_zero_rows(base_row, month_range)
-    month_range.each do |month|
-      add_crimes_for_month_zero_row(base_row, month)
+  def add_missing_years_at_end_of_previous_category(last_row)
+    if last_row[:year] != Time.now.year-1
+      add_zero_crimes_rows_for_years(last_row, ((last_row[:year]+1)...Time.now.year))
     end
   end
 
-  def add_crimes_for_month_zero_row(base_row, month)
+  def add_missing_years_at_beginning_of_new_category(current_row)
+    if current_row[:year] != 2002
+      add_zero_crimes_rows_for_years(current_row, (2002...current_row[:year]))
+    end
+  end
+
+  def add_missing_months_at_end_of_previous_year(last_row)
+    if last_row[:month] != 12
+      add_zero_crimes_rows(last_row, ((last_row[:month]+1)..12))
+    end
+  end
+
+  def add_missing_months_between_previous_and_new_years(last_row, current_row)
+    if current_row[:year] != last_row[:year] + 1
+      add_zero_crimes_rows_for_years(current_row, ((last_row[:year]+1)...current_row[:year]))
+    end
+  end
+
+  def add_missing_months_at_beginning_of_new_year(current_row)
+    if current_row[:month] != 1
+      add_zero_crimes_rows(current_row, (1...current_row[:month]))
+    end
+  end
+
+  def add_missing_months_between_previous_and_new_months(last_row, current_row)
+    if current_row[:month] != last_row[:month] + 1
+      add_zero_crimes_rows(current_row, ((last_row[:month]+1)...current_row[:month]))
+    end
+  end
+
+  def rows_for_same_ward_and_category(row1, row2)
+    row1[:ward] == row2[:ward] && row1[:primary_type] == row2[:primary_type]
+  end
+
+  def add_zero_crimes_rows_for_years(base_row, year_range)
+    year_range.each do |year|
+      add_zero_crimes_rows(base_row.merge(:year => year), (1..12))
+    end
+  end
+
+  def add_zero_crimes_rows(base_row, month_range)
+    month_range.each do |month|
+      add_zero_crimes_row(base_row, month)
+    end
+  end
+
+  def add_zero_crimes_row(base_row, month)
     new_row = base_row.merge(:month => month, :crime_count => 0).reject{|k,v| k == :id}
+    #puts "NEW ROW: #{new_row.inspect}"
     @insert_dataset.insert(new_row)
     @rows_inserted += 1
     puts "Inserted #{@rows_inserted} rows in crimes_for_month for months with zero crimes" if @rows_inserted % 1000 == 0
