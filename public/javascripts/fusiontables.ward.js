@@ -1,8 +1,8 @@
 var FusiontableWard = {};
 var map = null;
 var fusionTableId = 2954091;
-var map_bounds = new google.maps.LatLngBounds();
 var chicago = new google.maps.LatLng(41.8781136, -87.66677856445312);
+
 FusiontableWard.create = function(number, selector) {
   
   var simpleWardStyles = [
@@ -78,14 +78,14 @@ FusiontableWard.getMapBounds = function(number) {
 FusiontableWard.setMapBounds = function(response) {
   if (response.getDataTable().getNumberOfRows() > 0)
   {
+    var map_bounds = new google.maps.LatLngBounds();
     var kml = response.getDataTable().getValue(0, 0);
     kml = kml.replace("<Polygon><outerBoundaryIs><LinearRing><coordinates>", "");
     kml = kml.replace("</coordinates></LinearRing></outerBoundaryIs></Polygon>", "");
     var boundPoints = kml.split(" ");
+    
     for(var i=0; i<boundPoints.length; i++) { 
       var boundItem = boundPoints[i].split(",");
-      //console.log(boundItem[0]);
-      //console.log(boundItem[1]);
       var point = new google.maps.LatLng(parseFloat(boundItem[1]), parseFloat(boundItem[0]));
       
       map_bounds.extend(point);
