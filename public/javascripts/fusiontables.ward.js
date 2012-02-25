@@ -50,7 +50,8 @@ FusiontableWard.create = function(number, selector) {
     draggable: false,
     streetViewControl: false,
     zoomControl: false,
-    suppressInfoWindows: true
+    suppressInfoWindows: true,
+    disableDoubleClickZoom: true
   };
   map = new google.maps.Map(document.getElementById(selector), myOptions);
   map.setOptions({styles: simpleWardStyles});
