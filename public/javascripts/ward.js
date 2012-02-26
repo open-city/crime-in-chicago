@@ -140,6 +140,11 @@ CategoryChart.create = function(number, primary_type) {
   //fetch data from data attribute on link and convert to array of ints
   var dataSeries = $("#category-" + primary_type + " a").attr("data-values").split(',');
   for(var i=0; i<dataSeries.length; i++) { dataSeries[i] = parseInt(dataSeries[i], 10); }
+  var minValue = Math.min.apply( Math, dataSeries );
+  var maxValue = Math.max.apply( Math, dataSeries );
+  
+  //console.log(minValue);
+  //console.log(maxValue);
 
   //build high chart
   chart = new Highcharts.Chart({
