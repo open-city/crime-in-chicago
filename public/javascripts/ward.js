@@ -140,11 +140,26 @@ CategoryChart.create = function(number, primary_type) {
   //fetch data from data attribute on link and convert to array of ints
   var dataSeries = $("#category-" + primary_type + " a").attr("data-values").split(',');
   for(var i=0; i<dataSeries.length; i++) { dataSeries[i] = parseInt(dataSeries[i], 10); }
+  
+  // find min/max values and style them appropriately in highcharts
   var minValue = Math.min.apply( Math, dataSeries );
   var maxValue = Math.max.apply( Math, dataSeries );
   
-  //console.log(minValue);
-  //console.log(maxValue);
+  for(var i=0; i < dataSeries.length; i++) {
+    if (dataSeries[i] == minValue) {
+      dataSeries[i] = eval('(' + (dataSeries[i]+'').replace(minValue, '{marker: {fillColor: "#0b810b",radius: 4},y: ' + minValue + '}') + ')');
+      break; //only replace the first occurrence
+    }
+  }
+  
+  for(var i=0; i < dataSeries.length; i++) {
+    if (dataSeries[i] == maxValue) {
+      dataSeries[i] = eval('(' + (dataSeries[i]+'').replace(maxValue, '{marker: {fillColor: "#c10202",radius: 4},y: ' + maxValue + '}') + ')');
+      break; //only replace the first occurrence
+    }
+  }
+  
+  //console.log(dataSeries);
 
   //build high chart
   chart = new Highcharts.Chart({
@@ -187,23 +202,6 @@ CategoryChart.create = function(number, primary_type) {
     series: [{
       color: "#ddf2fb",
       data: dataSeries,
-      /*data: [40, 96, 110, 88, 115, 99, 174, 116, 96, 127, 135, 156, 136, 138, 105, 96, 103, 114, 136, 154, 130, 147, 139, 166, 125, 130, 108, 93, 104, 103, 122, 206, 150,
-        {
-          marker: {
-            fillColor: "#c10202",
-            radius: 4
-          },
-          y: 225
-        },
-        142, 168, 150, 143, 169, 154, 144, 144, 162, 135, 194, 171, 94, 138, 148, 153, 145, 138, 126, 136, 138, 114, 125, 167, 131, 119, 142, 130, 91, 81, 96, 87, 78, 81, 88, 123, 111, 126, 149, 134, 91, 86, 106, 138, 157, 135, 119, 115, 56, 89, 67, 58, 44, 65, 53, 51, 43, 31, 51, 53, 50, 45, 47, 34, 31, 29, 31, 31, 26, 24, 28, 29, 23, 43, 27, 30, 32, 37, 26, 21, 28, 19,
-        {
-          marker: {
-            fillColor: "#0b810b",
-            radius: 4
-          },
-          y: 11
-        }
-      ],*/
       lineColor: "#518fc9",
       name: "Crimes"
     }],
@@ -228,8 +226,8 @@ CategoryChart.create = function(number, primary_type) {
     yAxis: {
       lineWidth: 1,
       title: { text: "" },
-      min: Math.min.apply( Math, dataSeries ),
-      max: Math.max.apply( Math, dataSeries )
+      min: minValue,
+      max: maxValue
     }
   });
 }
