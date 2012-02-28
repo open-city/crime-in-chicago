@@ -49,8 +49,13 @@ module Crime
     end
     
     get "/wards/:ward" do
-      @current_menu = "home"
       haml :"wards/index", :locals => {
+        :ward => params[:ward]
+      }
+    end
+    
+    get "/wards/map/:ward" do
+      haml :"wards/map", :layout => false, :locals => {
         :ward => params[:ward]
       }
     end

@@ -134,6 +134,7 @@ ul { list-style: disc; margin-left: 1.5em; }
 .gallery li:last-child { margin: 0; }
 
 #map_canvas_detail { height: 307px; margin-bottom: 1em; }
+#map_canvas_enlarged { height: 100%; width: 100%}
 
 /* Magnify links */
 .magnify {

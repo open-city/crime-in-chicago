@@ -3,7 +3,7 @@ var map = null;
 var fusionTableId = 2954091;
 var chicago = new google.maps.LatLng(41.8781136, -87.66677856445312);
 
-FusiontableWard.create = function(number, selector) {
+FusiontableWard.create = function(number, selector, isDetail) {
   
   var simpleWardStyles = [
     {
@@ -41,18 +41,33 @@ FusiontableWard.create = function(number, selector) {
     }
   ];
 
-  var myOptions = {
-    zoom: 9,
-    center: chicago,
-    mapTypeId: google.maps.MapTypeId.ROADMAP,
-    mapTypeControl: false,
-    scrollwheel: false,
-    draggable: false,
-    streetViewControl: false,
-    zoomControl: false,
-    suppressInfoWindows: true,
-    disableDoubleClickZoom: true
-  };
+  var myOptions;
+  
+  if (isDetail) {
+    myOptions = {
+      zoom: 9,
+      center: chicago,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false,
+      streetViewControl: false,
+      suppressInfoWindows: true
+    };
+  }
+  else {
+    myOptions = {
+      zoom: 9,
+      center: chicago,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false,
+      scrollwheel: false,
+      draggable: false,
+      streetViewControl: false,
+      zoomControl: false,
+      suppressInfoWindows: true,
+      disableDoubleClickZoom: true
+    };
+  }
+  
   map = new google.maps.Map(document.getElementById(selector), myOptions);
   map.setOptions({styles: simpleWardStyles});
   
@@ -83,7 +98,7 @@ FusiontableWard.setMapBounds = function(response) {
     kml = kml.replace("<Polygon><outerBoundaryIs><LinearRing><coordinates>", "");
     kml = kml.replace("</coordinates></LinearRing></outerBoundaryIs></Polygon>", "");
     var boundPoints = kml.split(" ");
-    
+    console.log(kml);
     for(var i=0; i<boundPoints.length; i++) { 
       var boundItem = boundPoints[i].split(",");
       var point = new google.maps.LatLng(parseFloat(boundItem[1]), parseFloat(boundItem[0]));
