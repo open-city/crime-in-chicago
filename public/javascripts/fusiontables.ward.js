@@ -1,10 +1,79 @@
 var FusiontableWard = {};
+var FusiontableAllWards = {};
 var map = null;
 var fusionTableId = 2954091;
 var chicago = new google.maps.LatLng(41.8781136, -87.66677856445312);
 
-FusiontableWard.create = function(number, selector, isDetail) {
+FusiontableAllWards.create = function(selector) {
+  var myOptions = {
+      zoom: 10,
+      center: chicago,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false,
+      streetViewControl: false,
+      suppressInfoWindows: true
+  };
   
+  map = new google.maps.Map(document.getElementById(selector), myOptions);
+  map.setOptions({styles: FusiontableWard.getMapStyle()});
+  
+  var wardKML = new google.maps.FusionTablesLayer(fusionTableId, {
+    query: "SELECT geometry FROM " + fusionTableId,
+    suppressInfoWindows: true
+    }
+  );
+  
+  wardKML.setMap(map);
+  
+  //click listener
+	google.maps.event.addListener(wardKML, 'click', function(q) {
+    console.log(q.row['name'].value);
+    Ward.create(q.row['name'].value, '2011', "#ward-charts");
+	});
+}
+
+FusiontableWard.create = function(number, selector, isDetail) {
+  var myOptions;
+  
+  if (isDetail) {
+    myOptions = {
+      zoom: 9,
+      center: chicago,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false,
+      streetViewControl: false,
+      suppressInfoWindows: true
+    };
+  }
+  else {
+    myOptions = {
+      zoom: 9,
+      center: chicago,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false,
+      scrollwheel: false,
+      draggable: false,
+      streetViewControl: false,
+      zoomControl: false,
+      suppressInfoWindows: true,
+      disableDoubleClickZoom: true
+    };
+  }
+  
+  map = new google.maps.Map(document.getElementById(selector), myOptions);
+  map.setOptions({styles: FusiontableWard.getMapStyle()});
+  
+  var wardKML = new google.maps.FusionTablesLayer(fusionTableId, {
+    query: "SELECT geometry FROM " + fusionTableId + " WHERE name = " + number,
+    suppressInfoWindows: true
+    }
+  );
+  
+  wardKML.setMap(map);
+  FusiontableWard.getMapBounds(number);
+}
+
+FusiontableWard.getMapStyle = function() { 
   var simpleWardStyles = [
     {
       featureType: "road",
@@ -40,45 +109,8 @@ FusiontableWard.create = function(number, selector, isDetail) {
       ]
     }
   ];
-
-  var myOptions;
   
-  if (isDetail) {
-    myOptions = {
-      zoom: 9,
-      center: chicago,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      mapTypeControl: false,
-      streetViewControl: false,
-      suppressInfoWindows: true
-    };
-  }
-  else {
-    myOptions = {
-      zoom: 9,
-      center: chicago,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      mapTypeControl: false,
-      scrollwheel: false,
-      draggable: false,
-      streetViewControl: false,
-      zoomControl: false,
-      suppressInfoWindows: true,
-      disableDoubleClickZoom: true
-    };
-  }
-  
-  map = new google.maps.Map(document.getElementById(selector), myOptions);
-  map.setOptions({styles: simpleWardStyles});
-  
-  var wardKML = new google.maps.FusionTablesLayer(fusionTableId, {
-    query: "SELECT geometry FROM " + fusionTableId + " WHERE name = " + number,
-    suppressInfoWindows: true
-    }
-  );
-  
-  wardKML.setMap(map);
-  FusiontableWard.getMapBounds(number);
+  return simpleWardStyles;
 }
 
 FusiontableWard.getMapBounds = function(number) {

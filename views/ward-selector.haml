@@ -1,9 +1,30 @@
+- content_for :javascript do
+  :javascript
+    $(document).ready(function() {
+      //display ward map
+      FusiontableAllWards.create("ward_map");
+      
+      $('#map_toggle a').click(function() {
+        if ($(this).html().indexOf("Show map") != -1)
+          $(this).html('Hide map');
+        else
+          $(this).html('Show map');
+        
+        $("#ward_map").slideToggle(function() {
+          google.maps.event.trigger(document.getElementById("ward_map"), 'resize');
+          map.setCenter(chicago);
+        });
+        
+        return false;
+      });
+    });
+
 .vis-label
   %h2 Select wards
 
   %p Choose two or more to compare crime data.
   %p Height = no. of crimes
-  %p#map-toggle
+  %p#map_toggle
     %a{:href => "#"}
       Show map
 
@@ -11,6 +32,8 @@
   #wards
     = haml :"ward-crime-columns", :locals => { :year => "2011" }
 
-  .ward-map
+  %hr
+  
+  #ward_map{:style => "display: none; "}
 
 %hr

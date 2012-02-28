@@ -133,6 +133,7 @@ ul { list-style: disc; margin-left: 1.5em; }
 .gallery li { float: left; margin-right: 6%; width: 29%; }
 .gallery li:last-child { margin: 0; }
 
+#ward_map {height: 500px; width: 100% }
 #map_canvas_detail { height: 307px; margin-bottom: 1em; }
 #map_canvas_enlarged { height: 100%; width: 100%}
 
