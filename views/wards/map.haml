@@ -1,0 +1,13 @@
+= include_stylesheet :master,      :media => :screen
+
+= include_javascript "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"
+= include_javascript "http://maps.googleapis.com/maps/api/js?sensor=false"
+= include_javascript "http://www.google.com/jsapi"
+= include_javascript "fusiontables.ward"
+:javascript
+  google.load('visualization', '1', {}); //used for custom SQL call to get count
+  $(document).ready(function() {
+    FusiontableWard.create("#{ward}", "map_canvas_enlarged", true);
+  });
+
+#map_canvas_enlarged

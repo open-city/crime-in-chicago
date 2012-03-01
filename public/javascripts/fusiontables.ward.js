@@ -19,9 +19,15 @@ FusiontableAllWards.create = function(selector) {
   
   var wardKML = new google.maps.FusionTablesLayer(fusionTableId, {
     query: "SELECT geometry FROM " + fusionTableId,
-    suppressInfoWindows: true
+    suppressInfoWindows: true,
+    styles: {
+      where: "name = '1'",
+      polygonOptions: {
+        fillColor: "#000000",
+        fillOpacity: 1
+      }
     }
-  );
+  });
   
   wardKML.setMap(map);
   
