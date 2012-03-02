@@ -67,6 +67,8 @@
                     // Hover color
                     this.attr("fill", colors.hover);
                     this.attr("fill-opacity", 1.0);
+                    
+                    $('[data-ward="' + ward.ward_number + '"]').css('opacity', '0.5');
                 
                     // Show the label
                     _label.attr({ text: title}).update(bbox.x, bbox.y + bbox.height/2, bbox.width).show();
@@ -82,6 +84,8 @@
                     // Reset the color
                     path.attr("fill", originalColor);
                     path.attr("fill-opacity", originalOpacity);
+                    
+                    $('[data-ward="' + ward.ward_number + '"]').css('opacity', '');
                 })
                 .click( function() {
                     var $self = $(this.node)
@@ -90,7 +94,10 @@
                       $self.data("selected", 1);
                       this.attr("fill", colors.current);
                       this.attr("fill-opacity", 1.0);
-                      Ward.create(wardNumber, 2011, "#ward-charts");
+                      $('[data-ward="' + wardNumber + '"]').parent().attr('class', 'current');
+                      $('[data-ward="' + ward.ward_number + '"]').css('opacity', '');
+                      //console.log($('.year-selector.current a').attr('data-year'));
+                      Ward.create(wardNumber, $('.year-selector.current a').attr('data-year'), "#ward-charts");
                 });
             
             // Add this to our set
@@ -114,7 +121,7 @@
             adjustedScale = scale * 0.95;            
             
             // TODO: This is a hack. Implement better scaling.
-            _set.scale(adjustedScale, adjustedScale, 270, 550);
+            _set.scale(adjustedScale, adjustedScale, -600, -1272);
     }
     
     /* Public methods */

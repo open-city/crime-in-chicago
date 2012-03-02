@@ -45,9 +45,21 @@ Ward.create = function(number, year, selector) {
 Ward.events = {};
 Ward.events.load_ward_clickables = function() {
   $(".ward-selector").click(function() {
+    var ward = $(this).attr("data-ward");
     $(this).parent().attr('class', 'current');
-    Ward.create($(this).attr("data-ward"), $(this).attr("data-year"), "#ward-charts");
+    $(".ward.ward-" + ward).attr("fill", "#ee0000");
+    Ward.create(ward, $(this).attr("data-year"), "#ward-charts");
     return false;
+  });
+  $(".ward-selector").mouseover(function(){
+    var ward = $(this).attr("data-ward");
+    if ($(".ward.ward-" + ward).attr("fill") != "#ee0000")
+      $(".ward.ward-" + ward).attr("fill", "#f5f5f5");
+  });
+  $(".ward-selector").mouseout(function(){
+    var ward = $(this).attr("data-ward");
+    if ($(".ward.ward-" + ward).attr("fill") != "#ee0000")
+      $(".ward.ward-" + ward).attr("fill", "#A5D9EE");
   });
 }
 
