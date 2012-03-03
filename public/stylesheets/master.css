@@ -113,13 +113,13 @@ ul { list-style: disc; margin-left: 1.5em; }
       .crime-volume.weekly li { width: 14.28%; }
     
     /* Wards */
-    #wards { width: 60%; float: left;}
+    #wards { width: 71%; float: right;}
     #wards .column-chart { clear: both; font-size: 13px; }
     #wards .idx { bottom: 20px; }
-    #wards li { padding-top: 15px; width: 35px; }
+    #wards li { padding-top: 15px; width: 33px; }
     #wards .point { height: 55px; margin-right: 3px; }
     
-    #wardmap {width: 320px; height: 402px; float: left;}
+    #wardmap {width: 220px; height: 250px; float: left;}
 
 /* Footer */
 #footer { color: #777; font-size: 11px; }

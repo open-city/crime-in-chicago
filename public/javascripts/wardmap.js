@@ -16,7 +16,7 @@
       , _palette = {
             fill: "#A5D9EE"
           , hover: "#f5f5f5"
-          , stroke: "#333333"
+          , stroke: "#666"
           , current: "#ee0000"
       };
          
@@ -118,10 +118,10 @@
             scaleWidth =  _width / bBox.width,
             scaleHeight = _height / bBox.height,
             scale = (scaleWidth < scaleHeight) ? scaleWidth : scaleHeight,
-            adjustedScale = scale * 0.95;            
+            adjustedScale = scale * 1;            
             
             // TODO: This is a hack. Implement better scaling.
-            _set.scale(adjustedScale, adjustedScale, -600, -1272);
+            _set.scale(adjustedScale, adjustedScale, -2000, -3930);
     }
     
     /* Public methods */
