@@ -1,17 +1,17 @@
 .vis-label
-  %h2 Select wards
+  %h2 2. Select wards
 
   %p Choose two or more to compare crime data.
   %p Height = no. of crimes
 
 .vis-content
+
+  #search
+    %input.hint#tbAddress{:type => "text", :name => "q", :title => "Enter an address or an intersection...", :onkeydown => "if (event.keyCode == 13) $('#btnSearchAddress').click()"}
+    %input.btn#btnSearchAddress{ :type => "button", :value => "Find my ward", :onclick => "FusiontableWard.findWard();" }
+    %span#foundWardNumber
+
   #wards
     = haml :"ward-crime-columns", :locals => { :year => "2011" }
-  
-  #wardmap
-  
-  = include_javascript "raphael-min"
-  = include_javascript "wardmap"
-  = include_javascript "wardmap.svg"
 
 %hr

@@ -38,6 +38,54 @@ FusiontableAllWards.create = function(selector) {
 	});
 }
 
+FusiontableWard.resetSearch = function() {
+  $("#tbAddress").val("");
+  $("#foundWardNumber").html("");
+}
+
+FusiontableWard.findWard = function() {
+  var geocoder = new google.maps.Geocoder();
+  var address = $("#tbAddress").val();
+  var searchRadius = 1; //in meters
+  var searchStr = "SELECT name FROM " + fusionTableId + " WHERE geometry not equal to ''";
+  
+  if (address != "") {
+    if (address.toLowerCase().indexOf("chicago") == -1) 
+      address = address + " chicago";
+
+		geocoder.geocode( { 'address': address}, function(results, status) {
+		  if (status == google.maps.GeocoderStatus.OK) {
+				searchStr += " AND ST_INTERSECTS(geometry, CIRCLE(LATLNG" + results[0].geometry.location.toString() + "," + searchRadius + "))";
+				//console.log(searchStr);
+				FusiontableWard.getFTQuery(searchStr).send(FusiontableWard.displayFoundWard);
+		  }
+		  else {
+				  alert("We could not find your address: " + status);
+		  }
+	  });
+  }
+  return false;
+}
+	
+FusiontableWard.displayFoundWard = function(response) {
+  var number = "";
+  if (response.getDataTable().getNumberOfRows() > 0)
+  	number = parseInt(response.getDataTable().getValue(0, 0));
+  	
+  //console.log(number);
+  $( "#foundWardNumber" ).fadeOut(function() {
+      $( "#foundWardNumber" ).html("That address is in ward " + number);
+      $('[data-ward="' + number + '"]').parent().attr('class', 'current');
+      Ward.create(number, $('.year-selector.current a').attr('data-year'), "#ward-charts");
+    });
+  $( "#foundWardNumber" ).fadeIn();
+}
+
+FusiontableWard.getFTQuery = function(sql) {
+		var queryText = encodeURIComponent(sql);
+		return new google.visualization.Query('http://www.google.com/fusiontables/gvizdata?tq='  + queryText);
+	}
+
 FusiontableWard.create = function(number, selector, isDetail) {
   var myOptions;
   

@@ -12,7 +12,7 @@
 /* Fonts
 =====================================================================*/
 .action h1, h2, h3, h4, h5, h6, #identity, .price, .wards, #years { font-family: Arvo, Georgia, "Times New Roman", Times, serif; }
-body, h1 span, h2 span, h3 span { font-family: "Open Sans", Arial, sans-serif; }
+body, h1 span, h2 span, h3 span, input { font-family: "Open Sans", Arial, sans-serif; }
 
 
 /* Basics
@@ -28,6 +28,7 @@ h1, h2, h3, h4, h5, h6, strong { font-weight: bold; }
 h1 span, h2 span, h3 span { font-size: 12px; font-weight: normal; margin-left: 1em; }
 h2 { font-size: 17px; margin-bottom: 0.5em; }
 hr { border-bottom: 3px double #d9d9d9; border-width: 0 0 3px; clear: both; color: #fff; margin: 25px 0; }
+input, select, text area { font-size: 1em; }
 li { margin-bottom: 0.5em; }
 ol { list-style: decimal; margin-left: 2em; }
 table { border-collapse: collapse; width: 100%; }
@@ -113,13 +114,13 @@ ul { list-style: disc; margin-left: 1.5em; }
       .crime-volume.weekly li { width: 14.28%; }
     
     /* Wards */
-    #wards { width: 71%; float: right;}
+    //#wards { width: 71%; float: right;}
     #wards .column-chart { clear: both; font-size: 13px; }
     #wards .idx { bottom: 20px; }
-    #wards li { padding-top: 15px; width: 33px; }
+    #wards li { padding-top: 15px; width: 4%; }
     #wards .point { height: 55px; margin-right: 3px; }
     
-    #wardmap {width: 220px; height: 250px; float: left;}
+    //#wardmap {width: 220px; height: 250px; float: left;}
 
 /* Footer */
 #footer { color: #777; font-size: 11px; }
@@ -219,6 +220,11 @@ a:hover .magnify { background-color: #005b82; background-position: 0 -22px; bord
   #poster-sizes .size-sm { margin-top: 54px; height: 48px; width: 32px; }
   #poster-sizes .size-md { margin-top: 42px; height: 60px; width: 40px; }
   #poster-sizes .size-lg { margin-top: 22px; height: 80px; width: 53px; }
+
+/* Search */
+#search { white-space: nowrap; }
+#search input.hint { width: 300px; }
+.ezpz-hint { color: #777; font-style: italic; }
 
 /* Summaries */
 .summary { clear: both; font-size: 16px; line-height: 1; }
