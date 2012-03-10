@@ -195,7 +195,7 @@ CategoryChart.create = function(number, primary_type) {
           }
         },
         pointInterval: 30 * 24 * 3600 * 1000,
-        pointStart: Date.UTC(2002, 4, 1),
+        pointStart: Date.UTC(2003, 1, 1),
         shadow: false,
         states: {
            hover: {
