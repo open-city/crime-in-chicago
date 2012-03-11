@@ -1,9 +1,8 @@
-= include_stylesheet :prettyPhoto,      :media => :screen
-
 - content_for :javascript do
   = include_javascript "dataTables.sorting"
   = include_javascript "highcharts"
   = include_javascript "jquery.prettyPhoto"
+
   :javascript
     $(document).ready(function() {
       var year = 2011;
@@ -120,8 +119,12 @@
         width: "240px"
       });
       
-      //display ward map
-      FusiontableWard.create("#{ward}", "map_canvas_detail", false);
+      var fusion_map = FusionMap.create("map_canvas_detail", ward_map_default_options);
+      var fusion_layer = FusionLayer.create({select: 'geometry', from: ward_fusion_table_id, where: "name = #{ward}"}, fusion_map.page_element);
+      fusion_map.add_map_bounds({from: ward_fusion_table_id, where: "name = '#{ward}'"}, function(response) {
+        fusion_map.set_map_bounds(response);
+      });
+
       
       // map lightbox triggers
       $("a[rel^='prettyPhoto']").prettyPhoto({
@@ -242,7 +245,7 @@
   %h2
     Location
     %span
-      %a{:href => "/wards/map/#{ward}?iframe=true", :rel => "prettyPhoto[iframes-1]"} Enlarge
+      = link_to "Enlarge", "/wards/map/#{ward}?iframe=true", :rel => "prettyPhoto[iframes-1]"
   
   #map_canvas_detail
   

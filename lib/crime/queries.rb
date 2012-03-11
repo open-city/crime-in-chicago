@@ -34,6 +34,13 @@ module Crime
       group by primary_type
       order by crime_count desc
       limit 6".strip,
+    :ward_crimes_categories_per_month => "
+      select count(*) as crime_count, primary_type
+      from crimes
+      where ward = :ward and year = :year and date_part('month', occurred_at) = :month
+      group by primary_type
+      order by crime_count desc
+      limit 6".strip,
     :ward_crimes_per_year => "
       select cast(date_part('year',occurred_at) as int) as year, count(*) as crime_count_for_year
       from crimes 

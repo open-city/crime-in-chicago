@@ -7,6 +7,12 @@ require "sequel"
 require "uri"
 require "facets/string"
 
+class String
+  def titleize
+    split(/(\W)/).map(&:capitalize).join
+  end
+end
+
 module Crime
   class Application < Sinatra::Base
     include Cacheable
@@ -35,21 +41,13 @@ module Crime
     helpers Sinatra::JSON
 
 
-#    (2002..2011).each do |year|
-#      dataset = DB.fetch(QUERIES[:crime_max_daily_year], :year => year)
-#      retain_in_cache(dataset.sql) do
-#        dataset.first[:max].to_i
-#      end
-#    end
-
-
     get "/" do
       @current_menu = "home"
       haml :index
     end
     
     get "/wards/:ward" do
-      haml :"wards/index", :locals => {
+      haml :"wards/show", :locals => {
         :ward => params[:ward]
       }
     end
@@ -88,6 +86,14 @@ module Crime
 
       haml :"ward/statistics/category", :layout => false, :locals => {
         :ward => params[:ward], :year => params[:year]
+      }
+    end
+
+    get "/wards/:ward/:year/:month/partials/statistics/category" do
+      @categories_by_month = statistic_categories_by_ward_and_year_and_month(params[:ward], params[:year], params[:month])
+
+      haml :"ward/statistics/category_month", :layout => false, :locals => {
+        :ward => params[:ward], :year => params[:year], :month => params[:month]
       }
     end
 
@@ -145,8 +151,3 @@ module Crime
   end
 end
 
-class String
-  def titleize
-    split(/(\W)/).map(&:capitalize).join
-  end
-end

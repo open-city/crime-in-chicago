@@ -20,6 +20,9 @@ body, h1 span, h2 span, h3 span, input { font-family: "Open Sans", Arial, sans-s
 a { color: #227fa2; text-decoration: none; }
 a:hover { text-decoration: underline; }
 body { font-size: 14px; line-height: 1.4; padding-bottom: 15px; }
+body.map_enlarged {
+  padding-bottom: 0;
+}
 blockquote, dl, ol, p, table, ul { margin-bottom: 1em; }
 cite, em { font-style: italic; }
 dt { margin-top: 1em; }

@@ -2,12 +2,13 @@
   %ol.months
     - (1..12).each do |month|
       %li
-        %a{:href => "#"} 
+        %a{:href => "#", :"data-month" => month} 
           = Date::ABBR_MONTHNAMES[month]
   %ol.weekdays
     - (0..6).each do |day|
       %li
-        %a{:href => "#"} 
+        %a{:href => "#", :"data-weekday" => day} 
           = Date::ABBR_DAYNAMES[day]
+
   .chart{:id => "calendar-#{identity}-#{year}"}
 

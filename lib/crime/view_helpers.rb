@@ -47,6 +47,13 @@ module Crime
       end
     end
 
+    def statistic_categories_by_ward_and_year_and_month(ward, year, month)
+      dataset = DB.fetch(QUERIES[:ward_crimes_categories_per_month], :ward => ward, :year => year, :month => month)
+      retain_in_cache(dataset.sql) do
+        dataset.all
+      end
+    end
+
     def year_comparison(crimes, year1, year2)
       data1 = crimes.detect { |c| c[:year].to_s == year1.to_s }[:crime_count_for_year]
       data2 = crimes.detect { |c| c[:year].to_s == year2.to_s }[:crime_count_for_year]

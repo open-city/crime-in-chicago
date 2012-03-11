@@ -1,3 +1,21 @@
+- content_for :javascripts do
+  :javascript
+    $(function() {
+      function search(element) {
+        FusiontableWard.findWard(element.val());
+      }
+
+      $("#ward_search").click(function() {
+        search($("#ward_address"));
+      });
+
+      $("#ward_address").keydown(function(event) {
+        if (event.which == 13) {
+          search($(this));
+        }
+      });
+    });
+
 .vis-label
   %h2 2. Select wards
 
@@ -7,8 +25,8 @@
 .vis-content
 
   #search
-    %input.hint#tbAddress{:type => "text", :name => "q", :title => "Enter an address or an intersection...", :onkeydown => "if (event.keyCode == 13) $('#btnSearchAddress').click()"}
-    %input.btn#btnSearchAddress{ :type => "button", :value => "Find my ward", :onclick => "FusiontableWard.findWard();" }
+    %input.hint#ward_address{:type => "text", :name => "q", :title => "Enter an address or an intersection..."}
+    %input.btn#ward_search{ :type => "button", :value => "Find my ward" }
     %span#foundWardNumber
 
   #wards

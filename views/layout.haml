@@ -12,11 +12,12 @@
 
     = include_stylesheet :master,      :media => :screen
     = include_stylesheet :colorbrewer, :media => :screen
+    = include_stylesheet :prettyPhoto, :media => :screen
 
     = include_javascript "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"
     = include_javascript "http://maps.googleapis.com/maps/api/js?sensor=false"
     = include_javascript "http://www.google.com/jsapi"
-    = include_javascript "fusiontables.ward"
+    = include_javascript "fusion_maps"
     = include_javascript "jquery-addons"
     = include_javascript "jquery-ui.min"
     = include_javascript "jquery.tooltip.min"
@@ -27,11 +28,11 @@
     = include_javascript "d3.time"
     = include_javascript :ward
     = include_javascript :application
-
     = content :javascript
 
     :javascript
       google.load('visualization', '1', {}); //used for custom SQL call to get count
+
     - if production?
       :javascript
         var _gaq = _gaq || [];

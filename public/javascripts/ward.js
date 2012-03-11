@@ -1,7 +1,7 @@
 var Ward = {};
 Ward.create = function(number, year, selector) {
-  identity = function(number, year) {
-    ward = $("#ward-"+number+"-"+year);
+  var identity = function(number, year) {
+    var ward = $("#ward-"+number+"-"+year);
     if (ward.exists()) {
       ward.attr("data-year", year);
       ward.attr("data-ward", number);
@@ -11,7 +11,7 @@ Ward.create = function(number, year, selector) {
     return ward;
   }
 
-  ward = identity(number, year);
+  var ward = identity(number, year);
   if (ward.missing()) {
     $.get("/wards/"+number+"/"+year+"/partials/timeline", function(data) {
       $(selector).prepend(data);
@@ -35,9 +35,26 @@ Ward.create = function(number, year, selector) {
 
       Ward.calendar(ward, "#calendar-"+ward.number+"-"+ward.year, false);
 
+      var options = $.extend(ward_map_default_options, {
+        zoom: 14
+      });
+
+      var fusion_map = FusionMap.create("map_canvas_enlarged_ward_"+ward.number, options);
+      var fusion_layer = FusionLayer.create({select: 'geometry', from: ward_fusion_table_id, where: "name = '"+ward.number+"'"}, fusion_map.page_element);
+      fusion_map.add_map_bounds({from: ward_fusion_table_id, where: "name = '"+ward.number+"'"}, function(response) {
+        fusion_map.set_map_bounds(response);
+      });
+
+      ward.find(".heatmap .months li a").click(function() {
+        var month = $(this).attr("data-month");
+        Ward.statistics.category_month(ward, month);
+      });
+
       Ward.statistics.crime(ward);
       Ward.statistics.category(ward);
       Ward.statistics.sparkline(ward);
+
+      Ward.heatmap.setup_months(selector, ward);
     });
   }
 }
@@ -50,7 +67,6 @@ Ward.events.load_ward_clickables = function() {
     Ward.create(ward, $(this).attr("data-year"), "#ward-charts");
     return false;
   });
-  $(".hint").ezpz_hint();
 }
 
 Ward.events.load_year_clickables = function() {
@@ -74,9 +90,19 @@ Ward.events.load_year_clickables = function() {
 
       link = $(this);
       link.parent().addClass("current");
-      FusiontableWard.resetSearch();
-      
     }
+    return false;
+  });
+}
+
+Ward.heatmap = {};
+Ward.heatmap.setup_months = function(selector, ward) {
+  var ward_obj = ward;
+  $(selector).find(".heatmap .months li a").click(function(selector, ward) {
+    var month = $(this).attr("data-month");
+    $.get("/wards/"+ward.number+"/"+ward.year+"/"+month+"/partials/statistics/category", function(data) {
+      ward.find(".category").html(data);
+    });
     return false;
   });
 }
@@ -108,6 +134,13 @@ Ward.statistics.crime = function(ward) {
 Ward.statistics.category = function(ward) {
   $.get("/wards/"+ward.number+"/"+ward.year+"/partials/statistics/category", function(data) {
     ward.find(".category").html(data);
+  });
+}
+
+Ward.statistics.category_month = function(ward, month) {
+  $.get("/wards/"+ward.number+"/"+ward.year+"/"+month+"/partials/statistics/category", function(data) {
+    ward.find(".category").html(data);
+    return false;
   });
 }
 
@@ -145,25 +178,25 @@ CategoryChart.create = function(number, primary_type) {
   //fetch data from data attribute on link and convert to array of ints
   var dataSeries = $("#category-" + primary_type + " a").attr("data-values").split(',');
   for(var i=0; i<dataSeries.length; i++) { dataSeries[i] = parseInt(dataSeries[i], 10); }
-  
+
   // find min/max values and style them appropriately in highcharts
   var minValue = Math.min.apply( Math, dataSeries );
   var maxValue = Math.max.apply( Math, dataSeries );
-  
+
   for(var i=0; i < dataSeries.length; i++) {
     if (dataSeries[i] == minValue) {
       dataSeries[i] = eval('(' + (dataSeries[i]+'').replace(minValue, '{marker: {fillColor: "#0b810b",radius: 4},y: ' + minValue + '}') + ')');
       break; //only replace the first occurrence
     }
   }
-  
+
   for(var i=0; i < dataSeries.length; i++) {
     if (dataSeries[i] == maxValue) {
       dataSeries[i] = eval('(' + (dataSeries[i]+'').replace(maxValue, '{marker: {fillColor: "#c10202",radius: 4},y: ' + maxValue + '}') + ')');
       break; //only replace the first occurrence
     }
   }
-  
+
   //console.log(dataSeries);
 
   //build high chart
