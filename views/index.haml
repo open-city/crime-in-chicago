@@ -2,6 +2,24 @@
   :javascript
     $(document).ready(function() {
       Ward.events.load_ward_clickables();
+      //callThis();
+
+      function callThis() {
+        $(".ward-selector").click(function() {
+          var element = $(this);
+          var number = element.attr("data-ward");
+          var year   = element.attr("data-year");
+          element.parent().attr("class", "current");
+
+          var ward = new OpenCity.Ward(number, year);
+          ward.present();
+
+          //var calendar = new OpenCity.Ward.Calendar(ward, {height: 104, width: 770});
+          //calendar.attach("#ward-charts", "Blues");
+
+          return false;
+        });
+      }
     });
 
 #vis

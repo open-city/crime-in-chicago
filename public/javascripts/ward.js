@@ -1,4 +1,234 @@
+var OpenCity = {};
+OpenCity.Ward = function(number, year, options) {
+  this.number   = number;
+  this.year     = year;
+  this.options = options || {};
+  this.calendar = null;
+
+  return this;
+};
+OpenCity.Ward.prototype.getOption = function(option, default_options) {
+  if (typeof this.options != "undefined" &&
+      typeof this.options == "object" && this.options[option]) {
+    return this.options[option];
+  } else {
+    return default_options;
+  }
+};
+OpenCity.Ward.prototype.wardSelector = OpenCity.Ward.prototype.getOption("wardSelector", "#ward");
+OpenCity.Ward.prototype.missing = $(this.wardSelector+"-"+this.number+"-"+this.year).length == 0;
+OpenCity.Ward.prototype.present = function(selector) {
+  if (this.missing) {
+    this.calendar = new OpenCity.Ward.Calendar(this, {height: 104, width: 770});
+  }
+}
+OpenCity.Ward.Calendar = function(ward, options) {
+  this.ward    = ward;
+  this.options = options || {};
+  this.data    = new Object();
+  this.day     = d3.time.format("%w"),
+  this.week    = d3.time.format("%U"),
+  this.percent = d3.format(".1%"),
+  this.format  = d3.time.format("%Y-%m-%d");
+
+//  this.margins    = [0, 0, 0, 0];
+//  this.width      = 590 - m[1] - m[3];
+//  this.height     = 95  - m[0] - m[2];
+//  this.cell       = 10.64;
+
+//  this.setMargins(options);
+//  this.setWidth(options);
+//  this.setHeight(options);
+//  this.setCellsize(options);
+  return this;
+};
+OpenCity.Ward.Calendar.prototype.getOption = function(option, default_options) {
+  if (typeof this.options != "undefined" &&
+      typeof this.options == "object" && this.options[option]) {
+    return this.options[option];
+  } else {
+    return default_options;
+  }
+};
+OpenCity.Ward.Calendar.prototype.margins = OpenCity.Ward.Calendar.prototype.getOption("margins", [0, 0, 0, 0]);
+OpenCity.Ward.Calendar.prototype.width = function(options) {
+  return this.getOption("width", 590) - this.margins[1] - this.margins[3];
+};
+OpenCity.Ward.Calendar.prototype.height = function(options) {
+  return this.getOption("height", 95) - this.margins[0] - this.margins[2];
+};
+OpenCity.Ward.Calendar.prototype.cellsize = function(options) {
+  return this.getOption("cellsize", 10.64);
+};
+OpenCity.Ward.Calendar.prototype.color = function() {
+  return d3.scale.quantize().domain([0, this.crimes_max]).range(d3.range(0));
+};
+OpenCity.Ward.Calendar.prototype.svg = function(selector, class_string) {
+  return d3.select(selector).selectAll("svg")
+      .data(d3.range(parseInt(this.ward.year), parseInt(this.ward.year) + 1))
+    .enter().append("svg")
+      .attr("width", this.width)
+      .attr("height", this.height)
+      .attr("class", class_string)
+    .append("g")
+      .attr("transform", "translate(0, 1)");
+};
+OpenCity.Ward.Calendar.prototype.rect = function(selector, class_string) {
+  return svg.selectAll(selector)
+      .data(function(d) { return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+    .enter().append("rect")
+      .attr("class", class_string)
+      .attr("width", this.cellsize)
+      .attr("height", this.cellsize)
+      .attr("x", function(d) { return week(d) * this.cellsize; })
+      .attr("y", function(d) { return day(d) * this.cellsize; })
+      .map(this.format);
+};
+OpenCity.Ward.Calendar.prototype.attach = function(selector, color_class) {
+  var the_ward      = this.ward;
+  var the_width     = this.width();
+  var the_height    = this.height();
+  var the_data      = this.data;
+
+  var week          = d3.time.format("%U");
+  var day           = d3.time.format("%w");
+  var format        = d3.time.format("%Y-%m-%d");
+  var z             = 14.5;
+
+  d3.json("/api/"+the_ward.year+"/wards/"+the_ward.number+"/crime/calendar", function(json) {
+    the_data["crime_counts"] = [];
+    the_data["crimes_sum"] = 0;
+    the_data["crimes_max"] = json[0]["crime_max"]
+    json.forEach(function(obj, index) {
+      the_data[json[index]["date"]] = json[index]["crime_count"];
+      the_data["crime_counts"][the_data["crime_counts"].length] = json[index]["crime_count"];
+      the_data["crimes_sum"] = the_data["crimes_sum"] + json[index]["crime_count"];
+    });
+
+    var crimes_max = the_data["crimes_max"];
+    var color         = d3.scale.quantize().domain([0, crimes_max]).range(d3.range(9));
+
+//    this.ward.find(".summary_count").html("<strong>"+the_data["crimes_sum"]+"</strong>");
+
+    var svg = d3.select(selector).selectAll("svg")
+        .data(d3.range(parseInt(the_ward.year), parseInt(the_ward.year) + 1))
+      .enter().append("svg")
+        .attr("width", the_width)
+        .attr("height", the_height)
+        .attr("class", color_class)
+      .append("g")
+        .attr("transform", "translate(0, 1)");
+
+    var rect = svg.selectAll("rect.day")
+        .data(function(d) { return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+      .enter().append("rect")
+        .attr("class", "day")
+        .attr("width", z)
+        .attr("height", z)
+        .attr("x", function(d) {
+          return OpenCity.Ward.Calendar.functions.week(d) * z;
+        })
+        .attr("y", function(d) {
+          return OpenCity.Ward.Calendar.functions.day(d) * z;
+        })
+        .map(OpenCity.Ward.Calendar.functions.format);
+
+    rect.append("title")
+        .text(function(d) { return d; });
+
+    svg.selectAll("path.month")
+        .data(function(d) { return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+      .enter().append("path")
+        .attr("class", "month")
+        .attr("d", OpenCity.Ward.Calendar.functions.monthPath);
+
+    rect.filter(function(d) { return d in the_data; })
+        .attr("class", function(d) { return "day q" + color(the_data[d]) + "-9"; })
+      .select("title")
+        .text(function(d) { return "[" + d + "]" + ": " + the_data[d] + " crimes listed"; });
+  });
+};
+
+OpenCity.Ward.Calendar.functions = {};
+OpenCity.Ward.Calendar.functions.day       = d3.time.format("%w");
+OpenCity.Ward.Calendar.functions.week      = d3.time.format("%U");
+OpenCity.Ward.Calendar.functions.percent   = d3.format(".1%");
+OpenCity.Ward.Calendar.functions.format    = d3.time.format("%Y-%m-%d");
+OpenCity.Ward.Calendar.functions.monthPath = function(t0) {
+  var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0);
+  var d0 = + OpenCity.Ward.Calendar.functions.day(t0);
+  var d1 = + OpenCity.Ward.Calendar.functions.day(t1);
+  var w0 = + OpenCity.Ward.Calendar.functions.week(t0);
+  var w1 = + OpenCity.Ward.Calendar.functions.week(t1);
+  var z  = 14.5;
+
+  return "M" + (w0 + 1) * z + "," + d0 * z
+      + "H" + w0 * z + "V" + 7 * z
+      + "H" + w1 * z + "V" + (d1 + 1) * z
+      + "H" + (w1 + 1) * z + "V" + 0
+      + "H" + (w0 + 1) * z + "Z";
+};
+
+
+// To be removed
+OpenCity.Ward.Calendar.prototype.missing = function() {
+  var ward_element = $("#ward-"+this.ward.number+"-"+this.ward.year);
+  return ward_element.length == 0;
+}
+
+
+
+
+
+
+
+
+
+
+
 var Ward = {};
+Ward.events = {};
+Ward.events.load_ward_clickables = function() {
+  $(".ward-selector").click(function() {
+    var number = $(this).attr("data-ward");
+    var year   = $(this).attr("data-year");
+//    $(this).parent().attr("class", "current");
+//    var ward = new OpenCity.Ward(number, year);
+//    var calendar = new OpenCity.Ward.Calendar(ward, {height: 104, width: 770});
+//    calendar.attach("#ward-charts", "Blues");
+
+    $(this).parent().attr('class', 'current');
+    Ward.create(number, year, "#ward-charts");
+    return false;
+  });
+}
+
+Ward.events.load_year_clickables = function() {
+  $('.year-selector a').click(function() {
+    if (!$(this).parent().hasClass("current")) {
+      $.get("/wards/"+$(this).attr("data-year")+"/partials/crime-columns", function(data) {
+        $("#wards").html(data);
+
+        $(".ward-selector").click(function() {
+          $(this).parent().attr('class', 'current');
+          Ward.create($(this).attr("data-ward"), $(this).attr("data-year"), "#ward-charts");
+          return false;
+        });
+
+        Ward.tooltips(".chart-column .idx");
+      });
+
+      $('.year-selector.current').each(function() {
+        $(this).removeClass("current");
+      });
+
+      link = $(this);
+      link.parent().addClass("current");
+    }
+    return false;
+  });
+}
+
 Ward.create = function(number, year, selector) {
   var identity = function(number, year) {
     var ward = $("#ward-"+number+"-"+year);
@@ -57,42 +287,6 @@ Ward.create = function(number, year, selector) {
       Ward.heatmap.setup_months(selector, ward);
     });
   }
-}
-
-Ward.events = {};
-Ward.events.load_ward_clickables = function() {
-  $(".ward-selector").click(function() {
-    var ward = $(this).attr("data-ward");
-    $(this).parent().attr('class', 'current');
-    Ward.create(ward, $(this).attr("data-year"), "#ward-charts");
-    return false;
-  });
-}
-
-Ward.events.load_year_clickables = function() {
-  $('.year-selector a').click(function() {
-    if (!$(this).parent().hasClass("current")) {
-      $.get("/wards/"+$(this).attr("data-year")+"/partials/crime-columns", function(data) {
-        $("#wards").html(data);
-
-        $(".ward-selector").click(function() {
-          $(this).parent().attr('class', 'current');
-          Ward.create($(this).attr("data-ward"), $(this).attr("data-year"), "#ward-charts");
-          return false;
-        });
-
-        Ward.tooltips(".chart-column .idx");
-      });
-
-      $('.year-selector.current').each(function() {
-        $(this).removeClass("current");
-      });
-
-      link = $(this);
-      link.parent().addClass("current");
-    }
-    return false;
-  });
 }
 
 Ward.heatmap = {};
@@ -337,8 +531,12 @@ Ward.calendar = function(ward, selector, isHistory) {
         .attr("class", "day")
         .attr("width", z)
         .attr("height", z)
-        .attr("x", function(d) { return week(d) * z; })
-        .attr("y", function(d) { return day(d) * z; })
+        .attr("x", function(d) {
+          return week(d) * z;
+        })
+        .attr("y", function(d) {
+          return day(d) * z;
+        })
         .map(format);
 
     rect.append("title")
