@@ -1,8 +1,8 @@
 - content_for :javascript do
   :javascript
     $(document).ready(function() {
-      Ward.events.load_ward_clickables();
-      //callThis();
+      //Ward.events.load_ward_clickables();
+      callThis();
 
       function callThis() {
         $(".ward-selector").click(function() {
@@ -11,11 +11,7 @@
           var year   = element.attr("data-year");
           element.parent().attr("class", "current");
 
-          var ward = new OpenCity.Ward(number, year);
-          ward.present();
-
-          //var calendar = new OpenCity.Ward.Calendar(ward, {height: 104, width: 770});
-          //calendar.attach("#ward-charts", "Blues");
+          new OpenCity.Ward(number, year).present();
 
           return false;
         });

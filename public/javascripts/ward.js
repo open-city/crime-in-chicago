@@ -2,7 +2,10 @@ var OpenCity = {};
 OpenCity.Ward = function(number, year, options) {
   this.number   = number;
   this.year     = year;
-  this.options = options || {};
+  this.options  = options || {};
+  this.template = function() {
+    return new OpenCity.Ward.Template(this).tree();
+  };
   this.calendar = null;
 
   return this;
@@ -20,26 +23,82 @@ OpenCity.Ward.prototype.missing = $(this.wardSelector+"-"+this.number+"-"+this.y
 OpenCity.Ward.prototype.present = function(selector) {
   if (this.missing) {
     this.calendar = new OpenCity.Ward.Calendar(this, {height: 104, width: 770});
+    $("#ward-charts").prepend(this.template());
+    this.calendar.attach("#calendar-"+this.number+"-"+this.year, "Blues");
+    var number = this.number;
+
+    $("#ward-"+this.number+"-"+this.year).find(".remove").click(function() {
+      $("a[data-ward|='"+number+"']").parent().attr("class", "");
+      $(this).parent().remove();
+      return false;
+    });
   }
 }
+OpenCity.Ward.Template = function(ward) {
+  this.ward = ward;
+  this.base = $("<div id=\"ward-"+this.ward.number+"-"+this.ward.year+"\" class=\"timeline\" data-ward=\""+this.ward.number+"\" data-year=\""+this.ward.year+"\"></div>");
+
+  this.close_handle = function() {
+    return $("<a class=\"remove\" href=\"#\" title=\"Remove\">Remove</a>");
+  };
+
+  this.title = function() {
+    return $("<h2><a class=\"ward-title\" href=\"#\">Ward "+this.ward.number+" ["+this.ward.year+"]</a><span><a href=\"/wards/"+this.ward.number+"\">View all ward details</a></span></h2>");
+  };
+
+  this.heatmap_months = function() {
+    var months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    var list = $("<ol class=\"months\"></ol>");
+    $.each(months, function(index, value) {
+     list.append($("<li><a data-month=\""+(index + 1)+"\" href=\"#\">"+value+"</a></li>"));
+    });
+    return list;
+  };
+
+  this.heatmap_weekdays = function() {
+    var weekdays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+    var list = $("<ol class=\"weekdays\"></ol>");
+    $.each(weekdays, function(index, value) {
+     list.append($("<li><a data-weekday=\""+index+"\" href=\"#\">"+value+"</a></li>"));
+    });
+    return list;
+  };
+
+  this.heatmap_chart = function() {
+    return $("<div class=\"chart\" id=\"calendar-"+this.ward.number+"-"+this.ward.year+"\"></div>");
+  };
+
+  this.heatmap = function() {
+    var list = $("<div class=\"heatmap\"></div>");
+    list.append(this.heatmap_months());
+    list.append(this.heatmap_weekdays());
+    list.append(this.heatmap_chart());
+    return list;
+  };
+
+  this.tree = function() {
+    this.base.append(this.close_handle());
+    this.base.append(this.title());
+    this.base.append(this.heatmap());
+    return this.base;
+  };
+
+  return this;
+};
 OpenCity.Ward.Calendar = function(ward, options) {
-  this.ward    = ward;
-  this.options = options || {};
-  this.data    = new Object();
-  this.day     = d3.time.format("%w"),
-  this.week    = d3.time.format("%U"),
-  this.percent = d3.format(".1%"),
-  this.format  = d3.time.format("%Y-%m-%d");
+  this.ward     = ward;
+  this.options  = options || {};
+  this.data     = new Object();
+  this.day      = d3.time.format("%w"),
+  this.week     = d3.time.format("%U"),
+  this.percent  = d3.format(".1%"),
+  this.format   = d3.time.format("%Y-%m-%d");
 
 //  this.margins    = [0, 0, 0, 0];
 //  this.width      = 590 - m[1] - m[3];
 //  this.height     = 95  - m[0] - m[2];
 //  this.cell       = 10.64;
 
-//  this.setMargins(options);
-//  this.setWidth(options);
-//  this.setHeight(options);
-//  this.setCellsize(options);
   return this;
 };
 OpenCity.Ward.Calendar.prototype.getOption = function(option, default_options) {
