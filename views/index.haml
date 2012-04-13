@@ -11,7 +11,9 @@
           var year   = element.attr("data-year");
           element.parent().attr("class", "current");
 
-          new OpenCity.Ward(number, year).present();
+          var ward = new OpenCity.Ward(number, year)
+          //ward.template = new OpenCity.Ward.Template(ward).tree();
+          ward.present();
 
           return false;
         });

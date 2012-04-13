@@ -1,11 +1,12 @@
 var OpenCity = {};
+OpenCity.CrimeInChicago = OpenCity.CrimeInChicago || {};
+OpenCity.CrimeInChicago.url = "http://localhost:8080";
+
 OpenCity.Ward = function(number, year, options) {
   this.number   = number;
   this.year     = year;
   this.options  = options || {};
-  this.template = function() {
-    return new OpenCity.Ward.Template(this).tree();
-  };
+  this.template = new OpenCity.Ward.Template(this).tree();
   this.calendar = null;
 
   return this;
@@ -23,27 +24,67 @@ OpenCity.Ward.prototype.missing = $(this.wardSelector+"-"+this.number+"-"+this.y
 OpenCity.Ward.prototype.present = function(selector) {
   if (this.missing) {
     this.calendar = new OpenCity.Ward.Calendar(this, {height: 104, width: 770});
-    $("#ward-charts").prepend(this.template());
+    $("#ward-charts").prepend(this.template);
     this.calendar.attach("#calendar-"+this.number+"-"+this.year, "Blues");
     var number = this.number;
-
-    $("#ward-"+this.number+"-"+this.year).find(".remove").click(function() {
-      $("a[data-ward|='"+number+"']").parent().attr("class", "");
-      $(this).parent().remove();
-      return false;
-    });
   }
 }
 OpenCity.Ward.Template = function(ward) {
   this.ward = ward;
   this.base = $("<div id=\"ward-"+this.ward.number+"-"+this.ward.year+"\" class=\"timeline\" data-ward=\""+this.ward.number+"\" data-year=\""+this.ward.year+"\"></div>");
 
+  // Any template must implement the four following methods
+  // close_handle()
+  // title()
+  // heatmap()
+  // statistics()
+  // setTemplateEvents
+  this.tree = function() {
+    this.base.append(this.close_handle());
+    this.base.append(this.title());
+    this.base.append(this.heatmap());
+    this.base.append(this.statistics());
+    this.setTemplateEvents();
+    return this.base;
+  };
+
+  this.setTemplateEvents = function() {
+    var ward = this.ward;
+    var base = this.base;
+
+    // REMOVE WARD FROM DOM
+    this.base.find(".remove").click(function() {
+      $("a[data-ward|='"+ward.number+"']").parent().attr("class", "");
+      $(this).parent().remove();
+      return false;
+    });
+
+    // EXPAND STATISTICS ELEMENT
+    this.base.find(".ward-title").click(function() {
+      base.find(".statistics").toggle();
+      return false;
+    });
+  };
+
   this.close_handle = function() {
     return $("<a class=\"remove\" href=\"#\" title=\"Remove\">Remove</a>");
   };
 
   this.title = function() {
-    return $("<h2><a class=\"ward-title\" href=\"#\">Ward "+this.ward.number+" ["+this.ward.year+"]</a><span><a href=\"/wards/"+this.ward.number+"\">View all ward details</a></span></h2>");
+    var header = $("<h2></h2>");
+    var header_name = $("<a class=\"ward-title\" href=\"#\">Ward "+this.ward.number+" ["+this.ward.year+"]</a>");
+    header.append(header_name);
+    var ward_detail = $("<span><a class=\"ward-details\" href=\"" + OpenCity.CrimeInChicago.url + "/wards/"+this.ward.number+"\">View all ward details</a></span>");
+    header.append(ward_detail);
+    return header;
+  };
+
+  this.heatmap = function() {
+    var list = $("<div class=\"heatmap\"></div>");
+    list.append(this.heatmap_months());
+    list.append(this.heatmap_weekdays());
+    list.append(this.heatmap_chart());
+    return list;
   };
 
   this.heatmap_months = function() {
@@ -68,19 +109,24 @@ OpenCity.Ward.Template = function(ward) {
     return $("<div class=\"chart\" id=\"calendar-"+this.ward.number+"-"+this.ward.year+"\"></div>");
   };
 
-  this.heatmap = function() {
-    var list = $("<div class=\"heatmap\"></div>");
-    list.append(this.heatmap_months());
-    list.append(this.heatmap_weekdays());
-    list.append(this.heatmap_chart());
+  this.statistics = function() {
+    var list = $("<div class=\"statistics\" style=\"display:none;\"></div>");
+    list.append(this.statistics_map());
+    list.append(this.statistics_crime());
+//    list.append(this.statistics_frequency());
+//    list.append(this.statistics_sparkline());
     return list;
   };
 
-  this.tree = function() {
-    this.base.append(this.close_handle());
-    this.base.append(this.title());
-    this.base.append(this.heatmap());
-    return this.base;
+  this.statistics_map = function() {
+    return $("<div class=\"map panel\"><h3>Ward location</h3><div id=\"#ward-map\"></div></div>");
+  };
+
+  this.statistics_crime = function() {
+    var panel = $("<div class=\"crime\"><div class=\"panel\"></div></div>");
+    var header = $("<h3>Number of crimes</h3>");
+    panel.append(header);
+    return panel;
   };
 
   return this;
