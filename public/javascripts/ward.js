@@ -216,7 +216,8 @@ OpenCity.Ward.Template = function(ward) {
     list.append(this.statistics_map());
     list.append(this.statistics_crime());
     list.append(this.statistics_category());
-//    list.append(this.statistics_sparkline());
+    list.append(this.statistics_sparkline());
+    list.append(this.statistics_view_details());
     return list;
   };
 
@@ -253,7 +254,18 @@ OpenCity.Ward.Template = function(ward) {
     });
 
     return panel.append(list);
-  }
+  };
+
+  this.statistics_sparkline = function() {
+    var panel = create_panel("sparkline", "Time of day");
+    return panel;
+  };
+
+  this.statistics_view_details = function() {
+    var panel = create_panel("view_details", "<a rel=\"external\" href=\"/wards/2\">View more details >></a>");
+    panel.append($("<p class=\"mute\">See crime trends, full history, contact the alderman and more ...</p>"));
+    return panel;
+  };
 
   function create_panel(name, header) {
     var wrapper = $("<div class=\"panel\"></div>");
