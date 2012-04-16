@@ -42,6 +42,15 @@ OpenCity.Ward.prototype.present = function(selector) {
     this.template.attach($("#ward-charts"));
   }
 };
+OpenCity.Ward.tooltips = function(element) {
+  element.tooltip({
+    delay: 0,
+    fade: 0,
+    showBody: " - ",
+    showURL: false,
+    track: true
+  });
+};
 OpenCity.Ward.Template = function(ward) {
   this.ward = ward;
   this.base = $("<div id=\""+this.ward.prefixSelector()+"\" class=\"timeline\" data-ward=\""+this.ward.number+"\" data-year=\""+this.ward.year+"\"></div>");
@@ -61,7 +70,6 @@ OpenCity.Ward.Template = function(ward) {
     this.base.append(this.statistics());
     this.base.append($("<div style=\"clear:both;\"></div>")); // WRITE THE CSS SO THIS IS NOT REQUIRED
     this.setTemplateEvents();
-//    return this.base;
   };
 
   this.setTemplateEvents = function() {
@@ -94,74 +102,6 @@ OpenCity.Ward.Template = function(ward) {
       return false;
     });
 
-    // STATISTIC CRIME
-    d3.json(OpenCity.CrimeInChicago.url+"/api/wards/"+ward.number+"/"+ward.year+"/statistics/crime.json", function(json) {
-      function year_comparison(crimes, year1, year2) {
-        var data = [];
-
-        $.each(crimes, function(index, value) {
-          if (value["year"] == year1) {
-            data.push(value["crime_count_for_year"]);
-          }
-
-          if (value["year"] == year2) {
-            data.push(value["crime_count_for_year"]);
-          }
-
-          if (data.length == 2) {
-            return;
-          }
-        });
-
-        return (((data[0] / data[1]) * 100) - 100).toFixed(2);
-      }
-      function crime_min(crimes) {
-        return Math.min.apply(Math, $.map(crimes, function(value, index) {
-          return value["year"];
-        }));
-      }
-      function crime_max(crimes) {
-        return Math.max.apply(Math, $.map(crimes, function(value, index) {
-          return value["year"];
-        }));
-      }
-
-      var list = $("<ol class=\"chart-column\"></ol>");
-      var ward_crime = ward;
-      var max = json["max_crimes"];
-      var current_year = json["current_year"];
-      var current_year_crimes = 0;
-
-      $.each(json["crimes"], function(index, crime) {
-        var percentage = parseInt((crime["crime_count_for_year"] / max) * 100);
-        var current = (current_year == crime["year"]) ? "current" : "";
-        var title = current_year+" - "+crime["crime_count_for_year"]+" crimes";
-
-        if (current == "current") {
-          current_year_crimes = crime["crime_count_for_year"];
-        }
-
-        var list_item = $("<li style=\"width: 10%;\" class=\""+current+"\"><span class=\"point\"><span class=\"idx\" style=\"height:"+percentage+"%;\" title=\""+title+"\"></span></span></li>");
-        list.append(list_item);
-      });
-      var year_spectrum = $("<div class=\"xaxis\"><div class=\"tick first\">"+crime_min(json["crimes"])+"</div><div class=\"tick last\">"+crime_max(json["crimes"])+"</div></div>");
-
-      var summary = $("<div class=\"summary\"></div>");
-      var p = $("<p></p>");
-      var summary_count = $("<span class=\"summary_count\"><strong>"+OpenCity.Ward.Calendar.functions.delimiter(current_year_crimes)+"</strong></div>");
-      p.append(summary_count);
-      p.append(" in ");
-      p.append($("<span class=\"year\">"+ward.year+"</span>"));
-
-      if (ward.year > 2002) {
-        var previous_year = ward.year - 1;
-      }
-      var year_percentage = year_comparison(json["crimes"], ward.year, previous_year)+"% from "+previous_year;
-      summary.append($("<p><span class=\"mute\">"+year_percentage+"</span></p>"));
-      summary.append(p);
-
-      base.find(".statistics .crime .crime-volume").append(list).append(year_spectrum).parent().append(summary);
-    });
   };
 
   this.close_handle = function() {
@@ -227,13 +167,87 @@ OpenCity.Ward.Template = function(ward) {
   };
 
   this.statistics_crime = function() {
+    var ward = this.ward;
+    var base = this.base;
     var panel = create_panel("crime", "Number of crimes");
-    panel.append($("<div class=\"crime-volume yearly\"></div>"));
+    var volume = $("<div class=\"crime-volume yearly\"></div>");
+    panel.append(volume);
+
+    // STATISTIC CRIME
+    d3.json(OpenCity.CrimeInChicago.url+"/api/wards/"+ward.number+"/"+ward.year+"/statistics/crime.json", function(json) {
+      function year_comparison(crimes, year1, year2) {
+        var data = [];
+
+        $.each(crimes, function(index, value) {
+          if (value["year"] == year1) {
+            data.push(value["crime_count_for_year"]);
+          }
+
+          if (value["year"] == year2) {
+            data.push(value["crime_count_for_year"]);
+          }
+
+          if (data.length == 2) {
+            return;
+          }
+        });
+
+        return (((data[0] / data[1]) * 100) - 100).toFixed(2);
+      }
+      function crime_min(crimes) {
+        return Math.min.apply(Math, $.map(crimes, function(value, index) {
+          return value["year"];
+        }));
+      }
+      function crime_max(crimes) {
+        return Math.max.apply(Math, $.map(crimes, function(value, index) {
+          return value["year"];
+        }));
+      }
+
+      var list = $("<ol class=\"chart-column\"></ol>");
+      var max = json["max_crimes"];
+      var current_year = json["current_year"];
+      var current_year_crimes = 0;
+
+      $.each(json["crimes"], function(index, crime) {
+        var percentage = parseInt((crime["crime_count_for_year"] / max) * 100);
+        var current = (current_year == crime["year"]) ? "current" : "";
+        var title = current_year+" - "+OpenCity.Ward.Calendar.functions.delimiter(crime["crime_count_for_year"])+" crimes";
+
+        if (current == "current") {
+          current_year_crimes = crime["crime_count_for_year"];
+        }
+
+        var list_item = $("<li style=\"width: 11%;\" class=\""+current+"\"><span class=\"point\"><span class=\"idx\" style=\"height:"+percentage+"%;\" title=\""+title+"\"></span></span></li>");
+        OpenCity.Ward.tooltips(list_item.find(".idx"));
+        list.append(list_item);
+      });
+      var year_spectrum = $("<div class=\"xaxis\"><div class=\"tick first\">"+crime_min(json["crimes"])+"</div><div class=\"tick last\">"+crime_max(json["crimes"])+"</div></div>");
+
+      var summary = $("<div class=\"summary\"></div>");
+      var p = $("<p></p>");
+      var summary_count = $("<span class=\"summary_count\"><strong>"+OpenCity.Ward.Calendar.functions.delimiter(current_year_crimes)+"</strong></div>");
+      p.append(summary_count);
+      p.append(" in ");
+      p.append($("<span class=\"year\">"+ward.year+"</span>"));
+
+      if (ward.year > 2002) {
+        var previous_year = ward.year - 1;
+      }
+      var year_percentage = year_comparison(json["crimes"], ward.year, previous_year)+"% from "+previous_year;
+      summary.append($("<p><span class=\"mute\">"+year_percentage+"</span></p>"));
+      summary.append(p);
+
+      volume.append(list).append(year_spectrum);
+      panel.append(summary);
+    });
+
     return panel;
   };
 
   this.statistics_category = function() {
-    var panel = create_panel("category", "Most frequent");
+    var panel = create_panel("category", "Most frequent", {width: '20%'});
     var list = $("<ol class=\"chart-bar\"></ol>");
 
     d3.json(OpenCity.CrimeInChicago.url+"/api/wards/"+ward.number+"/"+ward.year+"/statistics/category.json", function(json) {
@@ -248,7 +262,7 @@ OpenCity.Ward.Template = function(ward) {
         list_item.append(point);
         point.append("<span class=\"idx\" style=\"width: "+Math.round(value["crime_count"] / max * 100)+"%\"></span>");
         point.append("<span class=\"label\">"+value["primary_type"]+"</span>");
-        point.append("<span class=\"count\">"+value["crime_count"]+"</span>");
+        point.append("<span class=\"count\">"+OpenCity.Ward.Calendar.functions.delimiter(value["crime_count"])+"</span>");
         list.append(list_item);
       });
     });
@@ -257,18 +271,18 @@ OpenCity.Ward.Template = function(ward) {
   };
 
   this.statistics_sparkline = function() {
-    var panel = create_panel("sparkline", "Time of day");
+    var panel = create_panel("sparkline", "Time of day", {width: "15%"});
     return panel;
   };
 
   this.statistics_view_details = function() {
-    var panel = create_panel("view_details", "<a rel=\"external\" href=\"/wards/2\">View more details >></a>");
+    var panel = create_panel("view_details", "<a rel=\"external\" href=\"/wards/2\">View more details >></a>", {width: "16%"});
     panel.append($("<p class=\"mute\">See crime trends, full history, contact the alderman and more ...</p>"));
     return panel;
   };
 
-  function create_panel(name, header) {
-    var wrapper = $("<div class=\"panel\"></div>");
+  function create_panel(name, header, options) {
+    var wrapper = $("<div class=\"panel\" "+(typeof options != "undefined" ? "style=\"width: "+options["width"]+";\"" : "")+"></div>");
     wrapper.addClass(name);
     wrapper.append("<h3>"+header+"</h3>");
     return wrapper;
