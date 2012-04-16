@@ -276,7 +276,7 @@ OpenCity.Ward.Template = function(ward) {
   };
 
   this.statistics_view_details = function() {
-    var panel = create_panel("view_details", "<a rel=\"external\" href=\"/wards/2\">View more details >></a>", {width: "16%"});
+    var panel = create_panel("view_details", "<a rel=\"external\" href=\"/wards/"+this.ward.number+"\">View more details >></a>", {width: "16%"});
     panel.append($("<p class=\"mute\">See crime trends, full history, contact the alderman and more ...</p>"));
     return panel;
   };
