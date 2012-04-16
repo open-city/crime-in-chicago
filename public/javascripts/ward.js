@@ -1,13 +1,25 @@
 var OpenCity = {};
 OpenCity.CrimeInChicago = OpenCity.CrimeInChicago || {};
 OpenCity.CrimeInChicago.url = "http://localhost:8080";
+OpenCity.CrimeInChicago.fusion_table_id = 2954091;
+OpenCity.CrimeInChicago.chicago_centroid = function() {
+  return new google.maps.LatLng(41.8781136, -87.66677856445312);
+};
+OpenCity.CrimeInChicago.map_default_options = function() {
+  return {
+    zoom: 9,
+    center: OpenCity.CrimeInChicago.chicago_centroid(),
+    disableDefaultUI: true,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+};
 
 OpenCity.Ward = function(number, year, options) {
   this.number   = number;
   this.year     = year;
   this.options  = options || {};
-  this.template = new OpenCity.Ward.Template(this).tree();
-  this.calendar = null;
+  this.template = new OpenCity.Ward.Template(this);
+  this.calendar = new OpenCity.Ward.Calendar(this, {height: 104, width: 770});
 
   return this;
 };
@@ -19,19 +31,21 @@ OpenCity.Ward.prototype.getOption = function(option, default_options) {
     return default_options;
   }
 };
-OpenCity.Ward.prototype.wardSelector = OpenCity.Ward.prototype.getOption("wardSelector", "#ward");
-OpenCity.Ward.prototype.missing = $(this.wardSelector+"-"+this.number+"-"+this.year).length == 0;
+OpenCity.Ward.prototype.prefixSelector = function() {
+  return OpenCity.Ward.prototype.getOption("prefixSelector", "ward"+"-"+this.number+"-"+this.year);
+};
+OpenCity.Ward.prototype.missing = function() {
+  return $("#"+this.prefixSelector()).length == 0;
+};
 OpenCity.Ward.prototype.present = function(selector) {
-  if (this.missing) {
-    this.calendar = new OpenCity.Ward.Calendar(this, {height: 104, width: 770});
-    $("#ward-charts").prepend(this.template);
-    this.calendar.attach("#calendar-"+this.number+"-"+this.year, "Blues");
-    var number = this.number;
+  if (this.missing()) {
+    this.template.attach($("#ward-charts"));
   }
-}
+};
 OpenCity.Ward.Template = function(ward) {
   this.ward = ward;
-  this.base = $("<div id=\"ward-"+this.ward.number+"-"+this.ward.year+"\" class=\"timeline\" data-ward=\""+this.ward.number+"\" data-year=\""+this.ward.year+"\"></div>");
+  this.base = $("<div id=\""+this.ward.prefixSelector()+"\" class=\"timeline\" data-ward=\""+this.ward.number+"\" data-year=\""+this.ward.year+"\"></div>");
+  this.fusion_map = null;
 
   // Any template must implement the four following methods
   // close_handle()
@@ -39,20 +53,23 @@ OpenCity.Ward.Template = function(ward) {
   // heatmap()
   // statistics()
   // setTemplateEvents
-  this.tree = function() {
+  this.attach = function(selector) {
+    selector.prepend(this.base);
     this.base.append(this.close_handle());
     this.base.append(this.title());
     this.base.append(this.heatmap());
     this.base.append(this.statistics());
+    this.base.append($("<div style=\"clear:both;\"></div>")); // WRITE THE CSS SO THIS IS NOT REQUIRED
     this.setTemplateEvents();
-    return this.base;
+//    return this.base;
   };
 
   this.setTemplateEvents = function() {
     var ward = this.ward;
     var base = this.base;
+    var fusion_map = this.fusion_map;
 
-    // REMOVE WARD FROM DOM
+    // REMOVE WARD TEMPLATE FROM DOM
     this.base.find(".remove").click(function() {
       $("a[data-ward|='"+ward.number+"']").parent().attr("class", "");
       $(this).parent().remove();
@@ -61,8 +78,89 @@ OpenCity.Ward.Template = function(ward) {
 
     // EXPAND STATISTICS ELEMENT
     this.base.find(".ward-title").click(function() {
-      base.find(".statistics").toggle();
+      base.find(".statistics").fadeToggle(500, function() {
+        if (fusion_map == null) {
+          // STATISTIC MAP
+          var fusion_table_id = OpenCity.CrimeInChicago.fusion_table_id;
+          var map_element = base.find(".ward-map")[0];
+
+          fusion_map = FusionMap.create(map_element, OpenCity.CrimeInChicago.map_default_options());
+          var fusion_layer = FusionLayer.create({select: 'geometry', from: fusion_table_id, where: "name = '"+ward.number+"'"}, fusion_map.page_element);
+          fusion_map.add_map_bounds({from: fusion_table_id, where: "name = '"+ward.number+"'"}, function(response) {
+            fusion_map.set_map_bounds(response);
+          });
+        }
+      });
       return false;
+    });
+
+    // STATISTIC CRIME
+    d3.json(OpenCity.CrimeInChicago.url+"/api/wards/"+ward.number+"/"+ward.year+"/statistics/crime.json", function(json) {
+      function year_comparison(crimes, year1, year2) {
+        var data = [];
+
+        $.each(crimes, function(index, value) {
+          if (value["year"] == year1) {
+            data.push(value["crime_count_for_year"]);
+          }
+
+          if (value["year"] == year2) {
+            data.push(value["crime_count_for_year"]);
+          }
+
+          if (data.length == 2) {
+            return;
+          }
+        });
+
+        return (((data[0] / data[1]) * 100) - 100).toFixed(2);
+      }
+      function crime_min(crimes) {
+        return Math.min.apply(Math, $.map(crimes, function(value, index) {
+          return value["year"];
+        }));
+      }
+      function crime_max(crimes) {
+        return Math.max.apply(Math, $.map(crimes, function(value, index) {
+          return value["year"];
+        }));
+      }
+
+      var list = $("<ol class=\"chart-column\"></ol>");
+      var ward_crime = ward;
+      var max = json["max_crimes"];
+      var current_year = json["current_year"];
+      var current_year_crimes = 0;
+
+      $.each(json["crimes"], function(index, crime) {
+        var percentage = parseInt((crime["crime_count_for_year"] / max) * 100);
+        var current = (current_year == crime["year"]) ? "current" : "";
+        var title = current_year+" - "+crime["crime_count_for_year"]+" crimes";
+
+        if (current == "current") {
+          current_year_crimes = crime["crime_count_for_year"];
+        }
+
+        var list_item = $("<li style=\"width: 10%;\" class=\""+current+"\"><span class=\"point\"><span class=\"idx\" style=\"height:"+percentage+"%;\" title=\""+title+"\"></span></span></li>");
+        list.append(list_item);
+      });
+      var year_spectrum = $("<div class=\"xaxis\"><div class=\"tick first\">"+crime_min(json["crimes"])+"</div><div class=\"tick last\">"+crime_max(json["crimes"])+"</div></div>");
+
+      var summary = $("<div class=\"summary\"></div>");
+      var p = $("<p></p>");
+      var summary_count = $("<span class=\"summary_count\"><strong>"+OpenCity.Ward.Calendar.functions.delimiter(current_year_crimes)+"</strong></div>");
+      p.append(summary_count);
+      p.append(" in ");
+      p.append($("<span class=\"year\">"+ward.year+"</span>"));
+
+      if (ward.year > 2002) {
+        var previous_year = ward.year - 1;
+      }
+      var year_percentage = year_comparison(json["crimes"], ward.year, previous_year)+"% from "+previous_year;
+      summary.append($("<p><span class=\"mute\">"+year_percentage+"</span></p>"));
+      summary.append(p);
+
+      base.find(".statistics .crime .crime-volume").append(list).append(year_spectrum).parent().append(summary);
     });
   };
 
@@ -83,7 +181,11 @@ OpenCity.Ward.Template = function(ward) {
     var list = $("<div class=\"heatmap\"></div>");
     list.append(this.heatmap_months());
     list.append(this.heatmap_weekdays());
-    list.append(this.heatmap_chart());
+    var chart = this.heatmap_chart();
+    list.append(chart);
+
+    this.ward.calendar.attach(chart[0], "Blues");
+
     return list;
   };
 
@@ -113,20 +215,51 @@ OpenCity.Ward.Template = function(ward) {
     var list = $("<div class=\"statistics\" style=\"display:none;\"></div>");
     list.append(this.statistics_map());
     list.append(this.statistics_crime());
-//    list.append(this.statistics_frequency());
+    list.append(this.statistics_category());
 //    list.append(this.statistics_sparkline());
     return list;
   };
 
   this.statistics_map = function() {
-    return $("<div class=\"map panel\"><h3>Ward location</h3><div id=\"#ward-map\"></div></div>");
+    var panel = create_panel("map", "Ward location");
+    return panel.append($("<div class=\"ward-map\" style=\"height: 138px; width: 130px;\"></div>"));
   };
 
   this.statistics_crime = function() {
-    var panel = $("<div class=\"crime\"><div class=\"panel\"></div></div>");
-    var header = $("<h3>Number of crimes</h3>");
-    panel.append(header);
+    var panel = create_panel("crime", "Number of crimes");
+    panel.append($("<div class=\"crime-volume yearly\"></div>"));
     return panel;
+  };
+
+  this.statistics_category = function() {
+    var panel = create_panel("category", "Most frequent");
+    var list = $("<ol class=\"chart-bar\"></ol>");
+
+    d3.json(OpenCity.CrimeInChicago.url+"/api/wards/"+ward.number+"/"+ward.year+"/statistics/category.json", function(json) {
+      var categories = json["categories"];
+      var max = Math.max.apply(Math, $.map(categories, function(value, index) {
+        return value["crime_count"];
+      }));
+
+      $.each(categories, function(index, value) {
+        var list_item = $("<li></li>");
+        var point = $("<span class=\"point\"></span>");
+        list_item.append(point);
+        point.append("<span class=\"idx\" style=\"width: "+Math.round(value["crime_count"] / max * 100)+"%\"></span>");
+        point.append("<span class=\"label\">"+value["primary_type"]+"</span>");
+        point.append("<span class=\"count\">"+value["crime_count"]+"</span>");
+        list.append(list_item);
+      });
+    });
+
+    return panel.append(list);
+  }
+
+  function create_panel(name, header) {
+    var wrapper = $("<div class=\"panel\"></div>");
+    wrapper.addClass(name);
+    wrapper.append("<h3>"+header+"</h3>");
+    return wrapper;
   };
 
   return this;
@@ -272,6 +405,16 @@ OpenCity.Ward.Calendar.functions.monthPath = function(t0) {
       + "H" + w1 * z + "V" + (d1 + 1) * z
       + "H" + (w1 + 1) * z + "V" + 0
       + "H" + (w0 + 1) * z + "Z";
+};
+OpenCity.Ward.Calendar.functions.delimiter = function(number_string, value) {
+  var value = typeof value == "undefined" ? "," : value;
+
+  var array = number_string.toString().split('').reverse();
+  for(x = 3; x < array.length; x = x + 3) {
+    array.splice(x, 0, value);
+    x++;
+  }
+  return array.reverse().join('');
 };
 
 

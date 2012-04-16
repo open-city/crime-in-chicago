@@ -81,12 +81,28 @@ module Crime
       }
     end
 
+    get "/api/wards/:ward/:year/statistics/crime.json" do
+      crimes = statistic_crimes_by_ward(params[:ward])
+      {
+        :max_crimes => crimes.map{|hash| hash[:crime_count_for_year]}.max,
+        :current_year => params[:year],
+        :crimes => crimes
+      }.to_json
+    end
+  
     get "/wards/:ward/:year/partials/statistics/category" do
       @categories_by_year = statistic_categories_by_ward_and_year(params[:ward], params[:year])
 
       haml :"ward/statistics/category", :layout => false, :locals => {
         :ward => params[:ward], :year => params[:year]
       }
+    end
+
+    get "/api/wards/:ward/:year/statistics/category.json" do
+      categories = statistic_categories_by_ward_and_year(params[:ward], params[:year])
+      {
+        :categories => categories
+      }.to_json
     end
 
     get "/wards/:ward/:year/:month/partials/statistics/category" do
@@ -107,6 +123,10 @@ module Crime
       haml :"ward-crime-columns", :layout => false, :locals => {
         :year => params[:year]
       }
+    end
+
+    get "/api/wards/:year/crime_count.json" do
+      ward_crime_columns(params[:year]).to_json
     end
     
     get "/wards/:ward/:primary_type/partials/subcategories" do 
