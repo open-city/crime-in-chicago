@@ -1,0 +1,37 @@
+<div class="panel {{class}}">
+  <h3>{{header}}</h3>
+
+  <div class="crime-volume yearly">
+    <ol class="chart-column">
+      {{#crimes}}
+      <li style="width: 10%;" class="{{current}}">
+        <span class="point">
+          <span class="idx" style="height: {{height}}%" title="{{title}}"></span>
+        </span>
+      </li>
+      {{/crimes}}
+    </ol>
+
+    <div class="xaxis">
+      <div class="tick first">
+        {{minimum_year}}
+      </div>
+
+      <div class="tick last">
+        {{maximum_year}}
+      </div>
+    </div>
+  </div>
+
+  <div class="summary">
+    <p>
+      <span class="mute">{{previous_year_diff}} from {{previous_year}}</span>
+    </p>
+
+    <p>
+      <span class="summary_count"><strong>{{current_year_crimes}}</strong></span>
+      in
+      <span class="year">{{current_year}}</span>
+    </p>
+  </div>
+</div>

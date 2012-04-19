@@ -80,6 +80,7 @@ FusionMap.create = function(selector, options) {
         this.page_element.fitBounds(map_bounds);
       }
 
+      this.page_element.setZoom(this.page_element.getZoom() + 1);
     }
   }
 
