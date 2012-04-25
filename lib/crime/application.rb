@@ -108,7 +108,7 @@ module Crime
         :categories => categories.map { |c|
           {
             :crime_count => c[:crime_count],
-            :primary_type => c[:primary_type].titleize,
+            :category_name => c[:category_name].titleize,
             :width => ((c[:crime_count].to_f / max) * 100).round
           }
         }

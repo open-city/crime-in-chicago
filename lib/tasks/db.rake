@@ -62,6 +62,13 @@ namespace :db do
       puts "loading ward office data from #{data_filename}..."
       sh "cat #{data_filename} | psql --dbname=chicago_crime -c \"$(cat db/script/load_ward_offices.sql)\""
     end
+    
+    desc "load crime types (uses tmp/Crime_Types.csv by default)"
+    task :crime_types, :data_filename do |t, args|
+      data_filename = args[:data_filename] || "db/import/Crime_Types.csv"
+      puts "loading crime types data from #{data_filename}..."
+      sh "cat #{data_filename} | psql --dbname=chicago_crime -c \"$(cat db/script/load_crime_types.sql)\""
+    end
   end
 
   desc "create database, migrate schema and load data from csv"
@@ -69,7 +76,8 @@ namespace :db do
     Rake::Task['db:drop'].invoke
     Rake::Task['db:create'].invoke
     Rake::Task['db:migrate'].invoke
-    Rake::Task['db:load:crimes'].invoke
+    Rake::Task['db:load:crimes'].invoke(args[:data_filename])
     Rake::Task['db:load:ward_offices'].invoke
+    Rake::Task['db:load:crime_types'].invoke
   end
 end

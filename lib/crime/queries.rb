@@ -28,10 +28,10 @@ module Crime
       group by cast(occurred_at as date), ward
       order by crime_count desc limit 1;".strip,
     :ward_crimes_categories_per_year => "
-      select count(*) as crime_count, primary_type
+      select count(*) as crime_count, fbi_code
       from crimes
       where ward = :ward and year = :year
-      group by primary_type
+      group by fbi_code
       order by crime_count desc
       limit 6".strip,
     :ward_crimes_categories_per_month => "
@@ -67,5 +67,9 @@ module Crime
       select date_part('hour',occurred_at) as hour, count(*) as crime_count from crimes 
       where date_part('year', occurred_at) = :year and ward = :ward 
       group by hour order by hour".strip
+    :category_name_by_fbi_code => "
+      select name
+      from crime_types
+      where fbi_code = :fbi_code".strip
   }
 end
