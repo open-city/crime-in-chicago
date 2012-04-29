@@ -64,9 +64,8 @@ module Crime
       select * from ward_offices
       where ward = :ward".strip,
     :sparkline_by_ward_and_year => "
-      select primary_type, year, month, crime_count
-      from crimes_for_month
-      where ward = :ward and year = :year
-      order by primary_type, year, month".strip
+      select date_part('hour',occurred_at) as hour, count(*) as crime_count from crimes 
+      where date_part('year', occurred_at) = :year and ward = :ward 
+      group by hour order by hour".strip
   }
 end
