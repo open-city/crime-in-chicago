@@ -74,7 +74,7 @@ module Crime
     end
 
     get "/wards/:ward/:year/partials/statistics/crime" do
-      @crimes_by_year = statistic_crimes_by_ward(params[:ward])
+      @crimes_by_year = statistic_crimes_by_ward(params[:ward], "2001")
 
       haml :"ward/statistics/crime", :layout => false, :locals => {
         :ward => params[:ward], :year => params[:year]
@@ -88,6 +88,82 @@ module Crime
         :ward => params[:ward], :year => params[:year]
       }
     end
+
+    # API
+    get "/api/wards/:ward/:year/statistics/map.json" do
+      {
+        :template => erb(:"mustache/map.html"),
+        :class => "map", :header => "Ward location"
+      }.to_json
+    end
+
+    get "/api/wards/:ward/:year/statistics/category.json" do
+      categories = statistic_categories_by_ward_and_year(params[:ward], params[:year])
+      max = categories.map{|c| c[:crime_count] }.max
+      {
+        :template => erb(:"mustache/category.html"),
+        :class => "category", :header => "Most frequent",
+        :categories => categories.map { |c|
+          {
+            :crime_count => c[:crime_count],
+            :primary_type => c[:primary_type].titleize,
+            :width => ((c[:crime_count].to_f / max) * 100).round
+          }
+        }
+      }.to_json
+    end
+
+    get "/api/wards/:ward/:year/:month/statistics/category.json" do
+      categories = statistic_categories_by_ward_year_month(params[:ward], params[:year], params[:month])
+      max = categories.map{|c| c[:crime_count] }.max
+      {
+        :template => erb(:"mustache/category.html"),
+        :class => "category", :header => "Most frequent",
+        :categories => categories.map { |c|
+          {
+            :crime_count => c[:crime_count],
+            :primary_type => c[:primary_type].titleize,
+            :width => ((c[:crime_count].to_f / max) * 100).round
+          }
+        }
+      }.to_json
+    end
+
+    get "/api/wards/:ward/:year/statistics/crime.json" do
+      crimes = statistic_crimes_by_ward(params[:ward], "2001")
+      max = crimes.map{ |c| c[:crime_count_for_year] }.max
+      year = params["year"].to_i
+      previous_year = year - 1 if year > 2002
+      {
+        :template => erb(:"mustache/crime.html"),
+        :class => "crime", :header => "Number of crimes",
+        :minimum_year => crimes.map{|hash| hash[:year]}.min,
+        :maximum_year => crimes.map{|hash| hash[:year]}.max,
+        :previous_year_diff => year_comparison(crimes, year, (previous_year ? previous_year : year)),
+        :previous_year => params["year"].to_i - 1,
+        :current_year_crimes => number_with_delimiter(crimes.detect{|hash| hash[:year].to_s == params["year"]}[:crime_count_for_year]),
+        :current_year => params["year"],
+        :crimes => crimes.map { |c|
+          {
+            :current => (c[:year].to_s == params[:year]) ? "current" : "",
+            :height => number_to_percentage(c[:crime_count_for_year].to_f / max),
+            :title => "#{c[:year]} - #{number_with_delimiter c[:crime_count_for_year]} crimes"
+          }
+        }
+      }.to_json
+    end
+
+    get "/api/wards/:ward/:year/statistics/sparkline.json" do
+      {
+        :template => erb(:"mustache/sparkline.html"),
+        :data => sparkline_by_ward_and_year({
+          :ward => params[:ward],
+          :year => params[:year]
+        }).join(",")
+      }.to_json
+    end
+  
+
 
     get "/wards/:ward/:year/:month/partials/statistics/category" do
       @categories_by_month = statistic_categories_by_ward_and_year_and_month(params[:ward], params[:year], params[:month])
@@ -107,6 +183,10 @@ module Crime
       haml :"ward-crime-columns", :layout => false, :locals => {
         :year => params[:year]
       }
+    end
+
+    get "/api/wards/:year/crime_count.json" do
+      ward_crime_columns(params[:year]).to_json
     end
     
     get "/wards/:ward/:primary_type/partials/subcategories" do 

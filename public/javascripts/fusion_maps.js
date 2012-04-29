@@ -16,7 +16,14 @@ FusionMapOptions.create = function(my_options) {
 var FusionPageElement = FusionPageElement || {};
 FusionPageElement.create = function(selector, options) {
   options = FusionMapOptions.create(options);
-  var fusion_page_element = new google.maps.Map(document.getElementById(selector), options);
+
+  var fusion_page_element = null;
+  if (typeof selector == "string") {
+    fusion_page_element = new google.maps.Map(document.getElementById(selector), options);
+  } else {
+    fusion_page_element = new google.maps.Map(selector, options);
+  }
+
   fusion_page_element.setOptions({styles: FusionMap.styles()});
   return fusion_page_element;
 }
@@ -66,13 +73,14 @@ FusionMap.create = function(selector, options) {
       kml = kml.replace("</coordinates></LinearRing></outerBoundaryIs></Polygon>", "");
       var boundPoints = kml.split(" ");
 
-      for(var i=0; i<boundPoints.length; i++) {
+      for (var i = 0; i < boundPoints.length; i++) {
         var boundItem = boundPoints[i].split(",");
         var point = new google.maps.LatLng(parseFloat(boundItem[1]), parseFloat(boundItem[0]));
         map_bounds.extend(point);
+        this.page_element.fitBounds(map_bounds);
       }
 
-      this.page_element.fitBounds(map_bounds);
+      this.page_element.setZoom(this.page_element.getZoom() + 1);
     }
   }
 
