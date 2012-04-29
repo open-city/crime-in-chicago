@@ -134,12 +134,25 @@ module Crime
       max = crimes.map{ |c| c[:crime_count_for_year] }.max
       year = params["year"].to_i
       previous_year = year - 1 if year > 2002
+      
+      previous_year_diff = year_comparison(crimes, year, (previous_year ? previous_year : year))
+      previous_year_diff_class = ""
+      if (previous_year_diff > 0) 
+        previous_year_diff_class = "label-red"
+        previous_year_diff = "+#{previous_year_diff}"
+      elsif (previous_year_diff < 0) 
+        previous_year_diff_class = "label-green"
+      end
+        
+      previous_year_diff = "#{previous_year_diff}%"
+      
       {
         :template => erb(:"mustache/crime.html"),
         :class => "crime", :header => "Number of crimes",
         :minimum_year => crimes.map{|hash| hash[:year]}.min,
         :maximum_year => crimes.map{|hash| hash[:year]}.max,
-        :previous_year_diff => year_comparison(crimes, year, (previous_year ? previous_year : year)),
+        :previous_year_diff => previous_year_diff,
+        :previous_year_diff_class => previous_year_diff_class,
         :previous_year => params["year"].to_i - 1,
         :current_year_crimes => number_with_delimiter(crimes.detect{|hash| hash[:year].to_s == params["year"]}[:crime_count_for_year]),
         :current_year => params["year"],

@@ -165,8 +165,8 @@ a:hover .magnify { background-color: #005b82; background-position: 0 -22px; bord
 #tagline { color: #227fa2; font-size: 16px; margin-top: 3px; }
 
 /* Max/min */
-.max { color: #e00; }
-.min { color: #008911; }
+.max, .label-red { color: #e00; }
+.min, .label-green { color: #008911; }
 
 /* Mute */
 .mute { color: #666; font-size: 11px; }
