@@ -1,6 +1,14 @@
 - content_for :javascripts do
   :javascript
     $(function() {
+      $("#wards .chart-column li a span").tooltip({
+        delay: 0,
+        fade: 0,
+        showBody: " - ",
+        showURL: false,
+        track: true
+      });
+
       function search(address) {
         var geocoder = new google.maps.Geocoder();
         var searchRadius = 1; //in meters
@@ -25,15 +33,17 @@
       }
 
       function displayFound(response) {
-        var number = "";
+        var number;
+        var year;
         if (response.getDataTable().getNumberOfRows() > 0)
           number = parseInt(response.getDataTable().getValue(0, 0));
+          year = $('.year-selector.current a').attr('data-year');
           
         //console.log(number);
         $( "#found_ward_number" ).fadeOut(function() {
             $( "#found_ward_number" ).html("That address is in ward " + number);
             $('[data-ward="' + number + '"]').parent().attr('class', 'current');
-            Ward.create(number, $('.year-selector.current a').attr('data-year'), "#ward-charts");
+            new OpenCity.Ward(number, year).present();
           });
         $( "#found_ward_number" ).fadeIn();
       }
@@ -52,6 +62,12 @@
           search($(this).val());
         }
       });
+
+      // Ezhint overlays
+      if ($.fn.ezpz_hint) {
+        $(".hint").ezpz_hint();
+      }
+
     });
 
 .vis-label

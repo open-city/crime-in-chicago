@@ -1,22 +1,21 @@
 - content_for :javascript do
+  = include_javascript :mustache
+  = include_javascript "jquery.ezpz_hint.min"
+  = include_javascript "open-city-crime"
+
   :javascript
     $(document).ready(function() {
-      //Ward.events.load_ward_clickables();
-      callThis();
+      $(".ward-selector").click(function() {
+        var element = $(this);
+        var number = element.attr("data-ward");
+        var year   = element.attr("data-year");
+        element.parent().attr("class", "current");
 
-      function callThis() {
-        $(".ward-selector").click(function() {
-          var element = $(this);
-          var number = element.attr("data-ward");
-          var year   = element.attr("data-year");
-          element.parent().attr("class", "current");
+        var ward = new OpenCity.Ward(number, year);
+        ward.present();
 
-          var ward = new OpenCity.Ward(number, year);
-          ward.present();
-
-          return false;
-        });
-      }
+        return false;
+      });
     });
 
 #vis

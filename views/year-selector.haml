@@ -19,7 +19,13 @@
               return false;
             });
 
-            Ward.tooltips(".chart-column .idx");
+            $(".chart-column .idx").tooltip({
+              delay: 0,
+              fade: 250,
+              showBody: " - ",
+              showURL: false,
+              track: true
+            });
           });
 
           $('.year-selector.current').each(function() {
