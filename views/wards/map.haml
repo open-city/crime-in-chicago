@@ -3,20 +3,21 @@
 = include_javascript "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"
 = include_javascript "http://maps.googleapis.com/maps/api/js?sensor=false"
 = include_javascript "http://www.google.com/jsapi"
-= include_javascript "fusion_maps"
+= include_javascript :ward
+= include_javascript :fusion_maps
 = include_javascript :application
 
 :javascript
   google.load('visualization', '1', {}); //used for custom SQL call to get count
   $(document).ready(function() {
-    var options = $.extend(ward_map_default_options, {
-      zoom: 14,
-      scrollwheel: false, draggable: false,
-      zoomControl: false, disableDoubleClickZoom: true
+    var options = $.extend(OpenCity.CrimeInChicago.map_default_options, {
+      disableDoubleClickZoom: false,
+      draggable: true,
+      zoom: 14
     });
     var fusion_map = FusionMap.create("map_canvas_enlarged", options);
-    var fusion_layer = FusionLayer.create({select: 'geometry', from: ward_fusion_table_id, where: "name = '#{ward}'"}, fusion_map.page_element);
-    fusion_map.add_map_bounds({from: ward_fusion_table_id, where: "name = '#{ward}'"}, function(response) {
+    var fusion_layer = FusionLayer.create({select: 'geometry', from: OpenCity.CrimeInChicago.fusion_table_id, where: "name = '#{ward}'"}, fusion_map.page_element);
+    fusion_map.add_map_bounds({from: OpenCity.CrimeInChicago.fusion_table_id, where: "name = '#{ward}'"}, function(response) {
       fusion_map.set_map_bounds(response);
     });
   });

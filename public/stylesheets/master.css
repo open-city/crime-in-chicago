@@ -74,7 +74,7 @@ ul { list-style: disc; margin-left: 1.5em; }
 
 /* Charts */
   /* Axis */
-  .xaxis { clear: both; color: #777; font-weight: normal; list-style: none; margin-bottom: 25px; font-size: 9px; }
+  .xaxis { clear: both; color: #777; font-weight: normal; list-style: none; margin-bottom: 25px; margin-right: 9px; font-size: 9px; }
   .xaxis .tick { float: left; margin: 0; }
   .xaxis .tick.last { float: right; }
   
@@ -230,7 +230,7 @@ a:hover .magnify { background-color: #005b82; background-position: 0 -22px; bord
 .ezpz-hint { color: #777; font-style: italic; }
 
 /* Summaries */
-.summary { clear: both; font-size: 16px; line-height: 1; }
+.summary { clear: both; font-size: 16px; line-height: 1; text-align: center; margin-right: 12px; }
 .summary p { margin: 0; }
 
 /* Timelines */

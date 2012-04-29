@@ -31,8 +31,8 @@ module Crime
     end
 
     # STATISTIC METHODS
-    def statistic_crimes_by_ward(number)
-      dataset = DB.fetch(QUERIES[:ward_crimes_per_year], :ward => number)
+    def statistic_crimes_by_ward(number, min_year)
+      dataset = DB.fetch(QUERIES[:ward_crimes_per_year], :ward => number, :min_year => min_year)
       retain_in_cache(dataset.sql) do
         dataset.all.sort do |a,b|
           a[:year] <=> b[:year]
@@ -42,6 +42,13 @@ module Crime
 
     def statistic_categories_by_ward_and_year(ward, year)
       dataset = DB.fetch(QUERIES[:ward_crimes_categories_per_year], :ward => ward, :year => year)
+      retain_in_cache(dataset.sql) do
+        dataset.all
+      end
+    end
+
+    def statistic_categories_by_ward_year_month(ward, year, month)
+      dataset = DB.fetch(QUERIES[:ward_crimes_categories_per_month], :ward => ward, :year => year, :month => month)
       retain_in_cache(dataset.sql) do
         dataset.all
       end

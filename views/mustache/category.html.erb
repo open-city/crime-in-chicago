@@ -1,0 +1,15 @@
+<div class="panel {{class}}">
+  <h3>{{header}}</h3>
+
+  <ol class="chart-bar">
+    {{#categories}}
+    <li>
+      <span class="point">
+        <span class="idx" style="width: {{width}}%;"></span>
+        <span class="label">{{primary_type}}</span>
+        <span class="count">{{crime_count}}</span>
+      </span>
+    </li>
+    {{/categories}}
+  </ol>
+</div>

@@ -44,7 +44,7 @@ module Crime
     :ward_crimes_per_year => "
       select cast(date_part('year',occurred_at) as int) as year, count(*) as crime_count_for_year
       from crimes 
-      where ward = :ward and date_part('year',occurred_at) > 2002
+      where ward = :ward and date_part('year',occurred_at) > :min_year
       group by date_part('year', occurred_at) 
       order by year;".strip,
     :ward_detail_category_list => "

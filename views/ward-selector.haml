@@ -1,19 +1,73 @@
 - content_for :javascripts do
   :javascript
     $(function() {
-      function search(element) {
-        FusiontableWard.findWard(element.val());
+      $("#wards .chart-column li a span").tooltip({
+        delay: 0,
+        fade: 0,
+        showBody: " - ",
+        showURL: false,
+        track: true
+      });
+
+      function search(address) {
+        var geocoder = new google.maps.Geocoder();
+        var searchRadius = 1; //in meters
+        var searchStr = "SELECT name FROM " + OpenCity.CrimeInChicago.fusion_table_id + " WHERE geometry not equal to ''";
+  
+        if (address != "") {
+          if (address.toLowerCase().indexOf("chicago") == -1) 
+            address = address + " chicago";
+
+          geocoder.geocode( { 'address': address}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+              searchStr += " AND ST_INTERSECTS(geometry, CIRCLE(LATLNG" + results[0].geometry.location.toString() + "," + searchRadius + "))";
+              //console.log(searchStr);
+              getFTQuery(searchStr).send(displayFound);
+            }
+            else {
+                alert("We could not find your address: " + status);
+            }
+          });
+        }
+        return false;
+      }
+
+      function displayFound(response) {
+        var number;
+        var year;
+        if (response.getDataTable().getNumberOfRows() > 0)
+          number = parseInt(response.getDataTable().getValue(0, 0));
+          year = $('.year-selector.current a').attr('data-year');
+          
+        //console.log(number);
+        $( "#found_ward_number" ).fadeOut(function() {
+            $( "#found_ward_number" ).html("That address is in ward " + number);
+            $('[data-ward="' + number + '"]').parent().attr('class', 'current');
+            new OpenCity.Ward(number, year).present();
+          });
+        $( "#found_ward_number" ).fadeIn();
+      }
+
+      function getFTQuery(sql) {
+        var queryText = encodeURIComponent(sql);
+        return new google.visualization.Query('http://www.google.com/fusiontables/gvizdata?tq='  + queryText);
       }
 
       $("#ward_search").click(function() {
-        search($("#ward_address"));
+        search($("#ward_address").val());
       });
 
       $("#ward_address").keydown(function(event) {
         if (event.which == 13) {
-          search($(this));
+          search($(this).val());
         }
       });
+
+      // Ezhint overlays
+      if ($.fn.ezpz_hint) {
+        $(".hint").ezpz_hint();
+      }
+
     });
 
 .vis-label
@@ -27,7 +81,7 @@
   #search
     %input.hint#ward_address{:type => "text", :name => "q", :title => "Enter an address or an intersection..."}
     %input.btn#ward_search{ :type => "button", :value => "Find my ward" }
-    %span#foundWardNumber
+    %span#found_ward_number
 
   #wards
     = haml :"ward-crime-columns", :locals => { :year => "2011" }
