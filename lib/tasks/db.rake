@@ -1,5 +1,15 @@
 namespace :db do
   
+  desc 'drop database'
+  task :drop do |t, args|
+    sh "dropdb chicago_crime"
+  end
+
+  desc 'create database'
+  task :drop do |t, args|
+    sh "createdb chicago_crime"
+  end
+
   desc 'migrate database schema'
   task :migrate, :version do |t, args|
     version = args[:version]

@@ -2,6 +2,7 @@
 -- > sed 1d Crimes_-_2001_to_present.csv 
 TRUNCATE TABLE crimes;
 COPY crimes (
+    ref_id,
     case_number,
     occurred_at,
     block,
@@ -16,6 +17,7 @@ COPY crimes (
     fbi_code,
     x_coordinate,
     y_coordinate,
+    updated_at,
     year,
     lat,
     lng,
