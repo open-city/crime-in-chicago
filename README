@@ -8,6 +8,30 @@ Showcase crime statistics for the city of Chicago
 Sinatra
 
 
+== Starting
+
+- Download the latest crimes dataset
+
+https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2
+
+- Clone the git repository
+- Execute these commands
+
+  > rake db:drop (if exists)
+  > rake db:create
+  > rake db:migrate
+  > rake db:load:crimes
+
+- Install all gems necessary
+
+  > gem install bundler
+  > bundle install
+
+- Start application server
+
+  > unicorn
+
+
 == Contributing to Crime in Chicago
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been
