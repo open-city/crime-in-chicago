@@ -15,6 +15,9 @@ Sinatra
 https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2
 
 - Clone the git repository
+
+    > git clone git@github.com:open-city/crime-in-chicago.git
+
 - Execute these commands
 
     > rake db:drop (if exists)
