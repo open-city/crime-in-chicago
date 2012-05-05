@@ -3,9 +3,17 @@ require 'digest/md5'
 
 module Cacheable
   def retain_in_cache(key)
-    if settings.cacheable?
+    if true# settings.cacheable?
       sha_key = sha(key.to_s)
-      @@dalli ||= Dalli::Client.new(settings.cacheable[:servers])
+#      @@dalli ||= Dalli::Client.new(settings.cacheable[:servers])
+      if development?
+        @@dalli ||= Dalli::Client.new("localhost:11211")
+      elsif production?
+        @@dalli ||= Dalli::Client.new("#{ENV["MEMCACHE_SERVERS"]}:11211", {
+          :username => "#{ENV["MEMCACHE_USERNAME"]}",
+          :password => "#{ENV["MEMCACHE_PASSWORD"]}"
+        })
+      end
 
       poky_operation = @@dalli.get(sha_key)
       unless poky_operation

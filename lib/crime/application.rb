@@ -20,8 +20,6 @@ module Crime
     enable :logging, :sessions
     enable :dump_errors, :show_exceptions if development?
 
-    set :cacheable, {:server => "localhost:11211"}
-
     configure :development do
       register Sinatra::Reloader
     end
