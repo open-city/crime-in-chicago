@@ -1,7 +1,17 @@
 begin
   config = YAML.load_file("config/database.yml")
 rescue
-  # Add logic for production heroku later
+  uri = URI.parse(ENV["DATABASE_URL"])
+  config = {
+    "production" => {
+      "adapter"  => "postgres",
+      "host"     => uri.host,
+      "database" => uri.path.slice(1..-1),
+      "username" => uri.username,
+      "password" => uri.password
+    }
+  }
+
   raise "You must create a database.yml"
 end
 
