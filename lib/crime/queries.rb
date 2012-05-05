@@ -1,7 +1,7 @@
 module Crime
   QUERIES = {
     :ward_crime_hash => "
-      select ward, count(*) crime_count
+      select ward, count(*) as crime_count
       from crimes
       where
         date_part('year', occurred_at) = :year and
