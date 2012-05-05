@@ -16,9 +16,12 @@ end
 module Crime
   class Application < Sinatra::Base
     include Cacheable
+    extend Cacheable
 
     enable :logging, :sessions
     enable :dump_errors, :show_exceptions if development?
+
+    set :cache, Dalli::Client.new(*dalli_settings)
 
     configure :development do
       register Sinatra::Reloader
@@ -37,7 +40,6 @@ module Crime
     helpers HtmlHelpers
     helpers Crime::ViewHelpers
     helpers Sinatra::JSON
-
 
     get "/" do
       @current_menu = "home"
