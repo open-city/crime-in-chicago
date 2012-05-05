@@ -7,7 +7,7 @@ rescue
       "adapter"  => "postgres",
       "host"     => uri.host,
       "database" => uri.path.slice(1..-1),
-      "username" => uri.username,
+      "username" => uri.user,
       "password" => uri.password
     }
   }
