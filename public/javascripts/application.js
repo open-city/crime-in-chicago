@@ -5,3 +5,4 @@ $(function() {
   });
 });
 
+OpenCity.CrimeInChicago.url = "http://beta.crimeinchicago.org/";
