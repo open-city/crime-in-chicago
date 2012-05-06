@@ -6,7 +6,7 @@ namespace :db do
   end
 
   desc 'create database'
-  task :drop do |t, args|
+  task :create do |t, args|
     sh "createdb chicago_crime"
   end
 
@@ -24,6 +24,7 @@ namespace :db do
       sh "sed 1d #{data_filename} | psql --dbname=chicago_crime -c \"$(cat db/script/load_crime_data.sql)\""
       Rake::Task['db:load:crimes_for_month'].invoke
       Rake::Task['db:load:crimes_per_subcategory'].invoke
+      Rake::Task['db:load:zero_crime_months'].invoke
     end
     
     desc "populate crimes_for_month table"
@@ -48,15 +49,18 @@ namespace :db do
 
     desc "load ward offices file into tables (uses tmp/Ward_Offices.csv by default)"
     task :ward_offices, :data_filename do |t, args|
-      data_filename = args[:data_filename] || "tmp/Ward_Offices.csv"
+      data_filename = args[:data_filename] || "db/import/Ward_Offices.csv"
       puts "loading ward office data from #{data_filename}..."
       sh "cat #{data_filename} | psql --dbname=chicago_crime -c \"$(cat db/script/load_ward_offices.sql)\""
     end
   end
 
-  desc "migrate schema and load crime data"
-  task :setup_from_scratch, :data_filename do |t, args|
+  desc "create database, migrate schema and load data from csv"
+  task :setup_from_scratch do
+    Rake::Task['db:drop'].invoke
+    Rake::Task['db:create'].invoke
     Rake::Task['db:migrate'].invoke
-    Rake::Task['db:load:crimes'].invoke(args[:data_filename])
+    Rake::Task['db:load:crimes'].invoke
+    Rake::Task['db:load:ward_offices'].invoke
   end
 end

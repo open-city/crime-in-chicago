@@ -12,18 +12,17 @@ Sinatra
 
 - Download the latest crimes dataset
 
-https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2
+    https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2
+    Export -> CSV (file is >1Gb in size)
 
 - Clone the git repository
 
     > git clone git@github.com:open-city/crime-in-chicago.git
 
-- Execute these commands
+- Execute this command
 
-    > rake db:drop (if exists)
-    > rake db:create
-    > rake db:migrate
-    > rake db:load:crimes
+    > rake db:setup_from_scratch
+    import takes ~30 minutes 
 
 - Install all gems necessary
 
@@ -33,6 +32,7 @@ https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2
 - Start application server
 
     > unicorn
+    navigate to http://localhost:8080
 
 
 == Contributing to Crime in Chicago
