@@ -16,6 +16,15 @@ namespace :db do
     sh "sequel -tE -m db/migrate #{version.nil? ? '' : "-M #{version}" } config/database.yml"
   end
 
+  namespace :backup do
+    desc "backup the whole database"
+    task :all do |t, args|
+      data_filename = args[:data_filename] || "tmp/postgres_backup.dump"
+      puts "backing up the database \"chicago_crime\" to #{data_filename}"
+      sh "pg_dump -Fc --no-acl --no-owner -h localhost chicago_crime > #{data_filename}"
+    end
+  end
+
   namespace :load do
     desc "load crime data file into tables (uses tmp/Crimes_-_2001_to_present.csv by default)"
     task :crimes, :data_filename do |t, args|
