@@ -162,6 +162,7 @@ module Crime
           {
             :current => (c[:year].to_s == params[:year]) ? "current" : "",
             :height => number_to_percentage(c[:crime_count_for_year].to_f / max),
+            :width => number_to_percentage(1.0 / crimes.count),
             :title => "#{c[:year]} - #{number_with_delimiter c[:crime_count_for_year]} crimes"
           }
         }

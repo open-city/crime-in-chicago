@@ -15,7 +15,7 @@
         Ward.sortable("#ward-charts");
       }
 
-      var year = 2011;
+      var year = #{Time.now.year};
       while (year > 2006)
       {
         WardDetail.create("#{ward}", year, "#history");
