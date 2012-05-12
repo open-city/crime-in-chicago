@@ -35,10 +35,10 @@ module Crime
       order by crime_count desc
       limit 6".strip,
     :ward_crimes_categories_per_month => "
-      select count(*) as crime_count, primary_type
+      select count(*) as crime_count, fbi_code
       from crimes
       where ward = :ward and year = :year and date_part('month', occurred_at) = :month
-      group by primary_type
+      group by fbi_code
       order by crime_count desc
       limit 6".strip,
     :ward_crimes_per_year => "
@@ -48,17 +48,17 @@ module Crime
       group by date_part('year', occurred_at) 
       order by year;".strip,
     :ward_detail_category_list => "
-      select primary_type, min(crime_count) as minimum, avg(crime_count)::integer as average, 
+      select fbi_code, min(crime_count) as minimum, avg(crime_count)::integer as average, 
       max(crime_count) as maximum, sum(crime_count) as total 
       from crimes_for_month 
-      where ward = :ward and year > 2002 group by primary_type;".strip,
+      where ward = :ward and year > 2002 group by fbi_code;".strip,
     :ward_detail_category_sparkline => "
       select crime_count from crimes_for_month 
-      where ward = :ward and year > 2002 and primary_type = :primary_type
+      where ward = :ward and year > 2002 and fbi_code = :fbi_code
       order by year, month;".strip,
     :ward_detail_subcategory_list => "
       select subcategory, crime_count from crimes_per_subcategory
-      where ward = :ward and category = :primary_type
+      where ward = :ward and fbi_code = :fbi_code
       order by crime_count desc".strip,
     :ward_office => "
       select * from ward_offices
@@ -68,7 +68,7 @@ module Crime
       where date_part('year', occurred_at) = :year and ward = :ward 
       group by hour order by hour".strip,
     :category_name_by_fbi_code => "
-      select name
+      select name, legal_definition, friendly_description
       from crime_types
       where fbi_code = :fbi_code".strip
   }

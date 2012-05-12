@@ -114,15 +114,18 @@ module Crime
     
     # WARD DETAIL METHODS
     def ward_detail_category_list(ward)
-      DB.fetch(Crime::QUERIES[:ward_detail_category_list], :ward => ward).all
+      dataset = DB.fetch(Crime::QUERIES[:ward_detail_category_list], :ward => ward)
+      dataset.all.each do |category_item| 
+        category_item[:category_name] = CrimeTypesLookup.name_for_fbi_code(category_item[:fbi_code])
+      end
     end
     
-    def ward_detail_category_sparkline(ward, primary_type)
-      DB.fetch(Crime::QUERIES[:ward_detail_category_sparkline], :ward => ward, :primary_type => primary_type).all
+    def ward_detail_category_sparkline(ward, fbi_code)
+      DB.fetch(Crime::QUERIES[:ward_detail_category_sparkline], :ward => ward, :fbi_code => fbi_code).all
     end
     
-    def ward_detail_subcategory_list(ward, primary_type)
-      DB.fetch(Crime::QUERIES[:ward_detail_subcategory_list], :ward => ward, :primary_type => primary_type).all
+    def ward_detail_subcategory_list(ward, fbi_code)
+      DB.fetch(Crime::QUERIES[:ward_detail_subcategory_list], :ward => ward, :fbi_code => fbi_code).all
     end
     
     def ward_office(ward)

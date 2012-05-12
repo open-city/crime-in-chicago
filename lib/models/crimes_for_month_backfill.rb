@@ -16,7 +16,7 @@ class CrimesForMonthBackfill
       FROM crimes_for_month 
       WHERE ward is NOT NULL AND TRIM(ward) NOT IN ('', '0') 
       AND year > 2001 AND year < DATE_PART('year', NOW())
-      ORDER BY ward, primary_type, year, month
+      ORDER BY ward, fbi_code, year, month
     SQL
   end
 
@@ -85,7 +85,7 @@ class CrimesForMonthBackfill
   end
 
   def rows_for_same_ward_and_category(row1, row2)
-    row1[:ward] == row2[:ward] && row1[:primary_type] == row2[:primary_type]
+    row1[:ward] == row2[:ward] && row1[:fbi_code] == row2[:fbi_code]
   end
 
   def add_zero_crimes_rows_for_years(base_row, year_range)

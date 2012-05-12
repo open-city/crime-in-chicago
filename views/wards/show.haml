@@ -23,19 +23,19 @@
       }
       
       $("#trends a").click(function() {
-        var primary_type = $(this).attr("data-category");
+        var fbi_code = $(this).attr("data-fbi_code");
         $(this).parents("tr").toggleClass("current");
-        if ($('#expanded-' + primary_type).exists()) {
-          $('#expanded-' + primary_type).remove();
+        if ($('#expanded-' + fbi_code).exists()) {
+          $('#expanded-' + fbi_code).remove();
           return false;
         }
         else
         {
           //append a new tr for expanded row
-          var expandedPlaceholder = "<tr><td colspan='6' id='expanded-" + primary_type + "'><div class='highchart' id='expanded-" + primary_type + "-chart'></td></tr></div>";
-          $(expandedPlaceholder).insertAfter("#category-" + primary_type);
-          CategoryChart.create(#{ward}, primary_type);
-          WardDetail.subcategories(#{ward}, primary_type);
+          var expandedPlaceholder = "<tr><td colspan='6' id='expanded-" + fbi_code + "'><div class='highchart' id='expanded-" + fbi_code + "-chart'></td></tr></div>";
+          $(expandedPlaceholder).insertAfter("#category-" + fbi_code);
+          CategoryChart.create(#{ward}, fbi_code);
+          WardDetail.subcategories(#{ward}, fbi_code);
           return false;
         }
       });
@@ -201,13 +201,13 @@
     %tbody
       - ward_detail_category_list(ward).each do |hash|
         - @category_sparkline = ""
-        - ward_detail_category_sparkline(ward, hash[:primary_type]).each do |s|
+        - ward_detail_category_sparkline(ward, hash[:fbi_code]).each do |s|
           - @category_sparkline += "#{s[:crime_count]},"
         - @category_sparkline = @category_sparkline.chomp(",")
-        %tr{:id => "category-#{encode_element_id hash[:primary_type]}"}
+        %tr{:id => "category-#{encode_element_id hash[:fbi_code]}"}
           %td.cat-title
-            %a{:href => "#", :"data-category" => (encode_element_id hash[:primary_type]), :"data-values" => @category_sparkline}
-              = hash[:primary_type].briefcase
+            %a{:href => "#", :"data-fbi_code" => (encode_element_id hash[:fbi_code]), :"data-values" => @category_sparkline}
+              = hash[:category_name]
           %td
             %span.sparkline
               = @category_sparkline
