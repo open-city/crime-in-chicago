@@ -66,7 +66,7 @@ module Crime
     :sparkline_by_ward_and_year => "
       select date_part('hour',occurred_at) as hour, count(*) as crime_count from crimes 
       where date_part('year', occurred_at) = :year and ward = :ward 
-      group by hour order by hour".strip
+      group by hour order by hour".strip,
     :category_name_by_fbi_code => "
       select name
       from crime_types

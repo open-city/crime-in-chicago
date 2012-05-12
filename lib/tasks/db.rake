@@ -76,7 +76,7 @@ namespace :db do
     Rake::Task['db:drop'].invoke
     Rake::Task['db:create'].invoke
     Rake::Task['db:migrate'].invoke
-    Rake::Task['db:load:crimes'].invoke(args[:data_filename])
+    Rake::Task['db:load:crimes'].invoke
     Rake::Task['db:load:ward_offices'].invoke
     Rake::Task['db:load:crime_types'].invoke
   end
