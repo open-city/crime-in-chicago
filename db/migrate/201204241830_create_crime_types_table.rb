@@ -17,6 +17,5 @@ Sequel.migration do
 
   down do
     run 'DROP TABLE crime_types;'
-    run 'DROP INDEX crimes_fbi_code_idx;'
   end
 end

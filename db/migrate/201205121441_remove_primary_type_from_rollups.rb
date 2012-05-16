@@ -11,7 +11,7 @@ Sequel.migration do
 
   down do
     run <<-SQL
-      ALTER TABLE crimes_for_month ADD COLUMN character varying(32);
+      ALTER TABLE crimes_for_month ADD COLUMN primary_type character varying(32);
       ALTER TABLE crimes_per_subcategory ADD COLUMN category character varying(32);
     SQL
     
