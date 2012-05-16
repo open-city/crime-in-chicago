@@ -44,7 +44,7 @@ module Crime
       dataset = DB.fetch(QUERIES[:ward_crimes_categories_per_year], :ward => ward, :year => year)
       retain_in_cache(dataset.sql) do
         dataset.all.each do |category_data| 
-          category_data[:category_name] = CrimeTypesLookup.name_for_fbi_code(category_data[:fbi_code])
+          category_data[:category_name] = CrimeType.find_by_fbi_code(category_data[:fbi_code])[:name]
         end
       end
     end
@@ -115,8 +115,10 @@ module Crime
     # WARD DETAIL METHODS
     def ward_detail_category_list(ward)
       dataset = DB.fetch(Crime::QUERIES[:ward_detail_category_list], :ward => ward)
-      dataset.all.each do |category_item| 
-        category_item[:category_name] = CrimeTypesLookup.name_for_fbi_code(category_item[:fbi_code])
+      retain_in_cache(dataset.sql) do
+        dataset.all.each do |category_item| 
+          category_item[:category_name] = CrimeType.find_by_fbi_code(category_item[:fbi_code])[:name]
+        end
       end
     end
     
