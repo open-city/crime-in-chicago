@@ -113,7 +113,7 @@ module Crime
     end
     
     def find_by_fbi_code(fbi_code)
-      crime_type = DB.fetch(Crime::QUERIES[:category_name_by_fbi_code], :fbi_code => fbi_code).first
+      crime_type = DB.fetch(Crime::QUERIES[:category_name_by_fbi_code], :fbi_code => fbi_code)
       retain_in_cache(crime_type.sql) do
         crime_type.first
       end
