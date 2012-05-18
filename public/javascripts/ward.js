@@ -202,17 +202,23 @@ WardDetail.create = function(number, year, selector) {
   });
 }
 
-WardDetail.subcategories = function(number, primary_type) {
-  $.get("/wards/"+number+"/"+primary_type+"/partials/subcategories", function(data) {
-    $(data).insertAfter('#expanded-' + primary_type + '-chart');
+WardDetail.subcategories = function(number, fbi_code) {
+  $.get("/wards/"+number+"/"+fbi_code+"/partials/subcategories", function(data) {
+    $(data).insertAfter('#expanded-' + fbi_code + '-chart');
   });
 }
 
+WardDetail.categoryDescription = function(fbi_code) {
+  d3.json("/crime_type/"+fbi_code+"/partials/description", function(json) {
+    $('#expanded-' + fbi_code).prepend($(Mustache.render(json["template"], json)));
+  });
+};
+
 var CategoryChart = {};
-CategoryChart.create = function(number, primary_type) {
+CategoryChart.create = function(number, fbi_code) {
 
   //fetch data from data attribute on link and convert to array of ints
-  var dataSeries = $("#category-" + primary_type + " a").attr("data-values").split(',');
+  var dataSeries = $("#category-" + fbi_code + " a").attr("data-values").split(',');
   for(var i=0; i<dataSeries.length; i++) { dataSeries[i] = parseInt(dataSeries[i], 10); }
 
   // find min/max values and style them appropriately in highcharts
@@ -239,7 +245,7 @@ CategoryChart.create = function(number, primary_type) {
   chart = new Highcharts.Chart({
     chart: {
       defaultSeriesType: "area",
-      renderTo: 'expanded-' + primary_type + '-chart',
+      renderTo: 'expanded-' + fbi_code + '-chart',
       margin: [10, 0, 30, 30],
       spacingBottom: 0,
       spacingLeft: 0,
