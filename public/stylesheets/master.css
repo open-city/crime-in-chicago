@@ -263,7 +263,7 @@ a:hover .magnify { background-color: #005b82; background-position: 0 -22px; bord
   .heatmap .chart { background: #fff; float: right; height: 104px; width: 770px; }
   .chart { font: 10px sans-serif; shape-rendering: crispEdges; }
   .day { fill: #fff; stroke: rgba(255, 255, 255, 0.7); }
-  .heatmap .day:hover { cursor: pointer; fill: #d81111; }
+  .heatmap .day:hover { fill: #d81111; }
   .month { fill: none; stroke: #000; stroke-width: 1px; }
     
     /* Months */
