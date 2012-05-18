@@ -205,6 +205,16 @@ module Crime
       ward_crime_columns(params[:year]).to_json
     end
     
+    get "/crime_type/:fbi_code/partials/description" do 
+      data = find_by_fbi_code(params[:fbi_code])
+      {
+        :template => erb(:"mustache/description.html"),
+        :name => data[:name],
+        :friendly_description => data[:friendly_description],
+        :legal_definition => data[:legal_definition]
+      }.to_json
+    end
+    
     get "/wards/:ward/:fbi_code/partials/subcategories" do 
       haml :"ward-subcategory", :layout => false, :locals => {
         :ward => params[:ward], :fbi_code => params[:fbi_code]

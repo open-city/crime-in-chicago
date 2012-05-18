@@ -5,6 +5,7 @@
   = include_javascript "dataTables.sorting"
   = include_javascript "highcharts"
   = include_javascript "jquery.prettyPhoto"
+  = include_javascript :mustache
   = include_javascript :ward
 
   :javascript
@@ -32,8 +33,11 @@
         else
         {
           //append a new tr for expanded row
-          var expandedPlaceholder = "<tr><td colspan='6' id='expanded-" + fbi_code + "'><div class='highchart' id='expanded-" + fbi_code + "-chart'></td></tr></div>";
+          var expandedPlaceholder = "<tr><td colspan='6' id='expanded-" + fbi_code + "'>";
+          expandedPlaceholder += "<div class='highchart' id='expanded-" + fbi_code + "-chart'></div>";
+          expandedPlaceholder += "</td></tr>";
           $(expandedPlaceholder).insertAfter("#category-" + fbi_code);
+          WardDetail.categoryDescription(fbi_code);
           CategoryChart.create(#{ward}, fbi_code);
           WardDetail.subcategories(#{ward}, fbi_code);
           return false;

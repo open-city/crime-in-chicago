@@ -208,6 +208,12 @@ WardDetail.subcategories = function(number, fbi_code) {
   });
 }
 
+WardDetail.categoryDescription = function(fbi_code) {
+  d3.json("/crime_type/"+fbi_code+"/partials/description", function(json) {
+    $('#expanded-' + fbi_code).prepend($(Mustache.render(json["template"], json)));
+  });
+};
+
 var CategoryChart = {};
 CategoryChart.create = function(number, fbi_code) {
 
