@@ -91,16 +91,36 @@ OpenCity.Ward.Widget.Sparkline = function(ward, callback) {
 }
 
 OpenCity.Ward.Template = function(ward) {
+  var template = this;
   this.ward = ward;
   this.base = $("<div id=\""+this.ward.prefixSelector()+"\" class=\"timeline\" data-ward=\""+this.ward.number+"\" data-year=\""+this.ward.year+"\"></div>");
   this.fusion_map = null;
+  this.ready = false;
+  this.events = {};
 
-  // Any template must implement the four following methods
-  // close_handle()
-  // title()
-  // heatmap()
-  // statistics()
-  // setTemplateEvents
+  this.on = function(event, handler) {
+    if (!template.events[event]) {
+      template.events[event] = [];
+    }
+    template.events[event].push(handler);
+  };
+
+  this.trigger = function() {
+    var args = Array.prototype.slice.call(arguments);
+    var events = template.events[args.shift()];
+
+    if (events) {
+      for (event in events) {
+        events[event].apply(template, args);
+      }
+    }
+  };
+
+  this.on("ward-widgets:loaded", function(t) {
+    this.base.find(".ward-loading").hide();
+    t.ready = true;
+  });
+
   this.attach = function(selector) {
     selector.prepend(this.base);
     this.base.append(this.close_handle());
@@ -111,10 +131,38 @@ OpenCity.Ward.Template = function(ward) {
     this.setTemplateEvents();
   };
 
+  this.open_statistics = function() {
+    var template = this;
+
+    if (this.ready) {
+      template.base.find(".statistics").slideToggle(500, function() {
+        if (template.fusion_map == null) {
+          // STATISTIC MAP
+          var fusion_table_id = OpenCity.CrimeInChicago.fusion_table_id;
+          var map_element = template.base.find(".ward-map")[0];
+
+          template.fusion_map = FusionMap.create(map_element, OpenCity.CrimeInChicago.map_default_options());
+          var fusion_layer = FusionLayer.create({select: 'geometry', from: fusion_table_id, where: "name = '"+template.ward.number+"'"}, template.fusion_map.page_element);
+          template.fusion_map.add_map_bounds({from: fusion_table_id, where: "name = '"+template.ward.number+"'"}, function(response) {
+            template.fusion_map.set_map_bounds(response);
+          });
+
+          // RENDER SPARKLINE
+          $.sparkline_display_visible();
+        }
+      });
+    } else {
+      template.base.find(".ward-loading").show();
+      template.on("ward-widgets:loaded", function(t) {
+        t.open_statistics();
+      });
+    }
+
+    return false;
+  };
+
   this.setTemplateEvents = function() {
-    var ward = this.ward;
-    var base = this.base;
-    var fusion_map = this.fusion_map;
+    var template   = this;
 
     // REMOVE WARD TEMPLATE FROM DOM
     this.base.find(".remove").click(function() {
@@ -125,23 +173,7 @@ OpenCity.Ward.Template = function(ward) {
 
     // EXPAND STATISTICS ELEMENT
     this.base.find(".ward-title").click(function() {
-      base.find(".statistics").slideToggle(500, function() {
-        if (fusion_map == null) {
-          // STATISTIC MAP
-          var fusion_table_id = OpenCity.CrimeInChicago.fusion_table_id;
-          var map_element = base.find(".ward-map")[0];
-
-          fusion_map = FusionMap.create(map_element, OpenCity.CrimeInChicago.map_default_options());
-          var fusion_layer = FusionLayer.create({select: 'geometry', from: fusion_table_id, where: "name = '"+ward.number+"'"}, fusion_map.page_element);
-          fusion_map.add_map_bounds({from: fusion_table_id, where: "name = '"+ward.number+"'"}, function(response) {
-            fusion_map.set_map_bounds(response);
-          });
-
-          // RENDER SPARKLINE
-          $.sparkline_display_visible();
-        }
-      });
-      return false;
+      return template.open_statistics();
     });
 
   };
@@ -152,10 +184,12 @@ OpenCity.Ward.Template = function(ward) {
 
   this.title = function() {
     var header = $("<h2></h2>");
+    var ward_loading = $("<span class=\"ward-loading\"><img src=\"/images/loader.gif\"/></span>");
+    header.append(ward_loading);
     var header_name = $("<a class=\"ward-title\" href=\"#\">Ward "+this.ward.number+" ["+this.ward.year+"]</a>");
     header.append(header_name);
-    var ward_detail = $("<span><a class=\"ward-details\" href=\"" + OpenCity.CrimeInChicago.url + "/wards/"+this.ward.number+"\">View all ward details</a></span>");
-    header.append(ward_detail);
+    var ward_view_detail = $("<span class=\"ward-view-details\"><a class=\"ward-details\" href=\"" + OpenCity.CrimeInChicago.url + "/wards/"+this.ward.number+"\">View all ward details</a></span>");
+    header.append(ward_view_detail);
     return header;
   };
 
@@ -206,6 +240,7 @@ OpenCity.Ward.Template = function(ward) {
   };
 
   this.statistics = function() {
+    var template = this;
     var list = $("<div class=\"statistics\" style=\"display:none;\"></div>");
     var elements = [];
 
@@ -221,6 +256,7 @@ OpenCity.Ward.Template = function(ward) {
           list.append(value);
         });
         elements = [];
+        template.trigger("ward-widgets:loaded", template);
       }
     };
 
