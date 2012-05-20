@@ -258,6 +258,12 @@ a:hover .magnify { background-color: #005b82; background-position: 0 -22px; bord
     top: 0;
     width: 16px;
   }
+
+  .timeline .ward-loading {
+    display: none;
+    margin-left: 0;
+    margin-right: 10px;
+  }
   
   /* Heatmap */
   .heatmap .chart { background: #fff; float: right; height: 104px; width: 770px; }
