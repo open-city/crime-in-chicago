@@ -108,7 +108,7 @@ module Crime
         :categories => categories.map { |c|
           {
             :crime_count => c[:crime_count],
-            :primary_type => c[:primary_type].titleize,
+            :category_name => c[:category_name].titleize,
             :width => ((c[:crime_count].to_f / max) * 100).round
           }
         }
@@ -124,7 +124,7 @@ module Crime
         :categories => categories.map { |c|
           {
             :crime_count => c[:crime_count],
-            :primary_type => c[:primary_type].titleize,
+            :fbi_code => c[:fbi_code],
             :width => ((c[:crime_count].to_f / max) * 100).round
           }
         }
@@ -205,9 +205,19 @@ module Crime
       ward_crime_columns(params[:year]).to_json
     end
     
-    get "/wards/:ward/:primary_type/partials/subcategories" do 
+    get "/crime_type/:fbi_code/partials/description" do 
+      data = find_by_fbi_code(params[:fbi_code])
+      {
+        :template => erb(:"mustache/description.html"),
+        :name => data[:name],
+        :friendly_description => data[:friendly_description],
+        :legal_definition => data[:legal_definition]
+      }.to_json
+    end
+    
+    get "/wards/:ward/:fbi_code/partials/subcategories" do 
       haml :"ward-subcategory", :layout => false, :locals => {
-        :ward => params[:ward], :primary_type => params[:primary_type]
+        :ward => params[:ward], :fbi_code => params[:fbi_code]
       }
     end
 

@@ -311,6 +311,7 @@ a:hover .magnify { background-color: #005b82; background-position: 0 -22px; bord
 #trends .cat-title a { background: url(/images/expand.png) no-repeat 0 50%; padding-left: 17px; }
 #trends .current td { font-weight: bold; }
 #trends .current .cat-title a { background-image: url(/images/collapse.png); }
+#trends .description { white-space: normal; margin-left: 30px; }
 #trends h3 { margin-left: 30px; }
 #trends .highchart { height: 250px; }
 #trends .num { text-align: right; }

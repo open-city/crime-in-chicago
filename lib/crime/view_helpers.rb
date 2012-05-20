@@ -43,7 +43,9 @@ module Crime
     def statistic_categories_by_ward_and_year(ward, year)
       dataset = DB.fetch(QUERIES[:ward_crimes_categories_per_year], :ward => ward, :year => year)
       retain_in_cache(dataset.sql) do
-        dataset.all
+        dataset.all.each do |category_data| 
+          category_data[:category_name] = find_by_fbi_code(category_data[:fbi_code])[:name]
+        end
       end
     end
 
@@ -110,17 +112,29 @@ module Crime
       DB.fetch(Crime::QUERIES[:ward_crimes_per_year], :ward => ward).all
     end
     
+    def find_by_fbi_code(fbi_code)
+      crime_type = DB.fetch(Crime::QUERIES[:category_name_by_fbi_code], :fbi_code => fbi_code)
+      retain_in_cache(crime_type.sql) do
+        crime_type.first
+      end
+    end
+    
     # WARD DETAIL METHODS
     def ward_detail_category_list(ward)
-      DB.fetch(Crime::QUERIES[:ward_detail_category_list], :ward => ward).all
+      dataset = DB.fetch(Crime::QUERIES[:ward_detail_category_list], :ward => ward)
+      retain_in_cache(dataset.sql) do
+        dataset.all.each do |category_item| 
+          category_item[:category_name] = find_by_fbi_code(category_item[:fbi_code])[:name]
+        end
+      end
     end
     
-    def ward_detail_category_sparkline(ward, primary_type)
-      DB.fetch(Crime::QUERIES[:ward_detail_category_sparkline], :ward => ward, :primary_type => primary_type).all
+    def ward_detail_category_sparkline(ward, fbi_code)
+      DB.fetch(Crime::QUERIES[:ward_detail_category_sparkline], :ward => ward, :fbi_code => fbi_code).all
     end
     
-    def ward_detail_subcategory_list(ward, primary_type)
-      DB.fetch(Crime::QUERIES[:ward_detail_subcategory_list], :ward => ward, :primary_type => primary_type).all
+    def ward_detail_subcategory_list(ward, fbi_code)
+      DB.fetch(Crime::QUERIES[:ward_detail_subcategory_list], :ward => ward, :fbi_code => fbi_code).all
     end
     
     def ward_office(ward)
