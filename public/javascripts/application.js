@@ -4,6 +4,6 @@ $(function() {
       $(this).attr('target', '_blank');
   });
 
-  OpenCity.CrimeInChicago.url = "http://beta.crimeinchicago.org";
+  OpenCity.CrimeInChicago.url = "http://localhost:8080"; // "http://beta.crimeinchicago.org";
 });
 
