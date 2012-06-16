@@ -5,11 +5,12 @@
 
   :javascript
     $(document).ready(function() {
-      $(".ward-selector").click(function() {
-        var element = $(this);
-        var number = element.attr("data-ward");
-        var year   = element.attr("data-year");
-        element.parent().attr("class", "current");
+      $("a.ward-selector").click(function() {
+        var $element = $(this);
+        var number = $element.attr("data-ward");
+        var year   = $element.attr("data-year");
+
+        $element.parent().toggleClass("current");
 
         var ward = new OpenCity.Ward(number, year);
         ward.present();

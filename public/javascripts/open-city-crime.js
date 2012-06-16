@@ -166,7 +166,7 @@ OpenCity.Ward.Template = function(ward) {
 
     // REMOVE WARD TEMPLATE FROM DOM
     this.base.find(".remove").click(function() {
-      $("a[data-ward|='"+ward.number+"']").parent().attr("class", "");
+      $("a[data-ward|='"+ward.number+"']").parent().toggleClass("current");
       $(this).parent().remove();
       return false;
     });
@@ -176,6 +176,10 @@ OpenCity.Ward.Template = function(ward) {
       return template.open_statistics();
     });
 
+    $("#wards li.current a[data-ward="+this.ward.number+"][data-year="+this.ward.year+"]").click(function() {
+      template.base.remove();
+      return false;
+    });
   };
 
   this.close_handle = function() {
