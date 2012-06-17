@@ -2,39 +2,43 @@
   :javascript
     $(document).ready(function() {
       $('.year-selector a').click(function() {
-        if (!$(this).parent().hasClass("current")) {
-          $.get("/wards/"+$(this).attr("data-year")+"/partials/crime-columns", function(data) {
-            $("#wards").html(data);
+        var selected_year = $(this).attr("data-year");
+        $.get("/wards/"+selected_year+"/partials/crime-columns", function(data) {
+          $("#wards").html(data);
 
-            $(".ward-selector").click(function() {
-              $(this).parent().attr('class', 'current');
-
-              var element = $(this);
-              var number = element.attr("data-ward");
-              var year   = element.attr("data-year");
-              element.parent().attr("class", "current");
-
-              var ward = new OpenCity.Ward(number, year);
-              ward.present();
-              return false;
-            });
-
-            $(".chart-column .idx").tooltip({
-              delay: 0,
-              fade: 250,
-              showBody: " - ",
-              showURL: false,
-              track: true
-            });
+          $("#ward-charts div[data-year="+selected_year+"]").each(function(index, element) {
+            $("#wards a[data-ward="+$(element).attr("data-ward")+"]").parent().addClass("current");
           });
 
-          $('.year-selector.current').each(function() {
-            $(this).removeClass("current");
+          $(".ward-selector").click(function() {
+            $(this).parent().attr('class', 'current');
+
+            var element = $(this);
+            var number = element.attr("data-ward");
+            var year   = element.attr("data-year");
+            element.parent().attr("class", "current");
+
+            var ward = new OpenCity.Ward(number, year);
+            ward.present();
+            return false;
           });
 
-          link = $(this);
-          link.parent().addClass("current");
-        }
+          $(".chart-column .idx").tooltip({
+            delay: 0,
+            fade: 250,
+            showBody: " - ",
+            showURL: false,
+            track: true
+          });
+        });
+
+        $('.year-selector.current').each(function() {
+          $(this).removeClass("current");
+        });
+
+        link = $(this);
+        link.parent().addClass("current");
+
         return false;
       });
     });
