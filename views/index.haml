@@ -5,8 +5,9 @@
 
   :javascript
     $(document).ready(function() {
-      $("a.ward-selector").click(function() {
+      $("a.ward-selector").click(function(event) {
         var $element = $(this);
+
         var number = $element.attr("data-ward");
         var year   = $element.attr("data-year");
 
