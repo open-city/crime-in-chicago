@@ -18,6 +18,14 @@
 
         return false;
       });
+
+      $("#clear_all_wards").click(function() {
+        $("#ward-charts div.timeline").remove();
+        $("a.ward-selector").each(function(index, element) {
+          $(element).parent().removeClass("current");
+        });
+        return false;
+      });
     });
 
 #vis
@@ -32,7 +40,7 @@
       Drag wards up and down to reorder for easy comparison.
       
     %p.tip
-      %a{:href => "/"}
+      %a#clear_all_wards{:href => "#"}
         Clear all
 
   .vis-content
