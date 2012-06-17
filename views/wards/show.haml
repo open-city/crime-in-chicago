@@ -10,12 +10,6 @@
 
   :javascript
     $(document).ready(function() {
-      if (typeof Ward !== "undefined") {
-        Ward.tooltips('.chart-column .idx');
-        Ward.draggable(".timeline");
-        Ward.sortable("#ward-charts");
-      }
-
       var year = #{Time.now.year};
       while (year > 2006)
       {

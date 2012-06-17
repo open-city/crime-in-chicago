@@ -1,8 +1,0 @@
-.panel
-  %h3 Time of day
-  %span.sparkline-day
-    = sparkline_by_ward_and_year(:ward => ward, :year => year).join(",")
-  .xaxis.day
-    .tick.first 12a
-    .tick noon
-    .tick.last 12a
