@@ -149,6 +149,7 @@ OpenCity.Ward.Template = function(ward) {
 
           // RENDER SPARKLINE
           $.sparkline_display_visible();
+          analyticsTrackEvent("Click", "Home: ward expanded", "ward:" + template.ward.number + " year:" + template.ward.year);
         }
       });
     } else {
