@@ -18,10 +18,10 @@
           if (address.toLowerCase().indexOf("chicago") == -1) 
             address = address + " chicago";
 
+          analyticsTrackEvent("Search", "Home: address search", address);
           geocoder.geocode( { 'address': address}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
               searchStr += " AND ST_INTERSECTS(geometry, CIRCLE(LATLNG" + results[0].geometry.location.toString() + "," + searchRadius + "))";
-              //console.log(searchStr);
               getFTQuery(searchStr).send(displayFound);
             }
             else {
@@ -36,16 +36,23 @@
         var number;
         var year;
         if (response.getDataTable().getNumberOfRows() > 0)
+        {
           number = parseInt(response.getDataTable().getValue(0, 0));
           year = $('.year-selector.current a').attr('data-year');
           
-        //console.log(number);
-        $( "#found_ward_number" ).fadeOut(function() {
+          $( "#found_ward_number" ).fadeOut(function() {
             $( "#found_ward_number" ).html("That address is in ward " + number);
             $('[data-ward="' + number + '"]').parent().attr('class', 'current');
             new OpenCity.Ward(number, year).present();
           });
-        $( "#found_ward_number" ).fadeIn();
+          $( "#found_ward_number" ).fadeIn();
+        }
+        else {
+          $( "#found_ward_number" ).fadeOut(function() {
+            $( "#found_ward_number" ).html("Sorry! We couldn't find a ward for that address");
+          });
+          $( "#found_ward_number" ).fadeIn();
+        }
       }
 
       function getFTQuery(sql) {
@@ -56,10 +63,12 @@
       $("#ward_search").click(function() {
         search($("#ward_address").val());
       });
-
-      $("#ward_address").keydown(function(event) {
-        if (event.which == 13) {
-          search($(this).val());
+      
+      $("#ward_address").keydown(function(e){
+        var key =  e.keyCode ? e.keyCode : e.which;
+        if(key == 13) {
+            $('#ward_search').click();
+            return false;
         }
       });
 

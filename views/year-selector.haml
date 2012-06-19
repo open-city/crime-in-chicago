@@ -3,6 +3,7 @@
     $(document).ready(function() {
       $('.year-selector a').click(function() {
         var selected_year = $(this).attr("data-year");
+        analyticsTrackEvent("Click", "Home: year selected", selected_year);
         $.get("/wards/"+selected_year+"/partials/crime-columns", function(data) {
           $("#wards").html(data);
 
