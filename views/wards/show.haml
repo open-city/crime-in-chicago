@@ -13,7 +13,7 @@
       var year = #{Time.now.year};
       while (year > 2006)
       {
-        WardDetail.create("#{ward}", year, "#history");
+        WardDetail.create("#{ward}", year, "#history-" + year);
         year--;
       }
       
@@ -43,7 +43,7 @@
         function(){
           while (year > 2001)
           {
-            WardDetail.create("#{ward}", year, "#history");
+            WardDetail.create("#{ward}", year, "#history-" + year);
             year--;
           } 
           $(this).hide();
@@ -57,7 +57,7 @@
           if (!$("#ward-#{ward}-2002").exists()) {
             while (year > 2001)
             {
-              WardDetail.create("#{ward}", year, "#history");
+              WardDetail.create("#{ward}", year, "#history-" + year);
               year--;
             }
           }
@@ -163,7 +163,17 @@
   
   #history
     .toggle-overlay
-    
+    #history-2012
+    #history-2011
+    #history-2010
+    #history-2009
+    #history-2008
+    #history-2007
+    #history-2006
+    #history-2005
+    #history-2004
+    #history-2003
+    #history-2002
   
   %p.toggle
     %a{:href => "#", :id => "history-toggle"} More
@@ -175,12 +185,12 @@
   %table#trends
     %thead
       %tr
-        %th Crime
+        %th Crime type
         %th{:style => "width: 200px;"}
-          %span 117 months*
+          %span Volume per month*
           %ol.xaxis
-            - (2..11).each do |year|
-              %li.tick{:style => "width: 10%;"}
+            - (2..12).each do |year|
+              %li.tick{:style => "width: 9%;"}
                 = "&lsquo;%02d" % year
         %th.num
           %span Low
