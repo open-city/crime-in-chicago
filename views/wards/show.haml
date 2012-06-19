@@ -34,6 +34,8 @@
           WardDetail.categoryDescription(fbi_code);
           CategoryChart.create(#{ward}, fbi_code);
           WardDetail.subcategories(#{ward}, fbi_code);
+          
+          analyticsTrackEvent("Click", "Detail: crime type expanded", "ward:" + #{ward} + " fbi_code:" + fbi_code);
           return false;
         }
       });
@@ -47,39 +49,10 @@
             year--;
           } 
           $(this).hide();
+          
+          analyticsTrackEvent("Click", "Detail: Show all years", "");
           return false;
         }); 
-        
-        
-        /*
-        $(".toggle-trigger").toggle(
-        function(){
-          if (!$("#ward-#{ward}-2002").exists()) {
-            while (year > 2001)
-            {
-              WardDetail.create("#{ward}", year, "#history-" + year);
-              year--;
-            }
-          }
-          
-          var target = $(this).attr("href");
-          var origHeight = $(target).height();
-          $(target).css("height", "auto");
-          var autoHeight = $(target).height();
-          $(target).css("height", origHeight + "px")
-          $(target).animate({ height: autoHeight + "px" }, 500, function(){
-            $(this).find(".toggle-overlay").hide();
-          });
-          $(this).text("Less");
-        },
-        function(){
-          var target = $(this).attr("href");
-          $(target + " .toggle-overlay").show();
-          $(target).animate({ height: "580px" }, 500);
-          $(this).text("More");
-        }
-      );
-        */
         
       // DataTables
       $("#trends").dataTable({

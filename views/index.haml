@@ -17,7 +17,8 @@
         ward.present();
         
         $("#timeline-empty").hide();
-
+        analyticsTrackEvent("Click", "Home: ward selected", "ward:" + number + " year:" + year);
+        
         return false;
       });
 
@@ -28,6 +29,7 @@
         });
         
         $("#timeline-empty").show();
+        analyticsTrackEvent("Click", "Home: clear all wards", "");
         return false;
       });
     });
