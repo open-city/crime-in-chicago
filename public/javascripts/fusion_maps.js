@@ -80,7 +80,10 @@ FusionMap.create = function(selector, options) {
         this.page_element.fitBounds(map_bounds);
       }
 
-      this.page_element.setZoom(this.page_element.getZoom() + 1);
+      //fix for not bounding close enough
+      var currentZoom = this.page_element.getZoom();
+      if (currentZoom < 11)
+        this.page_element.setZoom(currentZoom + 1);
     }
   }
 

@@ -243,6 +243,14 @@ a:hover .magnify { background-color: #005b82; background-position: 0 -22px; bord
   position: relative;
 }
 
+#timeline-empty {
+  border: 2px dashed #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  padding: 15px;
+  text-align: center;
+}
+
 .timeline h2 a.ward-title { background: url(../images/expand.png) no-repeat 0 0.2em; padding-left: 17px; }
 .timeline h2 a.ward-title.expanded { background-image: url(../images/collapse.png); color: #e00; }
 
