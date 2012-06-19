@@ -11,10 +11,12 @@
         var number = $element.attr("data-ward");
         var year   = $element.attr("data-year");
 
-        $element.parent().toggleClass("current");
+        $element.parent().addClass("current");
 
         var ward = new OpenCity.Ward(number, year);
         ward.present();
+        
+        $("#timeline-empty").hide();
 
         return false;
       });
@@ -24,6 +26,8 @@
         $("a.ward-selector").each(function(index, element) {
           $(element).parent().removeClass("current");
         });
+        
+        $("#timeline-empty").show();
         return false;
       });
     });
@@ -46,4 +50,5 @@
   .vis-content
     #compare
       #ward-charts
-
+        #timeline-empty
+          Select a ward above or search for your ward to see details.
