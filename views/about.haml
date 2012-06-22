@@ -24,20 +24,17 @@
     %li
       %a{:href => "#can-i-do-this-for-my-city"} Can I get this site for my city?
     %li
-      %a{:href => "#what-technologies-did-you-use-to-build-the-site"} What technologies did you use to build the site?
+      %a{:href => "#what-technologies-did-you-use-to-build-the-site"} What technologies did you use to build the site? (For the Geeks)
            
   
   %h2#what-is-this What is this?
   
   %p
-    This website lets you explore crime trends in Chicago's wards. It's a data visualization app built using <a href='https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2'>open data about Chicago crimes</a> released by the <a href='http://www.cityofchicago.org/police'>Chicago Police Department</a>.
+    Crime in Chicago is a data visualization by <a href="http://opencityapps.org">Open City</a> that lets you explore crime trends in Chicago's 50 wards. It was built using <a href='https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2'>open data about Chicago crimes</a> released by the <a href='http://www.cityofchicago.org/police'>Chicago Police Department</a>.
+    
   %p
-    At a glance, it lets you see an entire year of crime in a ward.
-  %p
-    You can also compare crime levels over the years and across the city.
-  %p    
-    And you can drill down to explore each ward’s homicides, robberies, assaults, and dozens of other crimes.
-  
+    With this website, you can compare crime levels over the years and across city wards. You can further explore each ward’s crime profile, which shows daily crime volumes going back to 2002, crime types and subcategories, and contact info for each Ward Alderman.
+     
   %h2#how-does-it-work How does it work?
   
   %ol
@@ -48,14 +45,14 @@
     %li
       This will bring up a heatmap that displays an <strong>entire calendar year of crime for that ward</strong>. Each square represents a day. The darker the square, the more crimes occurred that day.
       = image_tag "about/ward-42.png", :title => "A year of crime in Ward 42 by volume", :class => "content-image"
-      %p.mute A year of crime in ward 42 by volume
+      %p.mute A year of crime in Ward 42 by volume
     %li
-      To <strong>compare two or more different wards</strong>, choose another from the ward selector. You can stack two ward heatmaps, or view multiple years of crime for a single ward.
+      To <strong>compare wards</strong>, choose multiple wards from the 'Select wards' section. You can stack two different ward heatmaps, or view multiple years of crime for a single ward.
   
     %li
-      Once you have a ward selected, click on its title to <strong>view local crime trends</strong>. You can discover how crime in the ward has changed over time, what crimes occur most frequently, and how crime activity fluctuates across the day.
+      Once you have a ward selected, click on its name to <strong>view that ward's crime trends</strong>. You can discover how crime in the ward has changed over time, what crimes occur most frequently, and how crime activity fluctuates across the day.
       = image_tag "about/ward-42-expanded.png", :title => "Expanded details for Ward 42", :class => "content-image"
-      %p.mute Expanded details for ward 42
+      %p.mute Expanded details for Ward 42
     %li
       %p
         To view a <strong>ward’s crime profile</strong>, click on the “View all ward details” link. This will bring you to a detail page featuring heatmaps of the past 10 years of crime in the ward, contact info for each alderman, and a breakdown of all these crimes by category.
