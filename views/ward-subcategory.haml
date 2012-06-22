@@ -1,4 +1,4 @@
-%h3 Subcatgories
+%h3 Subcategories
 %ol.chart-bar
   - @subcategory_list = ward_detail_subcategory_list(ward, (decode_element_id fbi_code))
   - @max = @subcategory_list.map { |h| h[:crime_count] }.max

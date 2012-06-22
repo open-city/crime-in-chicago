@@ -20,14 +20,17 @@
     %li
       %a{:href => "#anything-i-should-know-about-this-data"} Anything I should know about the data?
     %li
-      %a{:href => "#who-built-it"} Who built it?
+      %a{:href => "#who-built-it"} Who built Crime in Chicago?
     %li
-      %a{:href => "#can-i-do-this-for-my-city"} Can I do this for my city?
+      %a{:href => "#can-i-do-this-for-my-city"} Can I get this site for my city?
+    %li
+      %a{:href => "#what-technologies-did-you-use-to-build-the-site"} What technologies did you use to build the site?
+           
   
   %h2#what-is-this What is this?
   
   %p
-    This website lets you explore crime trends in Chicago's wards. Its a data visualization app built using <a href='https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2'>open data about Chicago crimes</a> released by the <a href='http://www.cityofchicago.org/police'>Chicago Police Department</a>.
+    This website lets you explore crime trends in Chicago's wards. It's a data visualization app built using <a href='https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2'>open data about Chicago crimes</a> released by the <a href='http://www.cityofchicago.org/police'>Chicago Police Department</a>.
   %p
     At a glance, it lets you see an entire year of crime in a ward.
   %p
@@ -39,49 +42,45 @@
   
   %ol
     %li
-      First, <strong>pick a year and a ward</strong> on the front page. If you don’t know what ward you’re in, enter in your address to find it. Wards with more crime have higher bars.
-      = image_tag "about/ward-selector.png", :title => "The ward selector"
+      First, <strong>pick a year and a ward</strong> on the home page. If you don’t know what ward you’re in, enter in your address to find it. Wards with more crime have higher bars.
+      = image_tag "about/ward-selector.png", :title => "The ward selector", :class => "content-image"
+      %p.mute The ward selector
     %li
       This will bring up a heatmap that displays an <strong>entire calendar year of crime for that ward</strong>. Each square represents a day. The darker the square, the more crimes occurred that day.
-      = image_tag "about/ward-42.png", :title => "A year of crime in ward 42 by volume"
+      = image_tag "about/ward-42.png", :title => "A year of crime in Ward 42 by volume", :class => "content-image"
+      %p.mute A year of crime in ward 42 by volume
     %li
-      To <strong>compare two different</strong> wards, simply select another from the ward menu. You can stack two ward heatmaps side-by-side, or view multiple years of crime for a single ward.
+      To <strong>compare two or more different wards</strong>, choose another from the ward selector. You can stack two ward heatmaps, or view multiple years of crime for a single ward.
   
     %li
       Once you have a ward selected, click on its title to <strong>view local crime trends</strong>. You can discover how crime in the ward has changed over time, what crimes occur most frequently, and how crime activity fluctuates across the day.
-      = image_tag "about/ward-42-expanded.png", :title => "Expanded details for ward 42"
+      = image_tag "about/ward-42-expanded.png", :title => "Expanded details for Ward 42", :class => "content-image"
+      %p.mute Expanded details for ward 42
     %li
       %p
-        To view that <strong>ward’s crime profile</strong>, click on the “View all ward details” link. This will bring you to a detail page featuring heatmaps of the past 10 years of crime in the ward… 
-
-      %p
-        …contact info for each alderman
-      = image_tag "about/alderman-contact.png", :title => "Contact info for aldermen"
-      .clear      
-      %p
-        …and a breakdown of all these crimes by their category.
-      = image_tag "about/crime-categories.png", :title => "Crime categories"
+        To view a <strong>ward’s crime profile</strong>, click on the “View all ward details” link. This will bring you to a detail page featuring heatmaps of the past 10 years of crime in the ward, contact info for each alderman, and a breakdown of all these crimes by category.
+      = image_tag "about/crime-categories.png", :title => "Crime types", :class => "content-image"
+      %p.mute Crime types
       .clear
-    %li
       %p
-        To the right, you can see the total number of crimes in each category, as well as the monthly average, minimum, and maximum. Click on each crime category to drill down even further. You can see a plan-english and legal definitions of the crime, a chart showing the number of times that crime has occurred in recent months, and table containing subcategories of that crime. 
+        On the right, you can see the minimum (low), average, maximum (high) and total number of crimes in each category. Click on each crime category to see the legal definition of the crime, a closeup of the chart showing the number of times that crime has occurred per month, and a table containing subcategories of that crime type. 
       %p
         These subcategories come from the Chicago Police Department. Fair warning: they can be a little messy and cryptic.
 
   %h2#who-is-it-for Who is it for?
   %p
-    This free tool is for anyone interested in crime in Chicago. It was designed to be simple, and to allow anyone to visualize crime trends in their community.
+    This free tool is for anyone interested in crime in Chicago. It was designed to be simple and to allow anyone to visualize crime trends in their community.
   %p
     It can be used by:
   
   %ul
-    %li citizens who are concerned or curious about crime in the community.
-    %li city officials tracking neighborhood trends.
-    %li aldermen trying to identify and address local problem areas.
-    %li policemen looking to place their experience of the streets in a broader context.
-    %li community groups trying to understand the neighborhoods they serve.
-    %li journalists as a reporting tool.
-    %li academics researching urban crime.
+    %li citizens who are concerned or curious about crime in the community
+    %li city officials tracking neighborhood trends
+    %li aldermen trying to identify and address local problem areas
+    %li policemen looking to place their experience of the streets in a broader context
+    %li community groups trying to understand the neighborhoods they serve
+    %li journalists as a reporting tool
+    %li academics researching urban crime
     
   %h2#why-did-you-build-it Why did you build it?
     
@@ -91,57 +90,40 @@
   %ul
     %li
       %p
-      There are <a href='http://spotcrime.com/il/chicago'>several</a> <a href='http://www.everyblock.com'>websites</a> out there that show individual crime incidents. We wanted to zoom out and visualize trends. 
-      %p
-        Crime is a social phenomenon. To understand it, you need to observe how it varies across the city and changes over time. 
-    
+      There are several websites (like <a href='http://www.everyblock.com'>Everyblock</a> and <a href='http://spotcrime.com/il/chicago'>SpotCrime</a>) out there that show individual crime incidents. We wanted to illustrate a bigger picture out and visualize trends because crime is a social phenomenon. To understand it, you need to observe how it varies across the city and changes over time. 
     %li
       %p
-        The media often sensationalizes crime, so it’s important to put it in context. How prevalent are murders, really? Is your neighborhood actually experiencing a crime wave? What’s the real risk of going out at a certain time, or visiting certain neighborhoods? 
-      %p
-        Few citizens know, for example, that crime in Chicago has nosedived since the early 1990’s. That goes for the rest of the country, too.
+        Crime is often sensationalized, so it’s important to put it in context. How prevalent are murders, really? Is your neighborhood actually experiencing a crime wave? What’s the real risk of going out at a certain time or visiting certain neighborhoods? 
     %li
       %p
-        We often talk about crime in sweeping, city-wide terms: Chicago had 346,522 crimes in 2011. 15,587 carjackings. 430 homicides. But where are all these crimes happening? Everyone knows that Chicago’s crime landscape is highly uneven.
+        We often talk about crime in sweeping, city-wide terms: Chicago had 346,522 crimes in 2011. 15,587 carjackings. 430 homicides. But where are all these crimes happening? And what kinds of crimes are they? Chicago’s crime landscape is highly uneven.
       %p
-        And what kinds of crimes are they? Mail order fraud and gangland murders aren’t exactly the same thing. Our app lets you look at crime trends at the local level, and drill down to explore dozens of crime categories for every area of the city.
-    %li  
-      %p
-        There’s simply never been a public “crime dashboard” for Chicago. This is the first time citizens can see the crime landscape of their community.
+        Our app lets you look at crime trends at the local level to explore dozens of crime categories for every ward in the city.
   
   %h2#why-offer-a-poster Why offer a poster?
   
   %p
-    We've never done one before, and we thought that crime for all 50 wards would be a great dataset to make a static visualization out of. <a href='/poster'>Get one yourself!</a>
+    We've never done one before, and we thought that crime for all 50 wards would be a great dataset to make a static visualization of. <a href='/poster'>Get one now!</a>
     
   %p
-    All of the proceeds for the poster will go towards hosting for this site, and continued development on projects for Open City.
+    All of the proceeds for the poster will go towards hosting for this site and continued development on projects for <a href='http://opencityapps.org'>Open City</a>.
     
-  %h2#why-are-you-grouping-crimes-by-ward Why are you grouping crimes by ward?
+  %h2#why-are-you-grouping-crimes-by-ward Why are you showing crimes by ward?
     
   %p
-    Crime is highly political. 
-  %p
-    Politicians run campaigns on promises that they’ll bring it down. Citizens pressure them when it spikes. 
-  %p
-    And for decades, Chicago’s City Council has been deadlocked in a debate about whether police officers should be reassigned from lower-crime to higher-crime neighborhoods.
-  %p
-    As a result, the aldermen haven’t redrawn the Police Department’s beats - the geographical areas that cops patrol - since the 1970s. 
-  %p
-    This debate has been driven by politics, not facts. We want to inform it with a data-driven perspective.
-  %p
-    Rest assured, we want to show crime trends by neighborhood, by police district, and by other geographies. Wards were a good first step and proof of concept.
+    There are many useful ways to group crime geographically: by neighborhood, police district, community area and many others. Wards were a good first step and proof of concept.
+    
   %h2#where-does-this-data-come-from Where does this data come from?
   %p
-    The Chicago Police Department has tracked crime incidents in the city for years, but they have never before released this data to the public.
+    The <a href='http://www.cityofchicago.org/police'>Chicago Police Department</a> has tracked crime incidents in the city for years, but they have never before released this data to the public.
   %p
-    In June 2011, the CPD released anonymized records of the 4,802,684 reported crimes that took place in Chicago from 2001 to 2011. This data is <a href='https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2'>now available</a> to all on the <a href='http://data.cityofchicago.org'>City of Chicago's data portal</a>. The city updates it daily.     
+    In June 2011, the CPD released anonymized records of the 4,802,684 reported crimes that took place in Chicago from 2001 to 2011. This data is <a href='https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2'>now available</a> on the <a href='http://data.cityofchicago.org'>City of Chicago's data portal</a>. It is updated daily.     
 
   %h2#anything-i-should-know-about-this-data Anything I should know about this data?
   %ul
     %li   
       %p
-        When we say “crime,” we mean “crimes reported to the police.” Many crimes in Chicago never get reported. 
+        When we say “crime,” we mean “crimes reported to the Chicago Police Department.” Many crimes in Chicago never get reported. 
     %li    
       %p
         Crime incidents are first recorded by police officers at the scene of the crime. A crime’s category may change over time as the case develops.
@@ -149,18 +131,18 @@
       %p  
         This website does not track crimes in real-time. The Police Department waits two weeks before releasing data about a crime. We plan on updating the site every month.
   
-  %h2#who-built-it Who built it?
+  %h2#who-built-it Who built Crime in Chicago?
   %p
     This site was built by <a href='http://opencityapps.org'>Open City</a>, a volunteer group of technologists and researchers based in Chicago that create civic apps with open government data.
   %p
     Check out our <a href='http://opencityapps.org/#projects'>other projects</a>, and feel free to get in touch at <a href='mailto:info@opencityapps.org'>info@opencityapps.org</a>
   
-  %h2#can-i-do-this-for-my-city Can I do this for my city?
+  %h2#can-i-do-this-for-my-city Can I get this site for my city?
   
   %p
     Want to deploy this app in another city? All the code is up on <a href='https://github.com/open-city/crime-in-chicago'>github</a>.
-  %p
-    What technologies did you use to build it? (For the Geeks)
+  
+  %h2#what-technologies-did-you-use-to-build-the-site What technologies did you use to build the site? (For the Geeks)
   %ul
     %li Front-end: HTML, CSS, <a href='http://jquery.org'>jQuery</a>
     %li Data visualization: <a href='https://github.com/mbostock/d3/wiki/Gallery'>D3</a>, <a href='http://www.highcharts.com/'>Highcharts</a>, Sparklines, <a href='https://developers.google.com/maps/documentation/javascript/'>Google Maps</a>, <a href='http://www.google.com/fusiontables'>Fusion Tables</a>

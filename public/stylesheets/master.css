@@ -124,6 +124,9 @@ ul { list-style: disc; margin-left: 1.5em; }
     #wards .point { height: 55px; margin-right: 3px; }
     
     //#wardmap {width: 220px; height: 250px; float: left;}
+    
+/* Content image*/
+.content-image {border: 1px solid grey; padding: 5px; margin-top: 15px;}
 
 /* Footer */
 #footer { color: #777; font-size: 11px; }
