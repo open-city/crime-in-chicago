@@ -130,7 +130,16 @@ module Crime
     end
     
     def ward_detail_category_sparkline(ward, fbi_code)
-      DB.fetch(Crime::QUERIES[:ward_detail_category_sparkline], :ward => ward, :fbi_code => fbi_code).all
+      category_sparkline = ""
+      dataset = DB.fetch(Crime::QUERIES[:ward_detail_category_sparkline], :ward => ward, :fbi_code => fbi_code).all
+      dataset.each_with_index do |s, i|
+        if (i != dataset.count - 1) #chop off the last item
+          category_sparkline += "#{s[:crime_count]},"
+        end
+      end
+      category_sparkline = category_sparkline.chomp(",")
+      puts category_sparkline
+      category_sparkline
     end
     
     def ward_detail_subcategory_list(ward, fbi_code)

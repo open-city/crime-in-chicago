@@ -269,8 +269,9 @@ CategoryChart.create = function(number, fbi_code) {
             }
           }
         },
-        pointInterval: 30 * 24 * 3600 * 1000,
-        pointStart: Date.UTC(2003, 1, 1),
+        //this is very hacky. months have different day counts, so our point interval is the average - 30.4
+        pointInterval: 30.4 * 24 * 3600 * 1000,  
+        pointStart: Date.UTC(2003, 0, 28), //give ourselves a little buffer to fudge the month intervals
         shadow: false,
         states: {
            hover: {

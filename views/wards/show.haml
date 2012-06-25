@@ -162,8 +162,8 @@
         %th{:style => "width: 200px;"}
           %span Volume per month*
           %ol.xaxis
-            - (2..12).each do |year|
-              %li.tick{:style => "width: 9%;"}
+            - (3..12).each do |year|
+              %li.tick{:style => "width: 10%;"}
                 = "&lsquo;%02d" % year
         %th.num
           %span Low
@@ -181,10 +181,7 @@
           Earlier data is available but sporadic and therefore not included.
     %tbody
       - ward_detail_category_list(ward).each do |hash|
-        - @category_sparkline = ""
-        - ward_detail_category_sparkline(ward, hash[:fbi_code]).each do |s|
-          - @category_sparkline += "#{s[:crime_count]},"
-        - @category_sparkline = @category_sparkline.chomp(",")
+        - @category_sparkline = ward_detail_category_sparkline(ward, hash[:fbi_code])
         %tr{:id => "category-#{encode_element_id hash[:fbi_code]}"}
           %td.cat-title
             %a{:href => "#", :"data-fbi_code" => (encode_element_id hash[:fbi_code]), :"data-values" => @category_sparkline}
