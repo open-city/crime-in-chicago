@@ -137,9 +137,7 @@ module Crime
           category_sparkline += "#{s[:crime_count]},"
         end
       end
-      category_sparkline = category_sparkline.chomp(",")
-      puts category_sparkline
-      category_sparkline
+      category_sparkline.chomp(",")
     end
     
     def ward_detail_subcategory_list(ward, fbi_code)
