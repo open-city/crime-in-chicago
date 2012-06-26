@@ -18,8 +18,6 @@ module Crime
     include Cacheable
     extend Cacheable
 
-    puts "settings: #{dalli_settings.inspect}"
-
     enable :logging, :sessions
     enable :dump_errors, :show_exceptions if development?
 
