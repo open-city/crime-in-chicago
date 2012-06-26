@@ -18,6 +18,7 @@ GEM
     launchy (2.0.5)
       addressable (~> 2.2.6)
     mime-types (1.17.2)
+    newrelic_rpm (3.4.0)
     pg (0.12.2)
     r18n-core (0.4.13)
     rack (1.4.0)
@@ -72,6 +73,7 @@ DEPENDENCIES
   facets
   haml
   heroku
+  newrelic_rpm
   pg
   rake (= 0.8.7)
   rspec
