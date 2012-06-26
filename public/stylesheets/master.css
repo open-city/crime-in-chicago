@@ -166,6 +166,7 @@ a:hover .magnify { background-color: #005b82; background-position: 0 -22px; bord
 /* Identity */
 #identity { background: #ddf2fb; margin-bottom: 35px; padding: 23px 0 15px; text-align: center; }
 #tagline { color: #227fa2; font-size: 16px; margin-top: 3px; }
+#tagline .beta { color: #e00; }
 
 /* Max/min */
 .max, .label-red { color: #e00; }
