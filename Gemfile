@@ -7,6 +7,7 @@ gem "sinatra-reloader"
 gem "sinatra-r18n"
 gem "haml"
 gem "facets"
+gem "newrelic_rpm"
 
 # data
 gem "dalli"

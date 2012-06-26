@@ -29,6 +29,10 @@ module Crime
       register Sinatra::Reloader
     end
 
+    configure :production do
+      require "newrelic_rpm"
+    end
+
     register Sinatra::Initializers
     register Sinatra::R18n
 
