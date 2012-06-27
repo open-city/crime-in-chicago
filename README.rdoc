@@ -1,4 +1,4 @@
-= Crime In Chicago
+= Crime In Chicago Cedar
 
 Showcase crime statistics for the city of Chicago
 
