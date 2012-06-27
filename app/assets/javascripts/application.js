@@ -1,4 +1,5 @@
 //= require fusion_maps
+//= require jquery.min
 //= require jquery-addons
 //= require jquery-ui.min
 //= require jquery.tooltip.min
