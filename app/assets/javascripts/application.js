@@ -4,8 +4,7 @@
 //= require jquery-ui.min
 //= require jquery.tooltip.min
 //= require jquery.sparkline.min
-//= require d3
-//= require d3.time
+//= require d3.v2.min
 //= require mustache
 //= require jquery.ezpz_hint.min
 //= require open-city-crime
