@@ -1,6 +1,4 @@
-begin
-  config = YAML.load_file("config/database.yml")
-rescue
+if ENV["RACK_ENV"] == "production"
   uri = URI.parse(ENV["HEROKU_POSTGRESQL_GREEN_URL"])
   config = {
     "production" => {
@@ -11,8 +9,8 @@ rescue
       "password" => uri.password
     }
   }
-
-  raise "You must create a database.yml"
+else
+  config = YAML.load_file("config/database.yml")
 end
 
 DB = Sequel.postgres(config[Sinatra::Application.environment.to_s].reject { |key, value|
