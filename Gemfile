@@ -9,6 +9,7 @@ gem "sinatra-r18n"
 gem "haml"
 gem "facets"
 gem "newrelic_rpm"
+gem "sprockets"
 
 # data
 gem "dalli"

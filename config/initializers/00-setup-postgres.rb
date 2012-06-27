@@ -1,7 +1,7 @@
 begin
   config = YAML.load_file("config/database.yml")
 rescue
-  uri = URI.parse(ENV["DATABASE_URL"])
+  uri = URI.parse(ENV["HEROKU_POSTGRESQL_GREEN_URL"])
   config = {
     "production" => {
       "adapter"  => "postgres",

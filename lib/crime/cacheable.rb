@@ -4,9 +4,9 @@ require 'digest/md5'
 module Cacheable
   def dalli_settings
     if production?
-      ["#{ENV["MEMCACHE_SERVERS"]}:11211", {
-        :username => "#{ENV["MEMCACHE_USERNAME"]}",
-        :password => "#{ENV["MEMCACHE_PASSWORD"]}"
+      ["#{ENV["MEMCACHIER_SERVERS"]}", {
+        :username => "#{ENV["MEMCACHIER_USERNAME"]}",
+        :password => "#{ENV["MEMCACHIER_PASSWORD"]}"
       }]
     elsif development?
       ["localhost:11211"]
