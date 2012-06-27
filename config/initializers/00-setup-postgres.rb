@@ -7,6 +7,7 @@ if ENV["RACK_ENV"] == "production"
       "database" => uri.path.slice(1..-1),
       "username" => uri.user,
       "password" => uri.password
+      "sslmode"  => "require"
     }
   }
 else
