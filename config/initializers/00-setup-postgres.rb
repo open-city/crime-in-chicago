@@ -4,6 +4,7 @@ if ENV["RACK_ENV"] == "production"
     "production" => {
       "adapter"  => "postgres",
       "host"     => uri.host,
+      "port"     => uri.port,
       "database" => uri.path.slice(1..-1),
       "username" => uri.user,
       "password" => uri.password,
