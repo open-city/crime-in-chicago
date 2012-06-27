@@ -1,21 +1,21 @@
 module HtmlHelpers
   def include_stylesheet name, options={}
-    href = "/stylesheets/#{name}.css" unless name.to_s.match(/^http/)
+    href = "/stylesheets/#{name}.css" unless name.to_s.match(/^http|^\//)
     content_tag :link, nil, options.merge(:rel => "stylesheet", :href => (href || name))
   end
 
   def include_favicon name, options={}
-    href = "/images/#{name}.ico" unless name.to_s.match(/^http/)
+    href = "/images/#{name}.ico" unless name.to_s.match(/^http|^\//)
     content_tag :link, nil, options.merge(:rel => "shortcut icon", :href => (href || name))
   end
 
   def include_javascript name, options={}
-    href = "/javascripts/#{name}.js" unless name.to_s.match(/^http/)
+    href = "/javascripts/#{name}.js" unless name.to_s.match(/^http|^\//)
     content_tag :script, "", :type => "text/javascript", :src => (href || name)
   end
 
   def image_tag name, options={}
-    src = "/images/#{name}" unless name.to_s.match(/^http/)
+    src = "/images/#{name}" unless name.to_s.match(/^http|^\//)
     content_tag :img, nil, options.merge(:alt => name, :src => (src || name))
   end
 

@@ -1,8 +1,4 @@
 - content_for :javascript do
-  = include_javascript :mustache
-  = include_javascript "jquery.ezpz_hint.min"
-  = include_javascript "open-city-crime"
-
   :javascript
     $(document).ready(function() {
       $("a.ward-selector").click(function(event) {

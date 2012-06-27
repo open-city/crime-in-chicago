@@ -1,6 +1,8 @@
 !!! Strict
 %html{:lang => :en}
   %head
+    = '<script type="text/javascript">var NREUMQ=NREUMQ||[];NREUMQ.push(["mark","firstbyte",new Date().getTime()]);</script>'
+
     %title
       Crime in Chicago - An interactive analysis of crime in Chicago's 50 wards (beta)
 
@@ -10,20 +12,12 @@
 
     = include_favicon :favicon
 
-    = include_stylesheet :master,      :media => :screen
-    = include_stylesheet :colorbrewer, :media => :screen
+    = include_stylesheet "/assets/application.css"
 
     = include_javascript "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"
     = include_javascript "http://maps.googleapis.com/maps/api/js?sensor=false"
     = include_javascript "http://www.google.com/jsapi"
-    = include_javascript :fusion_maps
-    = include_javascript "jquery-addons"
-    = include_javascript "jquery-ui.min"
-    = include_javascript "jquery.tooltip.min"
-    = include_javascript "jquery.sparkline.min"
-    = include_javascript :d3
-    = include_javascript "d3.time"
-    = include_javascript :application
+    = include_javascript "/assets/application.js"
     = content :javascript
 
     :javascript
@@ -81,4 +75,4 @@
       &copy; 2012. Crime in Chicago was designed and developed by
       = link_to "Open City", "http://www.opencityapps.org"
 
-    = include_javascript :analytics_lib
+    = include_javascript "/assets/analytics_lib.js"
