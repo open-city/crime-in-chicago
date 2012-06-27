@@ -4,7 +4,8 @@
 *.log
 .sass-cache
 
-config/*.yml
+config/database.yml
+config/mongoid.yml
 db/*.sqlite3
 docs/*
 tmp/
