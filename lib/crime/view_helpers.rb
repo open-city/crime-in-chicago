@@ -133,7 +133,7 @@ module Crime
       category_sparkline = ""
       dataset = DB.fetch(Crime::QUERIES[:ward_detail_category_sparkline], :ward => ward, :fbi_code => fbi_code).all
       dataset.each_with_index do |s, i|
-        if (i != dataset.count - 1) #chop off the last item
+        if (i != dataset.count - 1) #chop off the last month. it is always incomplete
           category_sparkline += "#{s[:crime_count]},"
         end
       end
