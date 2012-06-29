@@ -1,6 +1,4 @@
 - content_for :javascript do
-  = include_javascript "/assets/application-ward.js"
-
   :javascript
     $(document).ready(function() {
       var year = #{Time.now.year};

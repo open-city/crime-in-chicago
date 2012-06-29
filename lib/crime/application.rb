@@ -64,7 +64,7 @@ module Crime
     
     #ward detail page
     get "/wards/:ward" do
-      haml :"wards/show", :locals => {
+      haml :"wards/show", :layout => :detail, :locals => {
         :ward => params[:ward]
       }
     end
