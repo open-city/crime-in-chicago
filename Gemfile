@@ -15,6 +15,7 @@ gem "sprockets"
 gem "dalli"
 gem "pg"
 gem "sequel"
+gem "unicorn"
 
 # utility
 gem "chronic"
@@ -23,5 +24,4 @@ gem "rake", "0.8.7"
 group :development do
   gem "heroku"
   gem "rspec"
-  gem "unicorn"
 end
