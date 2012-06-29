@@ -1,0 +1,77 @@
+!!! Strict
+%html{:lang => :en}
+  %head
+    = '<script type="text/javascript">var NREUMQ=NREUMQ||[];NREUMQ.push(["mark","firstbyte",new Date().getTime()]);</script>'
+
+    %title
+      Crime in Chicago - An interactive analysis of crime in Chicago's 50 wards (beta)
+
+    %meta{"http-equiv" => "Content-Type",       :content => "text/html; charset=utf-8"}
+    %meta{"http-equiv" => "Content-Style-Type", :content => "text/css"}
+    %meta{:name => "google-site-verification",  :content => ''}
+
+    = include_favicon :favicon
+
+    = include_stylesheet "/assets/application.css"
+
+    = include_javascript "/assets/application-ward.js"
+    = include_javascript "http://maps.googleapis.com/maps/api/js?sensor=false"
+    = include_javascript "http://www.google.com/jsapi"
+    = content :javascript
+
+    :javascript
+      google.load('visualization', '1', {}); //used for custom SQL call to get count
+
+  %body#page
+    #nav
+      #nav-content
+        %ul
+          %li{:class => current_menu_class("home")}
+            = link_to "Home", "/"
+            
+          %li{:class => current_menu_class("about")}
+            = link_to "About", "/about"
+            
+          %li{:class => current_menu_class("poster")}
+            = link_to "Get the poster", "/poster"
+          
+          %li{:class => current_menu_class("poster"), :id => "get-poster"}
+            = link_to "Get the poster", "/poster"
+          
+    #identity
+      #identity-content
+        %a{:href => "/"}
+          %img{:alt => "Crime in Chicago", :src => "/images/logo.png"}
+        #tagline
+          An interactive analysis of crime in Chicago's 50 wards
+          %span.beta (beta)
+
+    #content
+    
+      = yield
+
+      .clear
+    
+    #subfooter
+      #subfooter-content
+        #subfooter-primary
+          %h2 About this site
+          %p 
+            Crime in Chicago is a data visualization by <a href="http://opencityapps.org">Open City</a> that lets you explore crime trends in Chicago's 50 wards. It was built using <a href='https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2'>open data about Chicago crimes</a> released by the <a href='http://www.cityofchicago.org/police'>Chicago Police Department</a>. 
+          %p
+            <strong><a href="/about">More about this project</a> &raquo;</strong>
+
+        #subfooter-secondary
+          = link_to "#{image_tag('poster-thumb.png', 'alt' => 'Testing')}", "/poster"
+          %h2 Get the poster
+          %p 
+            See crime data for
+            %strong all 50 wards
+            compared on a single poster printed on high-quality materials.
+          %p
+            = link_to "Pricing and details &raquo;", "/poster"
+    #footer
+      &copy; 2012. Crime in Chicago was designed and developed by
+      = link_to "Open City", "http://www.opencityapps.org"
+
+    = include_javascript "/assets/analytics_lib.js"
