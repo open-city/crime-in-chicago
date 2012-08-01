@@ -51,6 +51,6 @@
 .vis-content
   %ol#years
     - (2002..(Time.now.year)).each do |year|
-      %li.year-selector{:class => "#{"current" if year == 2011}"}
+      %li.year-selector{:class => "#{"current" if year == 2012}"}
         = link_to year.to_s, "#", :"data-year" => year
 %hr
