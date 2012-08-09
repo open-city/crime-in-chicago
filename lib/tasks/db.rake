@@ -66,7 +66,7 @@ namespace :db do
 
   namespace :load do
     desc "download and load crime data file into tables"
-    task :crimes, :data_filename do |t, args|
+    task :crimes do |t, args|
       data_filename = "tmp/Crimes_-_2001_to_present.csv"
       Rake::Task['db:download'].invoke
       puts "loading crime data from #{data_filename}..."
