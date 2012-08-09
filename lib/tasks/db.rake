@@ -58,7 +58,7 @@ namespace :db do
     puts "entering maintenance mode"
     sh "heroku maintenance:on --app crime-in-chicago-cedar"
     puts "restoring database"
-    sh "heroku pgbackups:restore HEROKU_POSTGRESQL_GREEN 'http://#{CONFIG.public_pgdump_path.to_s}/postgres_backup.dump' --app crime-in-chicago-cedar"
+    sh "heroku pgbackups:restore HEROKU_POSTGRESQL_GREEN 'http://#{CONFIG.public_pgdump_path.to_s}/postgres_backup.dump' --app crime-in-chicago-cedar --confirm crime-in-chicago-cedar"
     puts "exiting maintenance mode"
     sh "heroku maintenance:off --app crime-in-chicago-cedar"
     puts "remember to clear the cache!"

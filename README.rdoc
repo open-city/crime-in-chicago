@@ -6,28 +6,34 @@ Showcase crime statistics for the city of Chicago
 == Requirements
 
 Sinatra
+Postgres
+Memcache
 
 
 == Starting
-
-- Download the latest crimes dataset
-
-    https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2
-    Export -> CSV (file is >1Gb in size)
 
 - Clone the git repository
 
     > git clone git@github.com:open-city/crime-in-chicago.git
 
-- Execute this command
-
-    > rake db:setup_from_scratch
-    import takes ~30 minutes 
-
 - Install all gems necessary
 
     > gem install bundler
     > bundle install
+    
+- Set up database
+
+    > pg_ctl -D /usr/local/var/postgres -l logfile start
+    starts postgres
+    
+    > rake db:setup_from_scratch
+    downloads file from City of Chicago Data Portal (~1.3Gb)
+    sets up database and runs import from downloaded file (~20-30 minutes)
+    
+- Setup and start memcached
+
+    > brew install memcached (for OS X, other OS's will need to install manually)
+    > memcached &
 
 - Start application server
 
