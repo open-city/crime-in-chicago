@@ -15,15 +15,14 @@ class CrimesForMonthBackfill
       SELECT * 
       FROM crimes_for_month 
       WHERE ward is NOT NULL AND TRIM(ward) NOT IN ('', '0') 
-      AND year > 2001 AND year <= DATE_PART('year', NOW())
+      AND year > 2001 AND year < DATE_PART('year', NOW())
       ORDER BY ward, fbi_code, year, month
     SQL
   end
 
   def run
     ds = DB.fetch(crimes_for_month_sql)
-    last_row = {:year => Time.now.year, :month => Time.now.month}
-    puts "populating months up to #{last_row.inspect}"
+    last_row = {:year => 2011, :month => 12}
     ds.each do |row|
       if !rows_for_same_ward_and_category(row, last_row)
         # new category
@@ -42,7 +41,7 @@ class CrimesForMonthBackfill
           add_missing_months_between_previous_and_new_months(last_row, row)
         end
       end
-      puts row.inspect
+      #puts row.inspect
       last_row = row
     end
     add_missing_months_at_end_of_previous_year(last_row)
