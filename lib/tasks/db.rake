@@ -28,9 +28,9 @@ namespace :db do
   desc "download crime data file"
   task :download do |t, args|
     begin
-      sh "wget --output-document tmp/Crimes_-_2001_to_present.csv https://data.cityofchicago.org/api/views/ijzp-q8t2/rows.csv?accessType=DOWNLOAD"
+      sh "curl -o tmp/Crimes_-_2001_to_present.csv https://data.cityofchicago.org/api/views/ijzp-q8t2/rows.csv?accessType=DOWNLOAD"
     rescue
-      puts "wget not installed!"
+      puts "failed to download file"
     end
   end
 
