@@ -1,0 +1,6 @@
+development: 
+  ftp_url: 
+  ftp_path: 
+  ftp_user:  
+  ftp_pass: 
+  public_pgdump_path:
