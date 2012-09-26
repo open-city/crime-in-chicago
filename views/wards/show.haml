@@ -51,17 +51,12 @@
           null,
           { "bSortable": false },
           {
-            "aDataSort": [2, 5],
+            "aDataSort": [2, 4],
             "asSorting": ["desc", "asc"],
             "sType": "number-comma"
           },
           {
-            "aDataSort": [3, 5],
-            "asSorting": ["desc", "asc"],
-            "sType": "number-comma"
-          },
-          {
-            "aDataSort": [4, 5],
+            "aDataSort": [3, 4],
             "asSorting": ["desc", "asc"],
             "sType": "number-comma"
           },
@@ -88,7 +83,7 @@
         maxSpotColor: "#c10202",
         spotColor: false,
         spotRadius: 2,
-        width: "240px"
+        width: "290px"
       });
       
       var fusion_map = FusionMap.create("map_canvas_detail", OpenCity.CrimeInChicago.map_default_options);
@@ -156,8 +151,8 @@
             - (3..12).each do |year|
               %li.tick{:style => "width: 10%;"}
                 = "&lsquo;%02d" % year
-        %th.num
-          %span Low
+        / %th.num
+        /   %span Low
         %th.num
           %span Avg
         %th.num
@@ -180,8 +175,8 @@
           %td
             %span.sparkline
               = @category_sparkline
-          %td.min.num 
-            = format_number hash[:minimum]
+          / %td.min.num 
+          /   = format_number hash[:minimum]
           %td.num 
             = format_number hash[:average]
           %td.max.num
