@@ -1,5 +1,11 @@
+require 'ostruct'
+require 'yaml'
+
+MY_ENV = ENV['ENV'] || 'development'
+CONFIG = OpenStruct.new(YAML.load_file("config/config.yml")[MY_ENV])
+
 namespace :db do
-  
+
   desc 'drop database'
   task :drop do |t, args|
     sh "dropdb chicago_crime"
@@ -24,11 +30,45 @@ namespace :db do
       sh "pg_dump -Fc --no-acl --no-owner -h localhost chicago_crime > #{data_filename}"
     end
   end
+  
+  desc "download crime data file"
+  task :download do |t, args|
+    puts "downloading crime file from City of Chicago Data Portal"
+    begin
+      sh "curl -o tmp/Crimes_-_2001_to_present.csv https://data.cityofchicago.org/api/views/ijzp-q8t2/rows.csv?accessType=DOWNLOAD"
+    rescue
+      puts "failed to download file"
+    end
+  end
+  
+  desc "ftp postgres dump to public endpoint specified in config.yml"
+  task :ftp_postgres_dump do |t, args|
+    puts "pushing up to ftp endpoint: #{CONFIG.ftp_url.to_s}"
+    require 'net/ftp'
+    Net::FTP.open(CONFIG.ftp_url.to_s, CONFIG.ftp_user.to_s, CONFIG.ftp_pass.to_s) do |ftp|
+      ftp.chdir(CONFIG.ftp_path.to_s)
+      ftp.putbinaryfile('tmp/postgres_backup.dump')
+    end
+  end
+  
+  desc "create local database dump and deploy to production using pgbackups restore"
+  task :deploy do |t, args|
+    Rake::Task['db:backup:all'].invoke
+    Rake::Task['db:ftp_postgres_dump'].invoke
+    puts "entering maintenance mode"
+    sh "heroku maintenance:on --app crime-in-chicago-cedar"
+    puts "restoring database"
+    sh "heroku pgbackups:restore HEROKU_POSTGRESQL_GREEN 'http://#{CONFIG.public_pgdump_path.to_s}/postgres_backup.dump' --app crime-in-chicago-cedar --confirm crime-in-chicago-cedar"
+    puts "exiting maintenance mode"
+    sh "heroku maintenance:off --app crime-in-chicago-cedar"
+    puts "remember to clear the cache!"
+  end
 
   namespace :load do
-    desc "load crime data file into tables (uses tmp/Crimes_-_2001_to_present.csv by default)"
-    task :crimes, :data_filename do |t, args|
-      data_filename = args[:data_filename] || "tmp/Crimes_-_2001_to_present.csv"
+    desc "download and load crime data file into tables"
+    task :crimes do |t, args|
+      data_filename = "tmp/Crimes_-_2001_to_present.csv"
+      Rake::Task['db:download'].invoke
       puts "loading crime data from #{data_filename}..."
       sh "sed 1d #{data_filename} | psql --dbname=chicago_crime -c \"$(cat db/script/load_crime_data.sql)\""
       Rake::Task['db:load:crimes_for_month'].invoke
@@ -73,6 +113,7 @@ namespace :db do
 
   desc "create database, migrate schema and load data from csv"
   task :setup_from_scratch do
+    Rake::Task['db:download'].invoke
     Rake::Task['db:drop'].invoke
     Rake::Task['db:create'].invoke
     Rake::Task['db:migrate'].invoke

@@ -6,6 +6,7 @@
 
 config/database.yml
 config/mongoid.yml
+config/config.yml
 db/*.sqlite3
 docs/*
 tmp/
