@@ -2,7 +2,7 @@ namespace :cache do
   
   desc 'seed calendar cache'
   task :seed do |t, args|
-    (2002..2012).each do |year|
+    2012.downto(2002).each do |year|
       puts "seeding #{year}"
       (1..50).each do |ward|
         sh "curl -o /dev/null 'http://www.crimeinchicago.org/api/#{year}/wards/#{ward}/crime/calendar'"
