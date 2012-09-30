@@ -1,5 +1,5 @@
 if ENV["RACK_ENV"] == "production"
-  uri = URI.parse(ENV["HEROKU_POSTGRESQL_GREEN_URL"])
+  uri = URI.parse(ENV["DATABASE_URL"])
   config = {
     "production" => {
       "adapter"  => "postgres",
