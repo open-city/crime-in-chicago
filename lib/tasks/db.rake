@@ -30,7 +30,7 @@ namespace :db do
       sh "pg_dump -Fc --no-acl --no-owner -h localhost chicago_crime > #{data_filename}"
     end
   end
-  
+
   desc "download crime data file"
   task :download do |t, args|
     puts "downloading crime file from City of Chicago Data Portal"
@@ -40,7 +40,7 @@ namespace :db do
       puts "failed to download file"
     end
   end
-  
+
   desc "ftp postgres dump to public endpoint specified in config.yml"
   task :ftp_postgres_dump do |t, args|
     puts "pushing up to ftp endpoint: #{CONFIG.ftp_url.to_s}"
@@ -50,7 +50,7 @@ namespace :db do
       ftp.putbinaryfile('tmp/postgres_backup.dump')
     end
   end
-  
+
   desc "create local database dump and deploy to production using pgbackups restore"
   task :deploy do |t, args|
     Rake::Task['db:backup:all'].invoke
@@ -58,7 +58,7 @@ namespace :db do
     puts "entering maintenance mode"
     sh "heroku maintenance:on --app crime-in-chicago-cedar"
     puts "restoring database"
-    sh "heroku pgbackups:restore HEROKU_POSTGRESQL_GREEN 'http://#{CONFIG.public_pgdump_path.to_s}/postgres_backup.dump' --app crime-in-chicago-cedar --confirm crime-in-chicago-cedar"
+    sh "heroku pgbackups:restore HEROKU_POSTGRESQL_VIOLET_URL 'http://#{CONFIG.public_pgdump_path.to_s}/postgres_backup.dump' --app crime-in-chicago-cedar --confirm crime-in-chicago-cedar"
     puts "exiting maintenance mode"
     sh "heroku maintenance:off --app crime-in-chicago-cedar"
     puts "remember to clear the cache!"
@@ -75,7 +75,7 @@ namespace :db do
       Rake::Task['db:load:crimes_per_subcategory'].invoke
       Rake::Task['db:load:zero_crime_months'].invoke
     end
-    
+
     desc "populate crimes_for_month table"
     task :crimes_for_month do
       puts "populating crimes_for_month table..."
@@ -102,7 +102,7 @@ namespace :db do
       puts "loading ward office data from #{data_filename}..."
       sh "cat #{data_filename} | psql --dbname=chicago_crime -c \"$(cat db/script/load_ward_offices.sql)\""
     end
-    
+
     desc "load crime types (uses tmp/Crime_Types.csv by default)"
     task :crime_types, :data_filename do |t, args|
       data_filename = args[:data_filename] || "db/import/Crime_Types.csv"
